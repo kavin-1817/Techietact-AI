@@ -1,0 +1,467 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+{% load admin_tags %}
+
+{% block title %}{{ module.title }} - Interactive Module{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/module-detail.css' %}?v=2">
+{% endblock %}
+
+{% block content %}
+<div class="module-page">
+    <div class="container">
+        {% if not is_unlocked %}
+        <div class="module-locked-container">
+            <div class="lock-message-card">
+                <div class="lock-icon">
+                    <i class="bi bi-lock-fill"></i>
+                </div>
+                <h1>Module Locked</h1>
+                <p>This module is currently locked. You need to complete the previous module's quiz with a score of 70% or higher to unlock it.</p>
+                {% if previous_module %}
+                <div class="previous-module-info">
+                    <p><strong>Previous Module:</strong> {{ previous_module.title }}</p>
+                    {% if is_programming_course %}
+                    <a href="{% url 'practice_code' %}?from={{ request.get_full_path|urlencode }}&from_label={{ module.title|urlencode }}" class="practice-button">
+                        <i class="bi bi-terminal me-2"></i>Practice Code
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <a href="{% url 'course_detail' module.course.id %}" class="back-button">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Course
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div class="module-layout">
+            <aside class="module-info">
+                <span class="badge bg-gradient px-3 py-2 mb-3" style="background: linear-gradient(135deg, #ff9900, #ff7700); border: none;">Module {{ module.order }}</span>
+                <h1>{{ module.title }}</h1>
+                <p>{{ module.summary }}</p>
+                <div class="module-meta">
+                    <span><i class="bi bi-journal-bookmark"></i>{{ module.course.title }}</span>
+                    <span><i class="bi bi-lightning"></i>Adaptive tutoring</span>
+                </div>
+                {% if module.learning_objectives %}
+                <div class="module-section">
+                    <h2>Learning objectives</h2>
+                    <ul>
+                        {% for item in module.learning_objectives.splitlines %}
+                            {% if item.strip %}<li>{{ item }}</li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if module.topics %}
+                <div class="module-section">
+                    <h2>Topics covered</h2>
+                    <div class="topics-checkbox-list">
+                        {% for item in module.topics.splitlines %}
+                            {% if item.strip %}
+                            {% with topic=item.strip %}
+                            <label class="topic-checkbox-item {% if selected_topic == topic %}active{% endif %}">
+                                <input type="checkbox" class="topic-checkbox" data-topic="{{ topic }}" value="{{ topic }}" {% if selected_topic == topic %}checked{% endif %}>
+                                <span class="topic-checkbox-label">
+                                    {{ topic }}
+                                    {% with count=topic_chat_counts|get_item:topic %}
+                                    {% if count %}
+                                    <span class="topic-chat-count">({{ count }})</span>
+                                    {% endif %}
+                                    {% endwith %}
+                                </span>
+                            </label>
+                            {% endwith %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </aside>
+            <section class="chat-card">
+                <div class="chat-header">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h2>Interactive tutor</h2>
+                            {% if selected_topic %}
+                            <p>Teaching: <strong>{{ selected_topic }}</strong> - Ask questions about this topic only.</p>
+                            {% else %}
+                            <p>Select a topic from the left to start a dedicated chat for that topic.</p>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            {% if is_programming_course %}
+                            <a href="{% url 'practice_code' %}?from={{ request.get_full_path|urlencode }}&from_label={{ module.title|urlencode }}" class="practice-link-btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+                                <i class="bi bi-terminal me-1"></i>Practice Code
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    {% if history %}
+                        {% for session in history %}
+                        <div class="message message-user">
+                            <div class="bubble">
+                                {{ session.question }}
+                            </div>
+                        </div>
+                        <div class="message message-ai">
+                            <div class="bubble">
+                                <div class="history-response" data-response="{{ session.response|escape }}"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="message message-ai">
+                        <div class="bubble">
+                            {% if selected_topic %}
+                            <strong>Welcome to {{ selected_topic }}!</strong><br><br>
+                            This is a dedicated chat for <strong>{{ selected_topic }}</strong> only.<br><br>
+                            I'll teach you everything about <strong>{{ selected_topic }}</strong> step by step.<br><br>
+                            Use the quick suggestion buttons below or ask your own question to begin.<br><br>
+                            <strong>Note:</strong> I will only teach <strong>{{ selected_topic }}</strong> in this chat. I won't discuss other topics here.
+                            {% else %}
+                            <strong>Welcome to {{ module.title }}!</strong><br><br>
+                            <strong>Select a topic from the left sidebar to start a dedicated chat.</strong><br><br>
+                            Each topic has its own separate chat where I'll teach only that specific topic.<br><br>
+                            <strong>How it works:</strong><br>
+                            • Click on any topic checkbox to open its dedicated chat<br>
+                            • Each topic chat is isolated - I'll only teach that topic<br>
+                            • You can switch between topics anytime by clicking different checkboxes<br>
+                            • Each topic maintains its own conversation history
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="bubble">
+                            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <form id="moduleChatForm" class="d-grid gap-3">
+                        {% csrf_token %}
+                        <textarea id="questionInput" placeholder="Ask the tutor about this module..." required></textarea>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                {% if is_programming_course %}
+                                    Tip: ask for syntax, examples, analogies, or quizzes.
+                                {% elif is_language_course %}
+                                    Tip: ask for sentence patterns, pronunciation help, usage notes, or conversation practice.
+                                {% else %}
+                                    Tip: ask for explanations, examples, analogies, or quizzes.
+                                {% endif %}
+                            </small>
+                            <button type="submit" id="sendButton">
+                                <i class="bi bi-send-fill me-2"></i>Ask Techietact
+                            </button>
+                        </div>
+                    </form>
+                    {% if selected_topic %}
+                    <div class="chat-suggestions-dropup" id="chatSuggestionsDropup">
+                        <button type="button" class="chat-suggestions-toggle" id="chatSuggestionsToggle" aria-expanded="false">
+                            <span>Quick suggestions</span>
+                            <span class="chevron"><i class="bi bi-chevron-up"></i></span>
+                        </button>
+                        <div class="chat-suggestions-panel" id="chatSuggestionsPanel">
+                            <div class="chat-suggestions-title">Jump back in</div>
+                            <div class="chat-suggestions-buttons">
+                                {% if is_language_course %}
+                                <button type="button" class="chat-suggestion-btn" data-question="Explain {{ selected_topic }} step by step using only this structure for this reply: Overview, Explanation, Sentence Pattern & rules, Usage Examples, Conversation Tip. Keep later answers direct unless I ask again. Avoid programming references.">
+                                    Step-by-step breakdown
+                                </button>
+                                {% else %}
+                                <button type="button" class="chat-suggestion-btn" data-question="Explain {{ selected_topic }} step by step using this structure only for this response: Overview, Explanation, Syntax, Example, Real World Example. Keep later answers direct unless I ask again.">
+                                    Step-by-step breakdown
+                                </button>
+                                {% endif %}
+                                {% if is_language_course %}
+                                <button type="button" class="chat-suggestion-btn" data-question="Share a single everyday scenario that makes {{ selected_topic }} feel natural to use. Focus on how to apply the rule in conversation.">
+                                    Real-life context
+                                </button>
+                                <button type="button" class="chat-suggestion-btn" data-question="Create a mini practice sheet for {{ selected_topic }} with fill-in-the-blank sentences, translation prompts, and a speaking challenge.">
+                                    Practice worksheet
+                                </button>
+                                <button type="button" class="chat-suggestion-btn" data-question="Quiz me with three short grammar questions about {{ selected_topic }}. Ask all questions first and wait for my answers.">
+                                    Quiz me on {{ selected_topic }}
+                                </button>
+                                {% else %}
+                                <button type="button" class="chat-suggestion-btn" data-question="Share a single real-world analogy for {{ selected_topic }} that maps each part of the concept to the scenario. Do not re-explain the topic outside the analogy.">
+                                    Real-world analogy
+                                </button>
+                                <button type="button" class="chat-suggestion-btn" data-question="Create an assignment for {{ selected_topic }} with objectives, required steps, and acceptance criteria I can follow.">
+                                    Assignment idea
+                                </button>
+                                <button type="button" class="chat-suggestion-btn" data-question="Quiz me with three questions about {{ selected_topic }}. Ask all questions first and wait for my answers.">
+                                    Quiz me on {{ selected_topic }}
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% if is_unlocked %}
+{% block extra_js %}
+<script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatForm = document.getElementById('moduleChatForm');
+    const questionInput = document.getElementById('questionInput');
+    const sendButton = document.getElementById('sendButton');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const suggestionButtons = document.querySelectorAll('.chat-suggestion-btn');
+    const suggestionPanel = document.getElementById('chatSuggestionsPanel');
+    const suggestionToggle = document.getElementById('chatSuggestionsToggle');
+    const suggestionDropup = document.getElementById('chatSuggestionsDropup');
+
+    function processMarkdown(text) {
+        const codeBlocks = [];
+        let processed = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, lang, code) => {
+            codeBlocks.push({ lang: lang || 'plaintext', code: code.trim() });
+            return `__CODE_BLOCK_${codeBlocks.length - 1}__`;
+        });
+
+        processed = processed.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+        processed = processed.replace(/^#{1,6}\s+(.+)$/gm, '<strong class="ai-heading">$1</strong>');
+        // Handle section headers (Real World Example, Explanation, Syntax, Example) with bold and spacing
+        processed = processed.replace(/(^|\n)\*\*(Real World Example|Explanation|Syntax|Example)\*\*/gi, '$1<strong style="display: block; margin-top: 1rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-primary);">$2</strong>');
+        processed = processed.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        processed = processed.replace(/(?<!•)\*([^*•]+)\*(?!•)/g, '<em>$1</em>');
+        processed = processed.replace(/(^|\n)(Topic(?: [^:\n]*)?:)/gi, '$1<strong>$2</strong>');
+        processed = processed.replace(/(^|\n)(Sub[\s-]?topic(?: [^:\n]*)?:)/gi, '$1<strong>$2</strong>');
+        processed = processed.replace(/(^|\n)(Step\s*\d+:)/gi, '$1<strong>$2</strong>');
+        processed = processed.replace(/(^|\n)(Key Takeaways?:)/gi, '$1<strong>$2</strong>');
+        processed = processed.replace(/(^|\n)(Next Steps?:)/gi, '$1<strong>$2</strong>');
+        processed = processed.replace(/^[\s]*[•\-\*]\s+(.+)$/gm, '<div class="ai-list-item">$1</div>');
+        processed = processed.replace(/^\s*\d+\.\s+(.+)$/gm, '<div class="ai-list-item"><strong>$1</strong></div>');
+        processed = processed.replace(/\n{3,}/g, '\n\n');
+        processed = processed.replace(/\n/g, '<br>');
+        processed = processed.replace(/(<div class="ai-list-item">.*?<\/div>)<br>/g, '$1');
+
+        codeBlocks.forEach((block, index) => {
+            const escaped = block.code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const codeHtml = `<div class="code-block-container"><pre class="code-block"><code class="language-${block.lang}">${escaped}</code></pre></div>`;
+            processed = processed.replace(`__CODE_BLOCK_${index}__`, codeHtml);
+        });
+
+        return processed;
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addMessage(text, isUser) {
+        const message = document.createElement('div');
+        message.className = `message ${isUser ? 'message-user' : 'message-ai'}`;
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        if (isUser) {
+            bubble.textContent = text;
+        } else {
+            bubble.innerHTML = processMarkdown(text);
+        }
+        message.appendChild(bubble);
+        chatMessages.insertBefore(message, typingIndicator);
+        // Don't auto-scroll - let user manually scroll to see new messages
+        // scrollToBottom();
+    }
+
+    function showTyping() {
+        typingIndicator.classList.add('active');
+        // Don't auto-scroll - let user manually scroll
+        // scrollToBottom();
+    }
+
+    function hideTyping() {
+        typingIndicator.classList.remove('active');
+    }
+
+    function setSuggestionsOpen(isOpen) {
+        if (!suggestionPanel || !suggestionToggle) {
+            return;
+        }
+        suggestionPanel.classList.toggle('is-open', isOpen);
+        suggestionToggle.classList.toggle('is-open', isOpen);
+        suggestionToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function closeSuggestionsDropup() {
+        setSuggestionsOpen(false);
+    }
+
+    function getCsrfToken() {
+        const tokenInput = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (tokenInput) return tokenInput.value;
+        const match = document.cookie.match(new RegExp('(^| )csrftoken=([^;]+)'));
+        return match ? match[2] : '';
+    }
+
+    // Handle Enter key to send (Shift+Enter for new line)
+    questionInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            chatForm.dispatchEvent(new Event('submit'));
+        }
+    });
+
+    chatForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const question = questionInput.value.trim();
+        if (!question) return;
+
+        questionInput.disabled = true;
+        sendButton.disabled = true;
+
+        addMessage(question, true);
+        questionInput.value = '';
+        questionInput.style.height = 'auto'; // Reset height
+        closeSuggestionsDropup();
+        showTyping();
+
+        try {
+            // Get selected topic from input dataset (set on page load)
+            const selectedTopic = questionInput.dataset.selectedTopic || '';
+            
+            const response = await fetch("{% url 'module_ask_api' module.id %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ 
+                    question: question,
+                    topic: selectedTopic
+                })
+            });
+            const data = await response.json();
+            hideTyping();
+
+            if (response.ok && !data.is_error) {
+                addMessage(data.response, false);
+            } else {
+                addMessage(data.response || data.error || 'Sorry, there was an issue. Please try again.', false);
+            }
+        } catch (error) {
+            hideTyping();
+            addMessage('Network error. Please try again.', false);
+        } finally {
+            questionInput.disabled = false;
+            sendButton.disabled = false;
+            questionInput.focus();
+            // Reset textarea height
+            questionInput.style.height = 'auto';
+        }
+    });
+
+    // Auto-resize textarea as user types
+    questionInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    function getTextFromDataAttribute(elem) {
+        // Get the raw attribute value (browser automatically decodes HTML entities in attributes)
+        const rawValue = elem.getAttribute('data-response');
+        if (!rawValue) return '';
+        
+        // The browser already decodes HTML entities from data attributes
+        // So we can use the value directly
+        return rawValue;
+    }
+
+    // Handle topic checkbox clicks - switch to topic-specific chat
+    function handleTopicCheckboxClick(topicName) {
+        // Navigate to the topic-specific chat by reloading the page with topic parameter
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('topic', encodeURIComponent(topicName));
+        window.location.href = currentUrl.toString();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Store the currently selected topic
+        const currentTopic = "{{ selected_topic|escapejs }}";
+        
+        // Add event listeners to topic checkboxes
+        document.querySelectorAll('.topic-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    handleTopicCheckboxClick(this.value);
+                } else {
+                    // If unchecking, navigate back to module page without topic
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.delete('topic');
+                    window.location.href = currentUrl.toString();
+                }
+            });
+        });
+
+        suggestionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (questionInput.disabled) {
+                    return;
+                }
+                const suggestedQuestion = button.dataset.question || '';
+                if (!suggestedQuestion) {
+                    return;
+                }
+                questionInput.value = suggestedQuestion;
+                chatForm.dispatchEvent(new Event('submit'));
+            });
+        });
+
+        if (suggestionToggle && suggestionPanel) {
+            suggestionToggle.addEventListener('click', () => {
+                const isOpen = !suggestionPanel.classList.contains('is-open');
+                setSuggestionsOpen(isOpen);
+            });
+        }
+
+        document.addEventListener('click', (event) => {
+            if (!suggestionDropup || !suggestionPanel?.classList.contains('is-open')) {
+                return;
+            }
+            if (!suggestionDropup.contains(event.target)) {
+                closeSuggestionsDropup();
+            }
+        });
+        
+        // Set the current topic in the input dataset for API calls
+        if (currentTopic) {
+            questionInput.dataset.selectedTopic = currentTopic;
+        }
+
+        const historyResponses = document.querySelectorAll('.history-response');
+        historyResponses.forEach(elem => {
+            // Get the text from the data attribute (browser auto-decodes HTML entities)
+            const text = getTextFromDataAttribute(elem);
+            if (!text) return;
+            
+            // Process markdown and set the formatted HTML
+            try {
+                elem.innerHTML = processMarkdown(text);
+            } catch (error) {
+                console.error('Error processing markdown:', error);
+                // Fallback: just display the text as-is
+                elem.textContent = text;
+            }
+        });
+        // Don't auto-scroll on page load - show top of chat
+        // scrollToBottom();
+
+    });
+</script>
+{% endblock extra_js %}
+{% endif %}
+

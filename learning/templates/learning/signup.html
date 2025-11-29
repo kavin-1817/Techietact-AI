@@ -1,0 +1,109 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Sign Up - Techietact AI Tutor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-grid-overlay"></div>
+    <div class="container auth-container">
+        <div class="auth-wrapper">
+            <div class="auth-showcase">
+                <span class="badge-spark"><i class="bi bi-stars"></i>Join the Techietact lab</span>
+                <h1>Craft your personalised tech learning cockpit</h1>
+                <p>Create your free account in seconds and unlock an AI tutor that adapts to your style, goals, and curiosity.</p>
+                <div class="milestone-list">
+                    <div class="milestone-item">
+                        <i class="bi bi-magic"></i>
+                        <span>Walk through every topic with layered explanations, syntax callouts, and analogy-driven insights.</span>
+                    </div>
+                    <div class="milestone-item">
+                        <i class="bi bi-boxes"></i>
+                        <span>Access guided mini projects that translate theory into hands-on problem solving.</span>
+                    </div>
+                    <div class="milestone-item">
+                        <i class="bi bi-compass"></i>
+                        <span>Follow adaptive learning paths that keep momentum high and highlight what’s next.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-card">
+                <header>
+                    <h2>Create your account</h2>
+                    <p>It’s free, fast, and unlocks an AI tutor dedicated to your mastery across stacks.</p>
+                </header>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="input-field">
+                        <div class="input-label">Username</div>
+                        <div class="input-shell">
+                            <i class="bi bi-person-plus"></i>
+                            <input type="text" name="username" id="id_username" class="auth-control" placeholder="Choose a unique username" value="{{ form.username.value|default_if_none:'' }}" required autofocus>
+                        </div>
+                        {% if form.username.errors %}
+                            <div class="error-text">{{ form.username.errors|join:', ' }}</div>
+                        {% else %}
+                            <div class="help-text">Letters, numbers, and underscores are welcome.</div>
+                        {% endif %}
+                    </div>
+                    <div class="input-field">
+                        <div class="input-label">Password</div>
+                        <div class="input-shell">
+                            <i class="bi bi-lock"></i>
+                            <input type="password" name="password1" id="id_password1" class="auth-control" placeholder="Create a secure password" required>
+                            <i class="bi bi-eye-slash toggle-visibility" data-target="id_password1" role="button" aria-label="Show password"></i>
+                        </div>
+                        {% if form.password1.errors %}
+                            <div class="error-text">{{ form.password1.errors|join:', ' }}</div>
+                        {% else %}
+                            <div class="help-text">Minimum 8 characters with a mix of symbols for best security.</div>
+                        {% endif %}
+                    </div>
+                    <div class="input-field">
+                        <div class="input-label">Confirm password</div>
+                        <div class="input-shell">
+                            <i class="bi bi-shield-check"></i>
+                            <input type="password" name="password2" id="id_password2" class="auth-control" placeholder="Confirm your password" required>
+                            <i class="bi bi-eye-slash toggle-visibility" data-target="id_password2" role="button" aria-label="Show password"></i>
+                        </div>
+                        {% if form.password2.errors %}
+                            <div class="error-text">{{ form.password2.errors|join:', ' }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="auth-button">Create free Techietact account</button>
+                </form>
+                <div class="form-footer">
+                    Already part of Techietact?
+                    <a href="{% url 'login' %}">Log in instead</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggles = document.querySelectorAll('.toggle-visibility');
+        toggles.forEach(icon => {
+            icon.addEventListener('click', () => {
+                const targetId = icon.dataset.target;
+                const input = document.getElementById(targetId);
+                if (!input) {
+                    return;
+                }
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                icon.classList.toggle('bi-eye');
+                icon.classList.toggle('bi-eye-slash');
+                icon.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+            });
+        });
+    });
+</script>
+{% endblock %}

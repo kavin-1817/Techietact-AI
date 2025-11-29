@@ -1,0 +1,65 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Quiz Result - {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="result-page">
+    <div class="container">
+        <div class="result-container">
+            <div class="result-card {% if passed %}passed{% else %}failed{% endif %}">
+                <div class="result-icon {% if passed %}passed{% else %}failed{% endif %}">
+                    {% if passed %}
+                    <i class="bi bi-check-circle-fill"></i>
+                    {% else %}
+                    <i class="bi bi-x-circle-fill"></i>
+                    {% endif %}
+                </div>
+                <h1>{% if passed %}Congratulations!{% else %}Try Again{% endif %}</h1>
+                <div class="score-display">{{ score_percentage|floatformat:1 }}%</div>
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Earned Points</div>
+                        <div class="stat-value">{{ attempt.earned_points }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Total Points</div>
+                        <div class="stat-value">{{ attempt.total_points }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Passing Score</div>
+                        <div class="stat-value">{{ quiz.passing_score }}%</div>
+                    </div>
+                </div>
+                <div class="result-message">
+                    {% if passed %}
+                    <p>Great job! You've successfully passed the quiz with a score of {{ score_percentage|floatformat:1 }}%.</p>
+                    <p><strong>The next module is now unlocked!</strong> Continue your learning journey.</p>
+                    {% else %}
+                    <p>You scored {{ score_percentage|floatformat:1 }}%, but you need {{ quiz.passing_score }}% to pass.</p>
+                    <p>Don't worry! Review the module content and try again. You can retake the quiz anytime.</p>
+                    {% endif %}
+                </div>
+                <div class="action-buttons">
+                    {% if passed %}
+                    <a href="{% url 'course_detail' module.course.id %}" class="action-btn btn-primary-action">
+                        <i class="bi bi-arrow-right"></i>Continue to Next Module
+                    </a>
+                    {% else %}
+                    <a href="{% url 'take_quiz' module.id %}" class="action-btn btn-primary-action">
+                        <i class="bi bi-arrow-clockwise"></i>Retake Quiz
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'module_detail' module.id %}" class="action-btn btn-secondary-action">
+                        <i class="bi bi-book"></i>Review Module
+                    </a>
+                    <a href="{% url 'course_detail' module.course.id %}" class="action-btn btn-secondary-action">
+                        <i class="bi bi-list"></i>Back to Course
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

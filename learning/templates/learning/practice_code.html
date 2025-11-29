@@ -1,0 +1,120 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Practice Code Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/practice-code.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="practice-page">
+  <div class="container">
+    <nav class="practice-breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'dashboard' %}">
+        <i class="bi bi-house-door"></i>Dashboard
+      </a>
+      {% if previous_url %}
+      <span class="breadcrumb-divider">/</span>
+      <a href="{{ previous_url }}">
+        <i class="bi bi-arrow-return-left"></i>{{ previous_label }}
+      </a>
+      {% endif %}
+      <span class="breadcrumb-divider">/</span>
+      <span>Practice Lab</span>
+    </nav>
+    <div class="practice-hero">
+      <span class="badge bg-opacity-25 text-uppercase mb-3" style="letter-spacing:0.15em;background:rgba(255,153,0,0.15);color:#ffb347;">Hands-on lab</span>
+      <h1>Practice coding with live Python & Java runtimes</h1>
+      <p>Choose a language, write your snippet, and run it instantly. Inspect stdout and error traces to sharpen debugging skills before taking any assessments.</p>
+    </div>
+    <div class="practice-grid">
+      <form method="post" class="practice-card practice-editor">
+        {% csrf_token %}
+        <div class="practice-toolbar">
+          <div class="flex-grow-1">
+            <label for="languageSelect" class="form-label text-uppercase small text-muted mb-1">Language</label>
+            <select id="languageSelect" name="language" class="language-select w-100">
+              {% for key, meta in languages.items %}
+              <option value="{{ key }}" {% if key == selected_language %}selected{% endif %}>{{ meta.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="form-label text-uppercase small text-muted mb-1">&nbsp;</label>
+            <button type="submit" class="run-btn w-100">
+              <i class="bi bi-play-fill"></i>Run Code
+            </button>
+          </div>
+        </div>
+        <textarea name="code" spellcheck="false">{{ code }}</textarea>
+        <p class="language-note">{{ selected_language_meta.note }}</p>
+      </form>
+      <div class="practice-card">
+        <h2>Execution output</h2>
+        <p class="mb-4">Results from the runtime, including compiler or interpreter errors.</p>
+        {% if executed %}
+        <div class="output-card">
+          <div class="output-block">
+            {% if output %}
+            <pre>{{ output }}</pre>
+            {% else %}
+            <pre class="text-muted">No stdout output.</pre>
+            {% endif %}
+          </div>
+          {% if error %}
+          <div class="error-block">
+            <strong>Errors / Diagnostics</strong>
+            <pre>{{ error }}</pre>
+          </div>
+          {% endif %}
+        </div>
+        {% else %}
+        <div class="output-card d-flex align-items-center justify-content-center text-center text-muted">
+          <div>
+            <i class="bi bi-terminal fs-1 mb-3 d-block"></i>
+            <p>Run your first snippet to inspect output and error traces.</p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{{ language_boilerplates|json_script:"practice-boilerplates" }}
+<script>
+  (() => {
+    const selectEl = document.getElementById('languageSelect');
+    const editorEl = document.querySelector('textarea[name="code"]');
+    if (!selectEl || !editorEl) {
+      return;
+    }
+    const boilerplates = JSON.parse(document.getElementById('practice-boilerplates').textContent);
+    let currentLanguage = selectEl.value;
+    let isDirty = false;
+    editorEl.addEventListener('input', () => {
+      isDirty = true;
+    });
+    const loadBoilerplate = (lang) => {
+      if (!boilerplates[lang]) {
+        return;
+      }
+      editorEl.value = boilerplates[lang];
+      isDirty = false;
+    };
+    selectEl.addEventListener('change', (event) => {
+      const nextLanguage = event.target.value;
+      if (isDirty && editorEl.value.trim() !== (boilerplates[currentLanguage] || '').trim()) {
+        const confirmReplace = window.confirm('Switching languages replaces the editor with the default sample for that language. Continue?');
+        if (!confirmReplace) {
+          selectEl.value = currentLanguage;
+          return;
+        }
+      }
+      currentLanguage = nextLanguage;
+      loadBoilerplate(nextLanguage);
+    });
+  })();
+</script>
+{% endblock %}
+

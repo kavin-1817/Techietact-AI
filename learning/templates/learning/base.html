@@ -1,0 +1,261 @@
+{% load admin_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Techietact AI Tutor - AI-Based Learning Platform{% endblock %}</title>
+    
+    {% load static %}
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Theme Toggle Script - Run Early to Prevent Flash -->
+    <script>
+        (function() {
+            // Get theme from localStorage or default to 'dark'
+            const savedTheme = localStorage.getItem('theme');
+            const currentTheme = savedTheme || 'dark';
+            const html = document.documentElement;
+            
+            // Apply theme immediately before page renders
+            if (currentTheme === 'light') {
+                html.setAttribute('data-theme', 'light');
+            } else {
+                // Dark is default, so remove attribute if it exists
+                html.removeAttribute('data-theme');
+            }
+            
+            // Force a reflow to ensure styles are applied
+            void html.offsetHeight;
+        })();
+    </script>
+    
+    <!-- Theme Toggle JS -->
+    <script src="{% static 'js/theme-toggle.js' %}"></script>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body style="min-height: 100vh;">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg shadow-sm fixed-top" id="mainNavbar" style="z-index: 1000;">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <div class="logo-icon me-2">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="16" cy="16" r="14" fill="url(#gradient)"/>
+                        <path d="M16 8L20 14L16 20L12 14L16 8Z" fill="white"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ff9900;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#ff7700;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="fw-bold">Techietact AI Tutor</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active fw-bold{% endif %}" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'courses_list' or request.resolver_match.url_name == 'course_detail' or request.resolver_match.url_name == 'module_detail' %}active fw-bold{% endif %}" href="{% url 'courses_list' %}">Courses</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active fw-bold{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active fw-bold{% endif %}" href="{% url 'about' %}">About</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        {% if user|is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'admin' in request.path %}active fw-bold{% endif %}" href="{% url 'admin_dashboard' %}">Admin</a>
+                        </li>
+                        {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn px-3 rounded-pill ms-2" href="{% url 'signup' %}" style="background: linear-gradient(135deg, #ff9900, #ff7700); border: none; color: white;">Sign Up</a>
+                    </li>
+                    {% endif %}
+                    <!-- Theme Toggle Button -->
+                    <li class="nav-item">
+                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
+                            <i class="bi bi-moon-fill" id="themeIcon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div style="height: 76px;"></div>
+
+    <!-- Advanced Modern Toast Messages Container -->
+    <div class="toast-container-advanced position-fixed top-0 end-0 p-3" style="z-index: 9999; margin-top: 80px;">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="advanced-toast toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000" data-toast-type="{{ message.tags }}">
+            <!-- Glow Effect Background -->
+            <div class="toast-glow toast-glow-{{ message.tags }}"></div>
+            
+            <!-- Progress Bar -->
+            <div class="toast-progress-bar">
+                <div class="toast-progress-fill toast-progress-{{ message.tags }}"></div>
+            </div>
+            
+            <!-- Shimmer Effect -->
+            <div class="toast-shimmer"></div>
+            
+            <div class="toast-header advanced-toast-header toast-{{ message.tags }}">
+                <div class="toast-icon-wrapper-advanced">
+                    <div class="icon-ripple"></div>
+                    {% if message.tags == 'success' %}
+                    <i class="bi bi-check-circle-fill toast-icon-advanced"></i>
+                    {% elif message.tags == 'error' or message.tags == 'danger' %}
+                    <i class="bi bi-x-circle-fill toast-icon-advanced"></i>
+                    {% elif message.tags == 'warning' %}
+                    <i class="bi bi-exclamation-triangle-fill toast-icon-advanced"></i>
+                    {% elif message.tags == 'info' %}
+                    <i class="bi bi-info-circle-fill toast-icon-advanced"></i>
+                    {% else %}
+                    <i class="bi bi-bell-fill toast-icon-advanced"></i>
+                    {% endif %}
+                </div>
+                <div class="toast-content-wrapper">
+                    <strong class="toast-title-advanced">
+                        {% if message.tags == 'success' %}Success
+                        {% elif message.tags == 'error' or message.tags == 'danger' %}Error
+                        {% elif message.tags == 'warning' %}Warning
+                        {% elif message.tags == 'info' %}Info
+                        {% else %}Notification{% endif %}
+                    </strong>
+                    <div class="toast-body-advanced">
+                        {{ message }}
+                    </div>
+                </div>
+                <button type="button" class="btn-close-advanced" data-bs-dismiss="toast" aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5" style="border-top: 1px solid var(--border-color);">
+        <div class="container text-center">
+            <p class="mb-0" style="color: var(--text-secondary);">&copy; 2025 Techietact AI Tutor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Navbar Scroll Effect Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.getElementById('mainNavbar');
+            let lastScrollTop = 0;
+            const scrollThreshold = 50; // Start effect after scrolling 50px
+            
+            function handleScroll() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > scrollThreshold) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                lastScrollTop = scrollTop;
+            }
+            
+            // Throttle scroll event for better performance
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Check initial scroll position
+            handleScroll();
+        });
+    </script>
+    
+    <!-- Advanced Toast Auto-Dismiss Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all advanced toasts
+            const toastElements = document.querySelectorAll('.advanced-toast');
+            toastElements.forEach(function(toastEl) {
+                const toast = new bootstrap.Toast(toastEl, {
+                    autohide: true,
+                    delay: 5000
+                });
+                
+                // Pause progress on hover
+                const progressBar = toastEl.querySelector('.toast-progress-fill');
+                toastEl.addEventListener('mouseenter', function() {
+                    if (progressBar) {
+                        progressBar.style.animationPlayState = 'paused';
+                    }
+                });
+                
+                toastEl.addEventListener('mouseleave', function() {
+                    if (progressBar) {
+                        progressBar.style.animationPlayState = 'running';
+                    }
+                });
+                
+                // Add hiding animation before removal
+                toastEl.addEventListener('hide.bs.toast', function() {
+                    toastEl.classList.add('hiding');
+                });
+                
+                // Reset progress bar animation on show
+                toastEl.addEventListener('shown.bs.toast', function() {
+                    if (progressBar) {
+                        progressBar.style.animation = 'none';
+                        void progressBar.offsetWidth; // Trigger reflow
+                        progressBar.style.animation = 'progressCountdown 5s linear forwards';
+                    }
+                });
+                
+                toast.show();
+            });
+        });
+    </script>
+    
+    <!-- Custom JS -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

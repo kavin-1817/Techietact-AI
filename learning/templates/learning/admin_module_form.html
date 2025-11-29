@@ -1,0 +1,121 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}{% if form_type == 'create' %}Create Module{% else %}Edit Module{% endif %} - {{ course.title }} - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-form-page py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="modern-form-card">
+                    <div class="card-body p-5">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <div>
+                                <h2 class="fw-bold text-white mb-1" style="font-size: 2rem;">
+                                    {% if form_type == 'create' %}
+                                        <i class="bi bi-plus-circle me-2 gradient-text"></i>Create New Module
+                                    {% else %}
+                                        <i class="bi bi-pencil me-2 gradient-text"></i>Edit Module
+                                    {% endif %}
+                                </h2>
+                                <p class="text-white-50 mb-0" style="font-size: 1.1rem;">{{ course.title }}</p>
+                            </div>
+                            <a href="{% url 'admin_modules_list' course.id %}" class="modern-cancel-btn" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+                                <i class="bi bi-arrow-left me-1"></i>Back
+                            </a>
+                        </div>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="modern-form-group">
+                                        <label for="title" class="modern-form-label">Module Title *</label>
+                                        <input 
+                                            type="text" 
+                                            class="modern-form-input" 
+                                            id="title" 
+                                            name="title" 
+                                            required 
+                                            value="{% if module %}{{ module.title }}{% endif %}"
+                                            placeholder="Enter module title"
+                                        >
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="modern-form-group">
+                                        <label for="order" class="modern-form-label">Order *</label>
+                                        <input 
+                                            type="number" 
+                                            class="modern-form-input" 
+                                            id="order" 
+                                            name="order" 
+                                            required 
+                                            min="1"
+                                            value="{% if module %}{{ module.order }}{% else %}{{ next_order }}{% endif %}"
+                                            placeholder="Module order"
+                                        >
+                                        <small class="modern-form-help">The sequence number for this module</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modern-form-group">
+                                <label for="summary" class="modern-form-label">Summary *</label>
+                                <textarea 
+                                    class="modern-form-textarea" 
+                                    id="summary" 
+                                    name="summary" 
+                                    rows="4" 
+                                    required
+                                    placeholder="Enter module summary/description"
+                                >{% if module %}{{ module.summary }}{% endif %}</textarea>
+                            </div>
+
+                            <div class="modern-form-group">
+                                <label for="learning_objectives" class="modern-form-label">Learning Objectives</label>
+                                <textarea 
+                                    class="modern-form-textarea" 
+                                    id="learning_objectives" 
+                                    name="learning_objectives" 
+                                    rows="5"
+                                    placeholder="Enter learning objectives (one per line)"
+                                >{% if module %}{{ module.learning_objectives }}{% endif %}</textarea>
+                                <small class="modern-form-help">Enter each learning objective on a new line</small>
+                            </div>
+
+                            <div class="modern-form-group">
+                                <label for="topics" class="modern-form-label">Topics Covered</label>
+                                <textarea 
+                                    class="modern-form-textarea" 
+                                    id="topics" 
+                                    name="topics" 
+                                    rows="5"
+                                    placeholder="Enter topics covered (one per line)"
+                                >{% if module %}{{ module.topics }}{% endif %}</textarea>
+                                <small class="modern-form-help">Enter each topic on a new line</small>
+                            </div>
+
+                            <div class="d-flex gap-3 mt-4">
+                                <button type="submit" class="modern-submit-btn">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    {% if form_type == 'create' %}Create Module{% else %}Update Module{% endif %}
+                                </button>
+                                <a href="{% url 'admin_modules_list' course.id %}" class="modern-cancel-btn">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

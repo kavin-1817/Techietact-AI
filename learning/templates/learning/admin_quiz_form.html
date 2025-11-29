@@ -1,0 +1,85 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}{% if form_type == 'create' %}Create Quiz{% else %}Edit Quiz{% endif %} - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-quiz-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="modern-form-card">
+                    <h1 class="mb-4" style="color: var(--text-white); font-weight: 800;">
+                        {% if form_type == 'create' %}
+                        <i class="bi bi-plus-circle me-2"></i>Create Quiz for {{ module.title }}
+                        {% else %}
+                        <i class="bi bi-pencil me-2"></i>Edit Quiz: {{ quiz.title }}
+                        {% endif %}
+                    </h1>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="modern-form-group">
+                            <label class="modern-form-label">Quiz Title *</label>
+                            <input type="text" 
+                                   name="title" 
+                                   class="modern-form-input" 
+                                   value="{% if form_type == 'edit' %}{{ quiz.title }}{% endif %}" 
+                                   required 
+                                   placeholder="e.g., Module 1 Assessment">
+                        </div>
+                        
+                        <div class="modern-form-group">
+                            <label class="modern-form-label">Description</label>
+                            <textarea name="description" 
+                                      class="modern-form-textarea" 
+                                      placeholder="Optional description for the quiz">{% if form_type == 'edit' %}{{ quiz.description }}{% endif %}</textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label class="modern-form-label">Passing Score (%) *</label>
+                                    <input type="number" 
+                                           name="passing_score" 
+                                           class="modern-form-input" 
+                                           value="{% if form_type == 'edit' %}{{ quiz.passing_score }}{% else %}70{% endif %}" 
+                                           min="0" 
+                                           max="100" 
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modern-form-group">
+                                    <label class="modern-form-label">Time Limit (minutes)</label>
+                                    <input type="number" 
+                                           name="time_limit" 
+                                           class="modern-form-input" 
+                                           value="{% if form_type == 'edit' %}{{ quiz.time_limit|default:'' }}{% else %}30{% endif %}" 
+                                           min="0" 
+                                           placeholder="0 for no limit">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="modern-submit-btn">
+                                <i class="bi bi-check-lg me-2"></i>
+                                {% if form_type == 'create' %}Create Quiz{% else %}Update Quiz{% endif %}
+                            </button>
+                            <a href="{% url 'admin_modules_list' course.id %}" class="modern-cancel-btn">
+                                <i class="bi bi-x-lg me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

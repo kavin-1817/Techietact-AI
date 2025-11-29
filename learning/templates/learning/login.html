@@ -1,0 +1,90 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Login - Techietact AI Tutor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-grid-overlay"></div>
+    <div class="container auth-container">
+        <div class="auth-wrapper">
+            <div class="auth-showcase">
+                <span class="badge-spark"><i class="bi bi-stars"></i>Get Started</span>
+                <h1>Start your tech learning journey</h1>
+                <p>Log in to access personalised lessons, AI-powered explanations, and detailed code walkthroughs crafted just for you.</p>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <i class="bi bi-robot"></i>
+                        <span>Get crystal-clear answers, analogies, and syntax explanations powered by Gemini every time you ask.</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-lightning"></i>
+                        <span>Resume recent conversations instantly—Techietact remembers where you left off.</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-journal-code"></i>
+                        <span>Unlock curated practice, mini projects, and black-themed code blocks tailor-made for mastering any stack.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-card">
+                <header>
+                    <h2>Sign in</h2>
+                    <p>Access your Techietact tutor with your credentials.</p>
+                </header>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-field">
+                        <div class="input-label">Username</div>
+                        <div class="input-shell">
+                            <i class="bi bi-person"></i>
+                            <input type="text" id="username" name="username" class="auth-control" placeholder="Enter your username" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <div class="input-label d-flex justify-content-between align-items-center">
+                            <span>Password</span>
+                        </div>
+                        <div class="input-shell">
+                            <i class="bi bi-shield-lock"></i>
+                            <input type="password" id="password" name="password" class="auth-control" placeholder="Enter your password" required>
+                            <i class="bi bi-eye-slash toggle-visibility" data-target="password" role="button" aria-label="Show password"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="auth-button">Log in to Techietact</button>
+                </form>
+                <div class="form-footer">
+                    Don’t have an account yet?
+                    <a href="{% url 'signup' %}">Create one for free</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggles = document.querySelectorAll('.toggle-visibility');
+        toggles.forEach(icon => {
+            icon.addEventListener('click', () => {
+                const targetId = icon.dataset.target;
+                const input = document.getElementById(targetId);
+                if (!input) {
+                    return;
+                }
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                icon.classList.toggle('bi-eye');
+                icon.classList.toggle('bi-eye-slash');
+                icon.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+            });
+        });
+    });
+</script>
+{% endblock %}

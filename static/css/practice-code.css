@@ -1,0 +1,257 @@
+/* Practice Code Lab page styles */
+.practice-page {
+    position: relative;
+    min-height: calc(100vh - 76px);
+    padding: 4.5rem 0;
+    background: #000000;
+    overflow: hidden;
+}
+
+.practice-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
+.practice-breadcrumb a {
+    color: #ff9900;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.practice-breadcrumb a:hover {
+    color: #ff7700;
+}
+
+.practice-breadcrumb .breadcrumb-divider {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.practice-breadcrumb span:last-child {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.practice-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.practice-hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.practice-hero p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.practice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.practice-card {
+    background: #ff9900;
+    color: #000000;
+    border: 1px solid rgba(255, 153, 0, 0.2);
+    border-radius: 24px;
+    padding: 2rem;
+    backdrop-filter: blur(18px);
+    transition: all 0.3s ease;
+}
+
+.practice-editor {
+    display: flex;
+    flex-direction: column;
+}
+
+.practice-toolbar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: flex-end;
+}
+
+.practice-toolbar .form-label {
+    color: #000000;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+}
+
+.language-select {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.language-select:focus {
+    outline: none;
+    border-color: #ff7700;
+    box-shadow: 0 0 0 0.2rem rgba(255, 119, 0, 0.15);
+}
+
+.practice-card textarea {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 1.25rem;
+    color: #000000;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 400px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.practice-card textarea:focus {
+    outline: none;
+    border-color: #ff7700;
+    box-shadow: 0 0 0 0.2rem rgba(255, 119, 0, 0.15);
+}
+
+.language-note {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.7);
+    font-style: italic;
+}
+
+.run-btn {
+    background: linear-gradient(135deg, #ff9900, #ff7700);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 12px 30px rgba(255, 153, 0, 0.35);
+}
+
+.run-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px rgba(255, 153, 0, 0.45);
+}
+
+.run-btn:active {
+    transform: translateY(0);
+}
+
+.practice-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 0.5rem;
+}
+
+.practice-card p {
+    color: rgba(0, 0, 0, 0.8);
+    line-height: 1.6;
+}
+
+.output-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    min-height: 400px;
+}
+
+.output-block {
+    margin-bottom: 1.5rem;
+}
+
+.output-block pre {
+    background: #000000;
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.error-block {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 12px;
+    padding: 1.25rem;
+}
+
+.error-block strong {
+    display: block;
+    color: #dc2626;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+}
+
+.error-block pre {
+    background: #000000;
+    color: #fca5a5;
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.output-card .text-muted {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.output-card i.bi-terminal {
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 4rem;
+}
+
+@media (max-width: 968px) {
+    .practice-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .practice-card textarea {
+        min-height: 300px;
+    }
+    
+    .output-card {
+        min-height: 300px;
+    }
+}
+

@@ -1,0 +1,106 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}{% if form_type == 'create' %}Create Course{% else %}Edit Course{% endif %} - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-form-page py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="modern-form-card">
+                    <div class="card-body p-5">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <h2 class="fw-bold text-white mb-0" style="font-size: 2rem;">
+                                {% if form_type == 'create' %}
+                                    <i class="bi bi-plus-circle me-2 gradient-text"></i>Create New Course
+                                {% else %}
+                                    <i class="bi bi-pencil me-2 gradient-text"></i>Edit Course
+                                {% endif %}
+                            </h2>
+                            <a href="{% url 'admin_dashboard' %}" class="modern-cancel-btn" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+                                <i class="bi bi-arrow-left me-1"></i>Back
+                            </a>
+                        </div>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modern-form-group">
+                                <label for="title" class="modern-form-label">Course Title *</label>
+                                <input 
+                                    type="text" 
+                                    class="modern-form-input" 
+                                    id="title" 
+                                    name="title" 
+                                    required 
+                                    value="{% if course %}{{ course.title }}{% endif %}"
+                                    placeholder="Enter course title"
+                                >
+                            </div>
+
+                            <div class="modern-form-group">
+                                <label for="description" class="modern-form-label">Description *</label>
+                                <textarea 
+                                    class="modern-form-textarea" 
+                                    id="description" 
+                                    name="description" 
+                                    rows="5" 
+                                    required
+                                    placeholder="Enter course description"
+                                >{% if course %}{{ course.description }}{% endif %}</textarea>
+                            </div>
+
+                            <div class="modern-form-group">
+                                <label for="category" class="modern-form-label">Category *</label>
+                                <select 
+                                    class="modern-form-select" 
+                                    id="category" 
+                                    name="category" 
+                                    required
+                                >
+                                    <option value="math" {% if course and course.category == 'math' %}selected{% endif %}>Mathematics</option>
+                                    <option value="science" {% if course and course.category == 'science' %}selected{% endif %}>Science</option>
+                                    <option value="programming" {% if course and course.category == 'programming' %}selected{% endif %}>Programming</option>
+                                    <option value="language" {% if course and course.category == 'language' %}selected{% endif %}>Language</option>
+                                    <option value="history" {% if course and course.category == 'history' %}selected{% endif %}>History</option>
+                                    <option value="other" {% if course and course.category == 'other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+
+                            <div class="modern-form-group">
+                                <div class="modern-checkbox-wrapper">
+                                    <input 
+                                        class="modern-checkbox" 
+                                        type="checkbox" 
+                                        id="is_featured" 
+                                        name="is_featured"
+                                        {% if course and course.is_featured %}checked{% endif %}
+                                    >
+                                    <label class="form-check-label text-white" for="is_featured" style="margin: 0; cursor: pointer; font-weight: 500;">
+                                        Mark as Featured Course
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-3 mt-4">
+                                <button type="submit" class="modern-submit-btn">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    {% if form_type == 'create' %}Create Course{% else %}Update Course{% endif %}
+                                </button>
+                                <a href="{% url 'admin_dashboard' %}" class="modern-cancel-btn">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

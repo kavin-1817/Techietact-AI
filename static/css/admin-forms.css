@@ -1,0 +1,264 @@
+/* Admin Forms CSS - Course, Module, Quiz, Question forms */
+
+.admin-form-page,
+.admin-quiz-page,
+.admin-question-page {
+    position: relative;
+    min-height: calc(100vh - 76px);
+    padding: 4.5rem 0;
+    background: #000000;
+    overflow: hidden;
+}
+
+.modern-form-card {
+    background: #ff9900;
+    color: #000000;
+    border: 1px solid rgba(255, 153, 0, 0.2);
+    border-radius: 24px;
+    padding: 2.5rem;
+    backdrop-filter: blur(18px);
+    transition: all 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modern-form-card h1,
+.modern-form-card h2 {
+    color: #000000;
+    font-weight: 800;
+    margin-bottom: 2rem;
+}
+
+.modern-form-group {
+    margin-bottom: 1.75rem;
+}
+
+.modern-form-label {
+    display: block;
+    color: #000000;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+.modern-form-input,
+.modern-form-textarea,
+.modern-form-select {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0.85rem 1.25rem;
+    color: #000000;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.modern-form-input:focus,
+.modern-form-textarea:focus,
+.modern-form-select:focus {
+    outline: none;
+    border-color: #ff7700;
+    box-shadow: 0 0 0 0.2rem rgba(255, 119, 0, 0.15);
+}
+
+.modern-form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+}
+
+.modern-form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 3rem;
+}
+
+.modern-form-select option {
+    background: #ffffff;
+    color: #000000;
+}
+
+.modern-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modern-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #ff7700;
+    flex-shrink: 0;
+}
+
+.modern-checkbox-wrapper label {
+    color: #000000;
+    cursor: pointer;
+    user-select: none;
+}
+
+.modern-form-help {
+    display: block;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+    font-style: italic;
+}
+
+.modern-submit-btn {
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.modern-submit-btn:hover {
+    background: #000000;
+    color: #ffffff;
+    transform: none;
+}
+
+.modern-cancel-btn {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0.85rem 2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.modern-cancel-btn:hover {
+    background: #ffffff;
+    color: #000000;
+    transform: none;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #ff9900 0%, #ff7700 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Question form specific styles */
+.answer-option-group {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.answer-option-group label {
+    color: #000000;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.answer-option-group input[type="text"] {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #000000;
+    font-size: 0.95rem;
+}
+
+.answer-option-group input[type="text"]:focus {
+    outline: none;
+    border-color: #ff7700;
+    box-shadow: 0 0 0 0.2rem rgba(255, 119, 0, 0.15);
+}
+
+.answer-option-group input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #ff7700;
+    margin-right: 0.5rem;
+}
+
+.remove-answer-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.remove-answer-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.add-answer-btn {
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-answer-btn:hover {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.5);
+}
+
+/* Quiz form specific */
+.quiz-meta-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .quiz-meta-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .modern-form-card {
+        padding: 1.5rem;
+    }
+    
+    .admin-form-page,
+    .admin-quiz-page,
+    .admin-question-page {
+        padding: 2rem 0;
+    }
+}
+

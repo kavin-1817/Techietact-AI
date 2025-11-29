@@ -1,0 +1,42 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Courses - Techietact AI Tutor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/courses.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="courses-page">
+    <div class="grid-overlay"></div>
+    <div class="container position-relative">
+        <div class="courses-header">
+            <span class="eyebrow"><i class="bi bi-journal-code"></i>Course catalog</span>
+            <h1>Choose a course and unlock interactive tech modules</h1>
+            <p>Every course is curated into digestible modules. Pick the path that fits your goals and let Techietact guide you module by module.</p>
+        </div>
+        <div class="courses-grid">
+            {% for course in courses %}
+            <div class="course-card" onclick="window.location.href='{% url 'course_detail' course.id %}'">
+                <span class="course-category">{{ course.get_category_display }}</span>
+                <h2>{{ course.title }}</h2>
+                <p>{{ course.description|truncatewords:35 }}</p>
+                <div class="course-meta">
+                    <span><i class="bi bi-columns-gap"></i>{{ course.modules.count }} modules</span>
+                    <span><i class="bi bi-clock-history"></i>{{ course.created_at|date:'M d, Y' }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="course-card">
+                <h2>No courses yet</h2>
+                <p>Once an admin creates courses, you’ll see them here. Check back soon.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

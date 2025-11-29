@@ -1,0 +1,173 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Add Question - {{ quiz.title }} - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-question-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="modern-form-card">
+                    <h1 class="mb-4" style="color: var(--text-white); font-weight: 800;">
+                        <i class="bi bi-plus-circle me-2"></i>Add Question to {{ quiz.title }}
+                    </h1>
+                    
+                    <form method="post" id="questionForm">
+                        {% csrf_token %}
+                        <div class="modern-form-group">
+                            <label class="modern-form-label">Question Text *</label>
+                            <textarea name="question_text" 
+                                      class="modern-form-textarea" 
+                                      required 
+                                      placeholder="Enter your question here..."></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="modern-form-group">
+                                    <label class="modern-form-label">Question Type *</label>
+                                    <select name="question_type" class="modern-form-select" required>
+                                        <option value="multiple_choice" selected>Multiple Choice (MCQ)</option>
+                                    </select>
+                                    <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+                                        All questions are in MCQ format with multiple options
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="modern-form-group">
+                                    <label class="modern-form-label">Points *</label>
+                                    <input type="number" 
+                                           name="points" 
+                                           class="modern-form-input" 
+                                           value="1" 
+                                           min="1" 
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="modern-form-group">
+                                    <label class="modern-form-label">Order</label>
+                                    <input type="number" 
+                                           name="order" 
+                                           class="modern-form-input" 
+                                           value="{{ next_order }}" 
+                                           min="1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modern-form-group">
+                            <label class="modern-form-label">MCQ Answer Options *</label>
+                            <p style="color: var(--text-muted-white); font-size: 0.9rem; margin-bottom: 1rem;">
+                                <i class="bi bi-info-circle me-1"></i>Add multiple choice options. Check the box next to the correct answer.
+                            </p>
+                            <div id="optionsContainer">
+                                <div class="option-group">
+                                    <div class="option-header">
+                                        <label style="color: var(--text-white); font-weight: 600; margin: 0;">
+                                            <input type="checkbox" name="option_correct" value="0" class="option-checkbox">
+                                            Mark as Correct Answer
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           name="option_text" 
+                                           class="modern-form-input" 
+                                           placeholder="Option A" 
+                                           required>
+                                </div>
+                                <div class="option-group">
+                                    <div class="option-header">
+                                        <label style="color: var(--text-white); font-weight: 600; margin: 0;">
+                                            <input type="checkbox" name="option_correct" value="1" class="option-checkbox">
+                                            Mark as Correct Answer
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           name="option_text" 
+                                           class="modern-form-input" 
+                                           placeholder="Option B" 
+                                           required>
+                                </div>
+                                <div class="option-group">
+                                    <div class="option-header">
+                                        <label style="color: var(--text-white); font-weight: 600; margin: 0;">
+                                            <input type="checkbox" name="option_correct" value="2" class="option-checkbox">
+                                            Mark as Correct Answer
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           name="option_text" 
+                                           class="modern-form-input" 
+                                           placeholder="Option C" 
+                                           required>
+                                </div>
+                                <div class="option-group">
+                                    <div class="option-header">
+                                        <label style="color: var(--text-white); font-weight: 600; margin: 0;">
+                                            <input type="checkbox" name="option_correct" value="3" class="option-checkbox">
+                                            Mark as Correct Answer
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           name="option_text" 
+                                           class="modern-form-input" 
+                                           placeholder="Option D" 
+                                           required>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-add-option" onclick="addOption()">
+                                <i class="bi bi-plus-circle me-2"></i>Add More Options
+                            </button>
+                            <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+                                <i class="bi bi-exclamation-triangle me-1"></i>Make sure to mark exactly one option as the correct answer for each question.
+                            </small>
+                        </div>
+                        
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="modern-submit-btn">
+                                <i class="bi bi-check-lg me-2"></i>Add Question
+                            </button>
+                            <a href="{% url 'admin_quiz_questions' course.id module.id %}" class="modern-cancel-btn">
+                                <i class="bi bi-x-lg me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let optionCount = 4; // Start from 4 since we have A, B, C, D by default
+    
+    function addOption() {
+        const container = document.getElementById('optionsContainer');
+        const optionGroup = document.createElement('div');
+        const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        const optionLabel = optionLetters[optionCount] || `Option ${optionCount + 1}`;
+        optionGroup.className = 'option-group';
+        optionGroup.innerHTML = `
+            <div class="option-header">
+                <label style="color: var(--text-white); font-weight: 600; margin: 0;">
+                    <input type="checkbox" name="option_correct" value="${optionCount}" class="option-checkbox">
+                    Mark as Correct Answer
+                </label>
+                <button type="button" class="btn-remove-option" onclick="this.parentElement.parentElement.remove()">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
+            </div>
+            <input type="text" name="option_text" class="modern-form-input" placeholder="Option ${optionLabel}" required>
+        `;
+        container.appendChild(optionGroup);
+        optionCount++;
+    }
+</script>
+{% endblock %}
+

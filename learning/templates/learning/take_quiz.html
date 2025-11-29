@@ -1,0 +1,79 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}{{ quiz.title }} - {{ module.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/quiz-take.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="quiz-page">
+    <div class="container">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1>{{ quiz.title }}</h1>
+                {% if quiz.description %}
+                <p>{{ quiz.description }}</p>
+                {% endif %}
+                <div class="quiz-meta">
+                    <span><i class="bi bi-journal-bookmark"></i>{{ module.title }}</span>
+                    <span><i class="bi bi-clipboard-check"></i>{{ questions|length }} MCQ Questions</span>
+                    <span><i class="bi bi-trophy"></i>Passing Score: {{ quiz.passing_score }}%</span>
+                    {% if quiz.time_limit %}
+                    <span><i class="bi bi-clock"></i>Time Limit: {{ quiz.time_limit }} min</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <form method="post" action="{% url 'submit_quiz' module.id %}" class="quiz-form">
+                {% csrf_token %}
+                {% for question in questions %}
+                <div class="question-item">
+                    <div class="question-header">
+                        <div style="display: flex; align-items: center; flex-wrap: wrap;">
+                            <span class="question-number">{{ question.order }}</span>
+                            <span class="question-text">{{ question.question_text }}</span>
+                            <span class="question-points">{{ question.points }} pt{{ question.points|pluralize }}</span>
+                        </div>
+                    </div>
+                    <div class="options-list">
+                        <p style="color: var(--text-muted-white); font-size: 0.9rem; margin-bottom: 1rem; font-style: italic;">
+                            <i class="bi bi-info-circle me-1"></i>Select the correct answer from the options below:
+                        </p>
+                        {% for option in question.options.all %}
+                        <div class="option-item">
+                            <input type="radio" 
+                                   id="option_{{ option.id }}" 
+                                   name="question_{{ question.id }}" 
+                                   value="{{ option.id }}" 
+                                   class="option-input" 
+                                   required>
+                            <label for="option_{{ option.id }}" class="option-label">
+                                <span class="option-radio"></span>
+                                <span class="option-text">
+                                    <strong style="color: var(--text-primary); margin-right: 0.5rem;">{{ forloop.counter }}.</strong>
+                                    {{ option.option_text }}
+                                </span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        <i class="bi bi-check-circle me-2"></i>Submit Quiz
+                    </button>
+                    <br>
+                    <a href="{% url 'module_detail' module.id %}" class="back-link">
+                        <i class="bi bi-arrow-left"></i>Back to Module
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

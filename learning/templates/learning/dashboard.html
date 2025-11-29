@@ -1,0 +1,174 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Techietact AI Tutor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-shell">
+  <div class="container">
+    <div class="dashboard-hero">
+      <div class="hero-panel">
+        <p class="hero-greeting">
+          {% if recent_sessions %}
+            Welcome back, {{ user.first_name|default:user.username }} 👋
+          {% else %}
+            Hello {{ user.first_name|default:user.username }} 👋
+          {% endif %}
+        </p>
+        <p class="hero-text">
+          {% if recent_sessions %}
+            Pick up right where you left off or explore a new path. Your tutor remembers every conversation.
+          {% else %}
+            Launch your personalised learning journey — pick a course and the AI tutor will guide you step by step.
+          {% endif %}
+        </p>
+        <div class="hero-actions">
+          <button class="pill-btn primary" onclick="window.location.href='{% url 'courses_list' %}'">
+            <i class="bi bi-journal-code me-2"></i>Explore Courses
+          </button>
+          <button class="pill-btn secondary" onclick="window.location.href='{% url 'practice_code' %}'">
+            <i class="bi bi-terminal me-2"></i>Open Practice Lab
+          </button>
+        </div>
+        <div class="hero-metrics">
+          <span class="metric-pill">
+            <i class="bi bi-lightning-charge-fill text-warning"></i> {{ recent_sessions|length }} active chats
+          </span>
+          <span class="metric-pill">
+            <i class="bi bi-bookmark-star text-info"></i> {{ featured_courses|length }} spotlight courses
+          </span>
+          <span class="metric-pill">
+            <i class="bi bi-grid-3x3-gap-fill text-primary"></i> {{ all_courses|length }} tracks unlocked
+          </span>
+        </div>
+      </div>
+      <div class="hero-insight-card">
+        {% if recent_sessions %}
+          {% with latest_session=recent_sessions|first %}
+            <p class="hero-insight-title">Resume {{ latest_session.module.title }}</p>
+            <p class="hero-insight-subtitle">
+              Continue inside {{ latest_session.module.course.title }}. Your last question was asked {{ latest_session.created_at|timesince }} ago.
+            </p>
+            <div class="hero-insight-meta">
+              <i class="bi bi-arrow-clockwise"></i><span>Hop back in</span>
+            </div>
+            <button class="pill-btn primary mt-3 w-100" onclick="window.location.href='{% url 'module_detail' latest_session.module.id %}'">
+              <i class="bi bi-play-circle me-2"></i>Continue session
+            </button>
+          {% endwith %}
+        {% else %}
+          <p class="hero-insight-title">No sessions yet</p>
+          <p class="hero-insight-subtitle">Pick a module to unlock your personal tutor and build momentum.</p>
+          <div class="hero-insight-meta">
+            <i class="bi bi-rocket-takeoff"></i><span>Step 1 · Choose a course</span>
+          </div>
+          <button class="pill-btn primary mt-3 w-100" onclick="window.location.href='{% url 'courses_list' %}'">
+            Start learning
+          </button>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="section-heading">
+      <h2>Personal cockpit</h2>
+    </div>
+    <div class="insights-grid">
+      <article class="insight-card" onclick="window.location.href='{% url 'courses_list' %}'" style="cursor:pointer;">
+        <div class="insight-tag"><i class="bi bi-stars"></i> Curated</div>
+        <h3>Pick your focus</h3>
+        <p>Browse all live learning tracks, unlock new modules, and bookmark your favourites.</p>
+        <span class="hero-insight-meta"><i class="bi bi-map"></i>{{ all_courses|length }} journeys available</span>
+      </article>
+      <article class="insight-card" onclick="window.location.href='{% url 'practice_code' %}'" style="cursor:pointer;">
+        <div class="insight-tag"><i class="bi bi-terminal"></i> Labs</div>
+        <h3>Hands-on lab</h3>
+        <p>Run Python or Java snippets instantly to test what you learn inside each module.</p>
+        <span class="hero-insight-meta"><i class="bi bi-stopwatch"></i>5s runtime sandbox</span>
+      </article>
+      <article class="insight-card">
+        <div class="insight-tag"><i class="bi bi-calendar-check"></i> Plan</div>
+        <h3>Learning nudges</h3>
+        <ul class="list-unstyled mb-0 small insight-list">
+          <li class="mb-2"><i class="bi bi-arrow-right-circle me-2 text-warning"></i>Review notes from your latest chat</li>
+          <li class="mb-2"><i class="bi bi-arrow-right-circle me-2 text-warning"></i>Attempt a quiz to unlock the next module</li>
+          <li><i class="bi bi-arrow-right-circle me-2 text-warning"></i>Schedule a practice slot in the lab</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="section-heading">
+      <h2>Recent learning stream</h2>
+      <a class="btn btn-outline-light btn-sm" href="{% url 'courses_list' %}">View all courses</a>
+    </div>
+    {% if recent_sessions %}
+      <div class="timeline mb-4">
+        {% for session in recent_sessions|slice:":5" %}
+          <div class="timeline-item" onclick="window.location.href='{% url 'module_detail' session.module.id %}'" style="cursor:pointer;">
+            <div class="timeline-marker">
+              <i class="bi bi-chat-dots"></i>
+            </div>
+            <div>
+              <p class="timeline-title">{{ session.module.course.title }} · {{ session.module.title }}</p>
+              <p class="timeline-meta"><i class="bi bi-clock me-1"></i>{{ session.created_at|timesince }} ago</p>
+              <p class="timeline-preview">{{ session.question|truncatewords:18 }}</p>
+            </div>
+            <span class="timeline-line"></span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-view">
+        <i class="bi bi-infinity"></i>
+        <p>No conversations yet. Start any module to light up your learning stream.</p>
+      </div>
+    {% endif %}
+
+    <div class="section-heading">
+      <h2>Featured spotlight</h2>
+    </div>
+    {% if featured_courses %}
+      <div class="card-grid">
+        {% for course in featured_courses %}
+          <div class="course-card" onclick="window.location.href='{% url 'course_detail' course.id %}'">
+            <div class="insight-tag mb-3">{{ course.get_category_display }}</div>
+            <h4 class="hero-insight-title" style="font-size:1.35rem;">{{ course.title }}</h4>
+            <p class="hero-insight-subtitle">{{ course.description|truncatewords:28 }}</p>
+            <p class="course-meta"><i class="bi bi-columns-gap me-2"></i>{{ course.modules.count }} modules</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-view">
+        <i class="bi bi-book"></i>
+        <p>No featured courses yet. Check back soon for curated recommendations.</p>
+      </div>
+    {% endif %}
+
+    <div class="section-heading">
+      <h2>Continue exploring</h2>
+      <button class="pill-btn secondary" onclick="window.location.href='{% url 'courses_list' %}'">
+        See catalog
+      </button>
+    </div>
+    {% if all_courses %}
+      <div class="card-grid">
+        {% for course in all_courses %}
+          <div class="course-card" onclick="window.location.href='{% url 'course_detail' course.id %}'">
+            <h4 class="hero-insight-title" style="font-size:1.2rem;">{{ course.title }}</h4>
+            <p class="hero-insight-subtitle">{{ course.description|truncatewords:18 }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-view">
+        <i class="bi bi-collection"></i>
+        <p>No courses published yet. Your catalog will appear here.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

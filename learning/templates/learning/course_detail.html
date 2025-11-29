@@ -1,0 +1,73 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+{% load admin_tags %}
+
+{% block title %}{{ course.title }} - Modules{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/course-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="course-detail-page">
+    <div class="container position-relative">
+        <div class="course-header">
+            <h1>{{ course.title }}</h1>
+            <p>{{ course.description }}</p>
+            <div class="header-meta">
+                <span><i class="bi bi-columns-gap"></i>{{ modules|length }} modules</span>
+                <span><i class="bi bi-bookmark"></i>{{ course.get_category_display }}</span>
+                <span><i class="bi bi-clock-history"></i>Updated {{ course.created_at|timesince }} ago</span>
+            </div>
+        </div>
+        <div class="modules-grid">
+            {% for module in modules %}
+            {% with is_unlocked=module_status|get_item:module.id %}
+            <div class="module-card {% if not is_unlocked %}module-locked{% endif %}" 
+                 {% if not is_unlocked %}style="cursor: not-allowed;"{% endif %}>
+                <div class="module-order">{{ module.order }}</div>
+                <h2>{{ module.title }}</h2>
+                <p>{{ module.summary|truncatewords:35 }}</p>
+                {% if not is_unlocked %}
+                <div class="module-lock-badge">
+                    <i class="bi bi-lock-fill"></i> Locked
+                </div>
+                <p class="module-lock-message">Complete the previous module's quiz to unlock this module.</p>
+                {% else %}
+                <div class="module-actions">
+                    <a href="{% url 'module_detail' module.id %}" class="module-action-btn btn-learn">
+                        <i class="bi bi-book me-1"></i>Start Learning
+                    </a>
+                    {% with has_quiz=module_has_quiz|get_item:module.id %}
+                    {% if has_quiz %}
+                    <a href="{% url 'take_quiz' module.id %}" class="module-action-btn btn-quiz">
+                        <i class="bi bi-clipboard-check me-1"></i>Take Quiz
+                    </a>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                {% endif %}
+                {% if module.learning_objectives %}
+                <div class="module-topics">
+                    <strong>Learning objectives:</strong>
+                    {% for item in module.learning_objectives.splitlines %}
+                        {% if item.strip %}<span>• {{ item }}</span>{% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endwith %}
+            {% empty %}
+            <div class="module-card">
+                <div class="module-order">—</div>
+                <h2>No modules yet</h2>
+                <p>The admin hasn’t added modules for this course yet. Check back later to start learning.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

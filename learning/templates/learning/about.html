@@ -1,0 +1,297 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}About - Techietact AI Tutor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <div class="container about-content">
+        <!-- Glowing Title -->
+        <h1 class="glow-title" id="glowTitle">
+            <span class="letter">A</span>
+            <span class="letter">b</span>
+            <span class="letter">o</span>
+            <span class="letter">u</span>
+            <span class="letter">t</span>
+            <span class="letter"> </span>
+            <span class="letter">T</span>
+            <span class="letter">e</span>
+            <span class="letter">c</span>
+            <span class="letter">h</span>
+            <span class="letter">i</span>
+            <span class="letter">e</span>
+            <span class="letter">t</span>
+            <span class="letter">a</span>
+            <span class="letter">c</span>
+            <span class="letter">t</span>
+            <span class="letter"> </span>
+            <span class="letter">A</span>
+            <span class="letter">I</span>
+            <span class="letter"> </span>
+            <span class="letter">T</span>
+            <span class="letter">u</span>
+            <span class="letter">t</span>
+            <span class="letter">o</span>
+            <span class="letter">r</span>
+        </h1>
+        
+        <p class="subtitle">Revolutionizing education through artificial intelligence</p>
+
+        <!-- Mission Section -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-title-icon">
+                    <i class="bi bi-bullseye"></i>
+                </span>
+                Our Mission
+            </h2>
+            <p class="section-text">
+                Techietact AI Tutor is dedicated to providing free, high-quality online tutoring services using advanced AI technology. We believe that education should be accessible to everyone, regardless of their financial situation or location.
+            </p>
+            <p class="section-text">
+                Our platform leverages cutting-edge artificial intelligence to deliver personalized learning experiences that adapt to each learner's unique needs and learning style. We're committed to breaking down barriers to education and empowering learners worldwide.
+            </p>
+        </div>
+
+        <!-- Vision Section -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-title-icon">
+                    <i class="bi bi-eye"></i>
+                </span>
+                Our Vision
+            </h2>
+            <p class="section-text">
+                We envision a world where quality education is universally accessible, personalized, and free. Our goal is to create an AI-powered learning ecosystem that adapts to individual learning styles, making education more effective, engaging, and inclusive.
+            </p>
+            <p class="section-text">
+                Through continuous innovation and the power of artificial intelligence, we aim to transform how people learn, making knowledge acquisition more intuitive, interactive, and impactful for learners of all backgrounds.
+            </p>
+        </div>
+
+        <!-- How It Works -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-title-icon">
+                    <i class="bi bi-gear"></i>
+                </span>
+                How It Works
+            </h2>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="process-number">1</div>
+                    <h3 class="process-title">Sign Up Free</h3>
+                    <p class="process-description">Create your account in seconds. No credit card required, no hidden fees.</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">2</div>
+                    <h3 class="process-title">Start Learning</h3>
+                    <p class="process-description">Open a course module and let Techietact walk you through lessons, examples, and quizzes.</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">3</div>
+                    <h3 class="process-title">Track Progress</h3>
+                    <p class="process-description">Monitor your learning journey, review past sessions, and explore new topics.</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">4</div>
+                    <h3 class="process-title">Excel & Grow</h3>
+                    <p class="process-description">Master concepts with personalized guidance and real-time feedback from AI.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-title-icon">
+                    <i class="bi bi-star"></i>
+                </span>
+                Key Features
+            </h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-clock-history text-white"></i>
+                    </div>
+                    <h4 class="feature-title">24/7 Availability</h4>
+                    <p class="feature-description">Learn anytime, anywhere. Our AI tutor is always ready to help you.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-person-check text-white"></i>
+                    </div>
+                    <h4 class="feature-title">Personalized Learning</h4>
+                    <p class="feature-description">AI adapts to your learning style and pace for optimal understanding.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-gift text-white"></i>
+                    </div>
+                    <h4 class="feature-title">100% Free</h4>
+                    <p class="feature-description">No hidden costs, no subscriptions. Quality education for everyone.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-code-slash text-white"></i>
+                    </div>
+                    <h4 class="feature-title">Multi-Stack Ready</h4>
+                    <p class="feature-description">AI tutor for top programming languages and tech stacks with detailed explanations.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-graph-up-arrow text-white"></i>
+                    </div>
+                    <h4 class="feature-title">Progress Tracking</h4>
+                    <p class="feature-description">Monitor your learning journey and see your improvement over time.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-journal-code text-white"></i>
+                    </div>
+                    <h4 class="feature-title">Interactive Chat</h4>
+                    <p class="feature-description">Engage in natural conversations with our intelligent AI tutor.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="section-card">
+            <div class="stats-section">
+                <div class="stat-box">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Free Access</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">AI</div>
+                    <div class="stat-label">Powered</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">Learning</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Values -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-title-icon">
+                    <i class="bi bi-heart"></i>
+                </span>
+                Our Values
+            </h2>
+            <div class="values-list">
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-universal-access"></i>
+                        Accessibility
+                    </h4>
+                    <p class="value-description">We believe education should be accessible to everyone, regardless of their background or financial situation.</p>
+                </div>
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-lightbulb"></i>
+                        Innovation
+                    </h4>
+                    <p class="value-description">We continuously innovate to provide the best learning experience using cutting-edge AI technology.</p>
+                </div>
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-people"></i>
+                        Inclusivity
+                    </h4>
+                    <p class="value-description">We welcome learners from all walks of life and create an inclusive learning environment for everyone.</p>
+                </div>
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-award"></i>
+                        Excellence
+                    </h4>
+                    <p class="value-description">We strive for excellence in every aspect of our platform, from AI responses to user experience.</p>
+                </div>
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-shield-check"></i>
+                        Privacy
+                    </h4>
+                    <p class="value-description">We respect your privacy and ensure your data is secure and protected at all times.</p>
+                </div>
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-arrow-repeat"></i>
+                        Continuous Improvement
+                    </h4>
+                    <p class="value-description">We're always improving our platform based on user feedback and the latest AI advancements.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Section -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span class="section-title-icon">
+                    <i class="bi bi-cpu"></i>
+                </span>
+                Powered by Advanced AI
+            </h2>
+            <p class="section-text">
+                Techietact AI Tutor is built on Google's Gemini AI technology, one of the most advanced language models available. Our specialized tech tutor provides:
+            </p>
+            <div class="values-list">
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-file-code"></i>
+                        Detailed Explanations
+                    </h4>
+                    <p class="value-description">Comprehensive explanations of development concepts with clear, easy-to-understand language.</p>
+                </div>
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-code-square"></i>
+                        Code Examples
+                    </h4>
+                    <p class="value-description">Real-world code examples with syntax highlighting and best practices.</p>
+                </div>
+                <div class="value-item">
+                    <h4 class="value-title">
+                        <i class="bi bi-lightbulb-fill"></i>
+                        Real-life Analogies
+                    </h4>
+                    <p class="value-description">Creative analogies that help you understand complex concepts through familiar examples.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const letters = document.querySelectorAll('#glowTitle .letter');
+        if (!letters.length) {
+            return;
+        }
+        
+        letters.forEach(letter => {
+            letter.addEventListener('mouseenter', () => {
+                letter.classList.add('glowing');
+            });
+            letter.addEventListener('mouseleave', () => {
+                letter.classList.remove('glowing');
+            });
+            letter.addEventListener('focus', () => letter.classList.add('glowing'));
+            letter.addEventListener('blur', () => letter.classList.remove('glowing'));
+        });
+    });
+</script>
+{% endblock %}
