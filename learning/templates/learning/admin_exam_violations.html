@@ -1,0 +1,392 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Exam Violations - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}?v=8">
+<style>
+  .violations-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .violations-stat-card {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .violations-stat-card::before,
+  .violations-stat-card::after {
+    display: none !important;
+    content: none !important;
+    background: transparent !important;
+    background-image: none !important;
+  }
+  
+  .violations-stat-card * {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+  
+  /* Ensure parent containers don't override */
+  .violations-stats {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .violations-stats .violations-stat-card {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+  }
+  
+  .violations-stat-label {
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: transparent !important;
+  }
+  
+  .violations-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000000;
+    background: transparent !important;
+  }
+  
+  .violations-table-container {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+  }
+  
+  .violations-table-container * {
+    background: transparent !important;
+  }
+  
+  .violations-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  .violations-table th {
+    text-align: left;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.05) !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+  }
+  
+  .violations-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    vertical-align: top;
+  }
+  
+  .violations-table tr:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+  
+  .violation-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  
+  .violation-badge.count {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+  }
+  
+  .violation-badge.attempt {
+    background: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+  }
+  
+  .violation-badge.auto-submitted {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+  }
+  
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  
+  .score-badge.excellent {
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+  }
+  
+  .score-badge.poor {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+  }
+  
+  .violation-detail-item {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+  
+  .violation-detail-type {
+    color: #dc2626;
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+  
+  .violation-detail-text {
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: rgba(0, 0, 0, 0.3);
+  }
+
+  .show-more-violations:hover,
+  .show-less-violations:hover {
+    color: #1d4ed8 !important;
+    text-decoration: underline !important;
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle "show more" clicks
+    document.querySelectorAll('.show-more-violations').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const container = this.closest('.violation-details-container');
+        const hiddenDiv = container.querySelector('.violation-details-hidden');
+        const showLessLink = container.querySelector('.show-less-violations');
+        
+        if (hiddenDiv) {
+          hiddenDiv.style.display = 'block';
+          this.style.display = 'none';
+          if (showLessLink) {
+            showLessLink.style.display = 'inline-block';
+          }
+        }
+      });
+    });
+
+    // Handle "show less" clicks
+    document.querySelectorAll('.show-less-violations').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const container = this.closest('.violation-details-container');
+        const hiddenDiv = container.querySelector('.violation-details-hidden');
+        const showMoreLink = container.querySelector('.show-more-violations');
+        
+        if (hiddenDiv) {
+          hiddenDiv.style.display = 'none';
+          this.style.display = 'none';
+          if (showMoreLink) {
+            showMoreLink.style.display = 'inline-block';
+          }
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+  <div class="container dashboard-shell">
+    <div class="holo-card">
+      <div class="holo-content">
+        
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <span class="text-uppercase small d-inline-flex align-items-center mb-2">
+              <span class="me-2 d-inline-block"></span>
+              Security & Monitoring
+            </span>
+            <h1>Exam Violations</h1>
+            <p>Monitor and review all exam rule violations, including screenshot attempts, tab switching, and other proctoring violations.</p>
+          </div>
+          <a href="{% url 'admin_dashboard' %}" class="cta-button">
+            <i class="bi bi-arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </a>
+        </div>
+
+        <!-- Statistics -->
+        <div class="violations-stats" style="position: relative; z-index: 10;">
+          <div class="violations-stat-card" style="background: #ffffff !important; background-color: #ffffff !important;">
+            <div class="violations-stat-label">Total Violations</div>
+            <div class="violations-stat-value" style="color: #dc2626;">{{ total_violations }}</div>
+          </div>
+          <div class="violations-stat-card" style="background: #ffffff !important; background-color: #ffffff !important;">
+            <div class="violations-stat-label">Auto-Submitted</div>
+            <div class="violations-stat-value" style="color: #dc2626;">{{ total_auto_submitted }}</div>
+          </div>
+          <div class="violations-stat-card" style="background: #ffffff !important; background-color: #ffffff !important;">
+            <div class="violations-stat-label">Students with Violations</div>
+            <div class="violations-stat-value">{{ unique_students_with_violations }}</div>
+          </div>
+        </div>
+
+        <!-- Violations Table -->
+        {% if all_violations %}
+        <div class="violations-table-container">
+          <table class="violations-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Course / Module</th>
+                <th>Quiz</th>
+                <th>Attempt #</th>
+                <th>Violations</th>
+                <th>Violation Details</th>
+                <th>Auto-Submitted</th>
+                <th>Score</th>
+                <th>Date & Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for violation in all_violations %}
+              <tr>
+                <td>
+                  <strong>{{ violation.student_username }}</strong><br>
+                  <small style="color: rgba(0, 0, 0, 0.6);">{{ violation.student_email }}</small>
+                </td>
+                <td>
+                  <strong>{{ violation.course_title }}</strong><br>
+                  <small style="color: rgba(0, 0, 0, 0.6);">{{ violation.module_title }}</small>
+                </td>
+                <td>{{ violation.quiz_title }}</td>
+                <td>
+                  <span class="violation-badge attempt">Attempt {{ violation.attempt_number }}</span>
+                </td>
+                <td>
+                  <span class="violation-badge count">{{ violation.violation_count }}</span>
+                </td>
+                <td>
+                  <div style="max-width: 300px;" class="violation-details-container" data-violation-index="{{ forloop.counter0 }}">
+                    <div class="violation-details-visible">
+                      {% for detail in violation.violation_details %}
+                        {% if forloop.counter <= 3 %}
+                        <div class="violation-detail-item">
+                          <span class="violation-detail-type">
+                            {% if detail.type %}{{ detail.type }}{% elif detail.details %}{{ detail.details|truncatewords:3 }}{% else %}Unknown{% endif %}:
+                          </span>
+                          <span class="violation-detail-text">
+                            {% if detail.details %}{{ detail.details|truncatewords:10 }}{% elif detail.source %}{{ detail.source }}{% elif detail.timestamp %}{{ detail.timestamp }}{% else %}{{ detail }}{% endif %}
+                          </span>
+                        </div>
+                        {% endif %}
+                      {% empty %}
+                        <span style="color: rgba(0, 0, 0, 0.5); font-size: 0.85rem;">No details available</span>
+                      {% endfor %}
+                    </div>
+                    <div class="violation-details-hidden" style="display: none;">
+                      {% for detail in violation.violation_details %}
+                        {% if forloop.counter > 3 %}
+                        <div class="violation-detail-item">
+                          <span class="violation-detail-type">
+                            {% if detail.type %}{{ detail.type }}{% elif detail.details %}{{ detail.details|truncatewords:3 }}{% else %}Unknown{% endif %}:
+                          </span>
+                          <span class="violation-detail-text">
+                            {% if detail.details %}{{ detail.details|truncatewords:10 }}{% elif detail.source %}{{ detail.source }}{% elif detail.timestamp %}{{ detail.timestamp }}{% else %}{{ detail }}{% endif %}
+                          </span>
+                        </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                    {% if violation.violation_details|length > 3 %}
+                      <a href="#" class="show-more-violations" style="color: #2563eb; text-decoration: none; font-size: 0.85rem; cursor: pointer; display: inline-block; margin-top: 0.5rem; font-weight: 500;">
+                        <i class="bi bi-chevron-down" style="font-size: 0.75rem;"></i> + {{ violation.violation_details|length|add:"-3" }} more...
+                      </a>
+                      <a href="#" class="show-less-violations" style="color: #2563eb; text-decoration: none; font-size: 0.85rem; cursor: pointer; display: none; margin-top: 0.5rem; font-weight: 500;">
+                        <i class="bi bi-chevron-up" style="font-size: 0.75rem;"></i> Show less
+                      </a>
+                    {% endif %}
+                  </div>
+                </td>
+                <td>
+                  {% if violation.auto_submitted %}
+                    <span class="violation-badge auto-submitted">
+                      <i class="bi bi-exclamation-triangle"></i> Yes
+                    </span>
+                  {% else %}
+                    <span style="color: rgba(0, 0, 0, 0.4);">No</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if violation.passed %}
+                    <span class="score-badge excellent">{{ violation.score|floatformat:1 }}%</span>
+                  {% else %}
+                    <span class="score-badge poor">{{ violation.score|floatformat:1 }}%</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <small style="color: rgba(0, 0, 0, 0.6);">
+                    {{ violation.started_at|date:"M d, Y" }}<br>
+                    {{ violation.started_at|date:"H:i" }}
+                  </small>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="violations-table-container">
+          <div class="empty-state">
+            <i class="bi bi-shield-check"></i>
+            <p>No exam violations detected. All students are following the exam rules.</p>
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

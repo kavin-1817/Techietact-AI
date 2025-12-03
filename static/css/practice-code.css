@@ -3,8 +3,9 @@
     position: relative;
     min-height: calc(100vh - 76px);
     padding: 4.5rem 0;
-    background: #000000;
+    background: var(--bg-primary);
     overflow: hidden;
+    transition: background 0.3s ease;
 }
 
 .practice-breadcrumb {
@@ -29,11 +30,13 @@
 }
 
 .practice-breadcrumb .breadcrumb-divider {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-muted-white);
+    transition: color 0.3s ease;
 }
 
 .practice-breadcrumb span:last-child {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-muted-white);
+    transition: color 0.3s ease;
 }
 
 .practice-hero {
@@ -44,16 +47,18 @@
 .practice-hero h1 {
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 800;
-    color: #ffffff;
+    color: var(--text-white);
     margin-bottom: 1rem;
+    transition: color 0.3s ease;
 }
 
 .practice-hero p {
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-muted-white);
     max-width: 700px;
     margin: 0 auto;
     line-height: 1.6;
+    transition: color 0.3s ease;
 }
 
 .practice-grid {
@@ -139,7 +144,7 @@
 }
 
 .run-btn {
-    background: linear-gradient(135deg, #ff9900, #ff7700);
+    background:black !important;
     border: none;
     border-radius: 12px;
     padding: 0.75rem 1.5rem;

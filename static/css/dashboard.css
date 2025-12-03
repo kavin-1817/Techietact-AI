@@ -1,5 +1,5 @@
   .dashboard-shell {
-    background: #000000;
+    background: var(--bg-primary);
     min-height: calc(100vh - 76px);
     padding: 3rem 0 4rem;
     position: relative;
@@ -18,31 +18,64 @@
   }
 
   .dashboard-hero {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.75rem;
     margin-bottom: 2.5rem;
   }
 
-  .hero-panel {
+  .hero-unified-card {
     background: #ff9900;
+    background-color: #ff9900 !important;
+    background-image: none !important;
     color: #000000;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 28px;
-    padding: 2.5rem;
+    border-radius: 32px;
+    padding: 3rem;
     backdrop-filter: blur(20px);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   }
 
-  .hero-panel::before {
+  .hero-unified-card::before {
     content: '';
     position: absolute;
-    width: 220px;
-    height: 220px;
-    bottom: -60px;
-    right: -40px;
+    width: 300px;
+    height: 300px;
+    bottom: -80px;
+    right: -60px;
     background: radial-gradient(circle, rgba(255, 153, 0, 0.25), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-unified-card::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: -50px;
+    left: -50px;
+    background: radial-gradient(circle, rgba(255, 119, 0, 0.2), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-main-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-welcome-section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-resume-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 2.5rem;
+    border-left: 2px solid rgba(0, 0, 0, 0.1);
   }
 
   .hero-greeting {
@@ -51,6 +84,7 @@
   color: #000000;
     margin-bottom: 0.75rem;
   }
+
 
   .hero-text {
   color: #000000;
@@ -113,49 +147,44 @@
     backdrop-filter: blur(6px);
   }
 
-  .hero-insight-card {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.4));
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 28px;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-insight-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top right, rgba(255, 153, 0, 0.15), transparent 45%);
-  }
-
-  .hero-insight-card > * {
-    position: relative;
-    z-index: 2;
-  }
-
-  .hero-insight-title {
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: var(--text-white);
-    margin-bottom: 0.35rem;
-  }
-
-  .hero-insight-subtitle {
-    color: var(--text-muted-white);
-    margin-bottom: 1.4rem;
-    font-size: 0.95rem;
-  }
-
-  .hero-insight-meta {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+  .resume-header {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .resume-icon {
+    font-size: 1.1rem;
+    color: #000000;
+  }
+
+  .resume-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .resume-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .resume-subtitle {
+    color: rgba(0, 0, 0, 0.7);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .resume-btn {
+    width: 100%;
+    margin-top: auto;
   }
 
   .section-heading {
@@ -326,10 +355,23 @@
     margin-bottom: 1rem;
   }
 
+  @media (max-width: 968px) {
+    .hero-main-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .hero-resume-section {
+      padding-left: 0;
+      padding-top: 2rem;
+      border-left: none;
+      border-top: 2px solid rgba(0, 0, 0, 0.1);
+    }
+  }
+
   @media (max-width: 768px) {
-    .hero-panel,
-    .hero-insight-card {
-      padding: 1.75rem;
+    .hero-unified-card {
+      padding: 2rem;
     }
 
     .hero-actions {
@@ -349,8 +391,7 @@
       var(--section-bg);
   }
 
-  html[data-theme="light"] .hero-panel,
-  html[data-theme="light"] .hero-insight-card,
+  html[data-theme="light"] .hero-unified-card,
   html[data-theme="light"] .insight-card,
   html[data-theme="light"] .timeline,
   html[data-theme="light"] .course-card,
@@ -359,17 +400,16 @@
     border-color: rgba(15, 23, 42, 0.08);
   }
 
-  html[data-theme="light"] .hero-panel::before {
+  html[data-theme="light"] .hero-unified-card::before {
     background: radial-gradient(circle, rgba(255, 153, 0, 0.15), transparent 70%);
   }
 
-  html[data-theme="light"] .hero-insight-card::after {
-    background: radial-gradient(circle at top right, rgba(255, 187, 134, 0.2), transparent 45%);
+  html[data-theme="light"] .hero-unified-card::after {
+    background: radial-gradient(circle, rgba(255, 119, 0, 0.1), transparent 70%);
   }
 
   html[data-theme="light"] .hero-greeting,
-  html[data-theme="light"] .hero-insight-title,
-  html[data-theme="light"] .hero-insight-card h4,
+  html[data-theme="light"] .resume-title,
   html[data-theme="light"] .timeline-title,
   html[data-theme="light"] .course-card h4,
   html[data-theme="light"] .section-heading h2 {
@@ -377,9 +417,8 @@
   }
 
   html[data-theme="light"] .hero-text,
-  html[data-theme="light"] .hero-insight-subtitle,
+  html[data-theme="light"] .resume-subtitle,
   html[data-theme="light"] .timeline-preview,
-  html[data-theme="light"] .hero-insight-card .hero-insight-subtitle,
   html[data-theme="light"] .course-card .hero-insight-subtitle,
   html[data-theme="light"] .empty-view {
     color: var(--text-muted);
@@ -409,7 +448,7 @@
 
   html[data-theme="light"] .course-card:hover,
   html[data-theme="light"] .insight-card:hover,
-  html[data-theme="light"] .hero-panel:hover {
+  html[data-theme="light"] .hero-unified-card:hover {
     border-color: rgba(255, 153, 0, 0.35);
   }
 
@@ -424,18 +463,20 @@
     color: var(--text-dark);
   }
 
-.hero-insight-card .hero-insight-title,
-.hero-insight-card h4 {
-  color: #ffffff;
-}
-
-.hero-insight-card .hero-insight-subtitle {
-  color: #e5e7eb;
+/* Ensure all text in unified card is black */
+.hero-unified-card .resume-title,
+.hero-unified-card .resume-subtitle,
+.hero-unified-card .resume-label {
+  color: #000000 !important;
 }
 
 .dashboard-shell .insight-list,
 .dashboard-shell .insight-list li {
   color: #000000;
+}
+
+.dashboard-shell .insight-list i.bi-arrow-right-circle {
+  color: #ffffff !important;
 }
 
 /* ensure orange cards use black text */

@@ -4,8 +4,9 @@
     position: relative;
     min-height: calc(100vh - 76px);
     padding: 4.5rem 0;
-    background: #000000;
+    background: var(--bg-primary);
     overflow: hidden;
+    transition: background 0.3s ease;
 }
 
 .glass-card {

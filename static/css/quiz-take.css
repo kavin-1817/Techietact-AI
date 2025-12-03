@@ -3,9 +3,30 @@
     position: relative;
     min-height: calc(100vh - 76px);
     padding: 4.5rem 0;
-    background: #000000;
+    background: var(--bg-primary);
     overflow: hidden;
     transition: background 0.3s ease;
+}
+
+/* Prevent text selection to make screenshots less useful */
+.quiz-page * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Allow selection in form inputs and labels for interaction */
+.quiz-page input[type="radio"],
+.quiz-page input[type="checkbox"],
+.quiz-page label,
+.quiz-page .option-label,
+.quiz-page .option-text {
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
+    cursor: pointer;
 }
 
 .quiz-page::before,
@@ -124,12 +145,14 @@
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #ff9900, #ff7700);
+    background: #000000 !important;
+    background-color: #000000 !important;
+    background-image: none !important;
     color: white;
     font-weight: 700;
     font-size: 1.1rem;
     margin-right: 1rem;
-    box-shadow: 0 8px 20px rgba(255, 153, 0, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .question-text {
@@ -236,7 +259,8 @@
 
 .submit-btn {
     padding: 1rem 3rem;
-    background: linear-gradient(135deg, #ff9900, #ff7700);
+    background: #000000;
+    background-color: #000000;
     color: white;
     border: none;
     border-radius: 16px;
@@ -244,12 +268,13 @@
     font-size: 1.1rem;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 12px 30px rgba(255, 153, 0, 0.35);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 
 .submit-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 18px 40px rgba(255, 153, 0, 0.45);
+    background: #1a1a1a;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
 }
 
 .back-link {
@@ -265,5 +290,6 @@
 .back-link:hover {
     color: var(--text-white);
 }
+
 
 

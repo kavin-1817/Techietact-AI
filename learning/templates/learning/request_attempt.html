@@ -1,0 +1,217 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Request Additional Attempt - {{ quiz.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/module-detail.css' %}">
+<style>
+    .request-form-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2.5rem;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    .request-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .request-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .request-header p {
+        color: var(--text-secondary);
+        font-size: 1.05rem;
+    }
+    
+    .quiz-info {
+        background: rgba(255, 153, 0, 0.1);
+        border: 1px solid rgba(255, 153, 0, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .quiz-info h3 {
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .quiz-info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255, 153, 0, 0.2);
+    }
+    
+    .quiz-info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .quiz-info-label {
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+    
+    .quiz-info-value {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .form-textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 1rem;
+        border: 2px solid var(--input-border);
+        border-radius: 12px;
+        background: var(--input-bg);
+        color: var(--text-primary);
+        font-size: 1rem;
+        font-family: inherit;
+        resize: vertical;
+        transition: border-color 0.3s ease;
+    }
+    
+    .form-textarea:focus {
+        outline: none;
+        border-color: #ff9900;
+        box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.1);
+    }
+    
+    .form-help-text {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+    
+    .btn-submit {
+        background: #ff9900;
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+        background: #ff7700;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+    }
+    
+    .btn-cancel {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-cancel:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--text-secondary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="module-page">
+    <div class="container">
+        <div class="request-form-container">
+            <div class="request-header">
+                <h1>Request Additional Attempt</h1>
+                <p>You have exhausted all 3 attempts for this quiz. Please provide a reason for requesting an additional attempt.</p>
+            </div>
+            
+            <div class="quiz-info">
+                <h3><i class="bi bi-clipboard-check me-2"></i>Quiz Information</h3>
+                <div class="quiz-info-item">
+                    <span class="quiz-info-label">Course:</span>
+                    <span class="quiz-info-value">{{ module.course.title }}</span>
+                </div>
+                <div class="quiz-info-item">
+                    <span class="quiz-info-label">Module:</span>
+                    <span class="quiz-info-value">{{ module.title }}</span>
+                </div>
+                <div class="quiz-info-item">
+                    <span class="quiz-info-label">Quiz:</span>
+                    <span class="quiz-info-value">{{ quiz.title }}</span>
+                </div>
+                <div class="quiz-info-item">
+                    <span class="quiz-info-label">Attempts Used:</span>
+                    <span class="quiz-info-value" style="color: #dc2626;">{{ attempt_count }} of 3</span>
+                </div>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="reason" class="form-label">
+                        <i class="bi bi-chat-text me-2"></i>Reason for Request
+                    </label>
+                    <textarea 
+                        id="reason" 
+                        name="reason" 
+                        class="form-textarea" 
+                        placeholder="Please explain why you need an additional attempt. For example: technical issues during the exam, unexpected interruptions, or other valid reasons..."
+                        required
+                    ></textarea>
+                    <div class="form-help-text">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Be specific and honest. Your request will be reviewed by an administrator.
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{% url 'course_detail' module.course.id %}" class="btn-cancel">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn-submit">
+                        <i class="bi bi-send me-2"></i>Submit Request
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

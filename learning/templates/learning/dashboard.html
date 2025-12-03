@@ -11,65 +11,71 @@
 <div class="dashboard-shell">
   <div class="container">
     <div class="dashboard-hero">
-      <div class="hero-panel">
-        <p class="hero-greeting">
-          {% if recent_sessions %}
-            Welcome back, {{ user.first_name|default:user.username }} 👋
-          {% else %}
-            Hello {{ user.first_name|default:user.username }} 👋
-          {% endif %}
-        </p>
-        <p class="hero-text">
-          {% if recent_sessions %}
-            Pick up right where you left off or explore a new path. Your tutor remembers every conversation.
-          {% else %}
-            Launch your personalised learning journey — pick a course and the AI tutor will guide you step by step.
-          {% endif %}
-        </p>
-        <div class="hero-actions">
-          <button class="pill-btn primary" onclick="window.location.href='{% url 'courses_list' %}'">
-            <i class="bi bi-journal-code me-2"></i>Explore Courses
-          </button>
-          <button class="pill-btn secondary" onclick="window.location.href='{% url 'practice_code' %}'">
-            <i class="bi bi-terminal me-2"></i>Open Practice Lab
-          </button>
-        </div>
-        <div class="hero-metrics">
-          <span class="metric-pill">
-            <i class="bi bi-lightning-charge-fill text-warning"></i> {{ recent_sessions|length }} active chats
-          </span>
-          <span class="metric-pill">
-            <i class="bi bi-bookmark-star text-info"></i> {{ featured_courses|length }} spotlight courses
-          </span>
-          <span class="metric-pill">
-            <i class="bi bi-grid-3x3-gap-fill text-primary"></i> {{ all_courses|length }} tracks unlocked
-          </span>
-        </div>
-      </div>
-      <div class="hero-insight-card">
-        {% if recent_sessions %}
-          {% with latest_session=recent_sessions|first %}
-            <p class="hero-insight-title">Resume {{ latest_session.module.title }}</p>
-            <p class="hero-insight-subtitle">
-              Continue inside {{ latest_session.module.course.title }}. Your last question was asked {{ latest_session.created_at|timesince }} ago.
+      <div class="hero-unified-card">
+        <div class="hero-main-content">
+          <div class="hero-welcome-section">
+            <p class="hero-greeting">
+              {% if recent_sessions %}
+                Welcome back, {{ user.first_name|default:user.username }} 👋
+              {% else %}
+                Hello {{ user.first_name|default:user.username }} 👋
+              {% endif %}
             </p>
-            <div class="hero-insight-meta">
-              <i class="bi bi-arrow-clockwise"></i><span>Hop back in</span>
+            <p class="hero-text">
+              {% if recent_sessions %}
+                Pick up right where you left off or explore a new path. Your tutor remembers every conversation.
+              {% else %}
+                Launch your personalised learning journey — pick a course and the AI tutor will guide you step by step.
+              {% endif %}
+            </p>
+            <div class="hero-actions">
+              <button class="pill-btn primary" onclick="window.location.href='{% url 'courses_list' %}'">
+                <i class="bi bi-journal-code me-2"></i>Explore Courses
+              </button>
+              <button class="pill-btn secondary" onclick="window.location.href='{% url 'practice_code' %}'">
+                <i class="bi bi-terminal me-2"></i>Open Practice Lab
+              </button>
             </div>
-            <button class="pill-btn primary mt-3 w-100" onclick="window.location.href='{% url 'module_detail' latest_session.module.id %}'">
-              <i class="bi bi-play-circle me-2"></i>Continue session
-            </button>
-          {% endwith %}
-        {% else %}
-          <p class="hero-insight-title">No sessions yet</p>
-          <p class="hero-insight-subtitle">Pick a module to unlock your personal tutor and build momentum.</p>
-          <div class="hero-insight-meta">
-            <i class="bi bi-rocket-takeoff"></i><span>Step 1 · Choose a course</span>
+            <div class="hero-metrics">
+              <span class="metric-pill">
+                <i class="bi bi-lightning-charge-fill text-warning"></i> {{ recent_sessions|length }} active chats
+              </span>
+              <span class="metric-pill">
+                <i class="bi bi-bookmark-star text-info"></i> {{ featured_courses|length }} spotlight courses
+              </span>
+              <span class="metric-pill">
+                <i class="bi bi-grid-3x3-gap-fill text-primary"></i> {{ unlocked_modules_count }} tracks unlocked
+              </span>
+            </div>
           </div>
-          <button class="pill-btn primary mt-3 w-100" onclick="window.location.href='{% url 'courses_list' %}'">
-            Start learning
-          </button>
-        {% endif %}
+          <div class="hero-resume-section">
+            {% if recent_sessions %}
+              {% with latest_session=recent_sessions|first %}
+                <div class="resume-header">
+                  <i class="bi bi-arrow-clockwise resume-icon"></i>
+                  <span class="resume-label">Resume Learning</span>
+                </div>
+                <p class="resume-title">Continue {{ latest_session.module.title }}</p>
+                <p class="resume-subtitle">
+                  Inside {{ latest_session.module.course.title }} · Last activity {{ latest_session.created_at|timesince }} ago
+                </p>
+                <button class="pill-btn primary resume-btn" onclick="window.location.href='{% url 'module_detail' latest_session.module.id %}'">
+                  <i class="bi bi-play-circle me-2"></i>Continue session
+                </button>
+              {% endwith %}
+            {% else %}
+              <div class="resume-header">
+                <i class="bi bi-rocket-takeoff resume-icon"></i>
+                <span class="resume-label">Get Started</span>
+              </div>
+              <p class="resume-title">No sessions yet</p>
+              <p class="resume-subtitle">Pick a module to unlock your personal tutor and build momentum.</p>
+              <button class="pill-btn primary resume-btn" onclick="window.location.href='{% url 'courses_list' %}'">
+                <i class="bi bi-play-circle me-2"></i>Start learning
+              </button>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </div>
 
@@ -93,9 +99,9 @@
         <div class="insight-tag"><i class="bi bi-calendar-check"></i> Plan</div>
         <h3>Learning nudges</h3>
         <ul class="list-unstyled mb-0 small insight-list">
-          <li class="mb-2"><i class="bi bi-arrow-right-circle me-2 text-warning"></i>Review notes from your latest chat</li>
-          <li class="mb-2"><i class="bi bi-arrow-right-circle me-2 text-warning"></i>Attempt a quiz to unlock the next module</li>
-          <li><i class="bi bi-arrow-right-circle me-2 text-warning"></i>Schedule a practice slot in the lab</li>
+          <li class="mb-2"><i class="bi bi-arrow-right-circle me-2" style="color: #ffffff !important;"></i>Review notes from your latest chat</li>
+          <li class="mb-2"><i class="bi bi-arrow-right-circle me-2" style="color: #ffffff !important;"></i>Attempt a quiz to unlock the next module</li>
+          <li><i class="bi bi-arrow-right-circle me-2" style="color: #ffffff !important;"></i>Schedule a practice slot in the lab</li>
         </ul>
       </article>
     </div>

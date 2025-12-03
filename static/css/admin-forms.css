@@ -6,26 +6,32 @@
     position: relative;
     min-height: calc(100vh - 76px);
     padding: 4.5rem 0;
-    background: #000000;
+    background: var(--bg-primary) !important;
     overflow: hidden;
+    transition: background 0.3s ease;
 }
 
 .modern-form-card {
-    background: #ff9900;
-    color: #000000;
-    border: 1px solid rgba(255, 153, 0, 0.2);
-    border-radius: 24px;
-    padding: 2.5rem;
+    background: #ff9900 !important;
+    background-color: #ff9900 !important;
+    background-image: none !important;
+    color: #000000 !important;
+    border: 1px solid rgba(255, 153, 0, 0.2) !important;
+    border-radius: 24px !important;
+    padding: 2.5rem !important;
     backdrop-filter: blur(18px);
     transition: all 0.3s ease;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+    position: relative;
+    z-index: 1;
 }
 
 .modern-form-card h1,
 .modern-form-card h2 {
-    color: #000000;
+    color: #000000 !important;
     font-weight: 800;
     margin-bottom: 2rem;
+    background: transparent !important;
 }
 
 .modern-form-group {
@@ -33,40 +39,49 @@
 }
 
 .modern-form-label {
-    display: block;
-    color: #000000;
+    display: block !important;
+    color: #000000 !important;
     font-weight: 600;
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
     letter-spacing: 0.02em;
+    background: transparent !important;
 }
 
 .modern-form-input,
 .modern-form-textarea,
 .modern-form-select {
-    width: 100%;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    padding: 0.85rem 1.25rem;
-    color: #000000;
+    width: 100% !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 1.25rem !important;
+    color: #000000 !important;
     font-size: 1rem;
     font-family: inherit;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
 .modern-form-input:focus,
 .modern-form-textarea:focus,
 .modern-form-select:focus {
-    outline: none;
-    border-color: #ff7700;
-    box-shadow: 0 0 0 0.2rem rgba(255, 119, 0, 0.15);
+    outline: none !important;
+    border-color: #ff7700 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 119, 0, 0.15) !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
 }
 
 .modern-form-textarea {
     resize: vertical;
     min-height: 120px;
     line-height: 1.6;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
 }
 
 .modern-form-select {
@@ -79,8 +94,9 @@
 }
 
 .modern-form-select option {
-    background: #ffffff;
-    color: #000000;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
 }
 
 .modern-checkbox-wrapper {
@@ -112,15 +128,16 @@
 }
 
 .modern-submit-btn {
-    background: #000000;
-    color: #ffffff;
-    border: none;
-    border-radius: 12px;
-    padding: 0.85rem 2rem;
+    background: #000000 !important;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 2rem !important;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
@@ -134,15 +151,16 @@
 }
 
 .modern-cancel-btn {
-    background: #ffffff;
-    color: #000000;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    padding: 0.85rem 2rem;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 2rem !important;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
@@ -156,7 +174,7 @@
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, #ff9900 0%, #ff7700 100%);
+    background: white;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -246,6 +264,228 @@
     gap: 1.5rem;
 }
 
+/* Quiz Questions Page Styles */
+.admin-quiz-questions-page {
+    position: relative;
+    min-height: calc(100vh - 76px);
+    padding: 4.5rem 0;
+    background: var(--bg-primary) !important;
+    overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+.admin-quiz-questions-page .page-header {
+    margin-bottom: 2.5rem;
+}
+
+.admin-quiz-questions-page .page-header h1 {
+    color: #ffffff !important;
+    font-weight: 800;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: transparent !important;
+}
+
+.admin-quiz-questions-page .page-header p {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 1rem;
+    margin: 0;
+    background: transparent !important;
+}
+
+/* Question Card Styles */
+.question-card {
+    background: #ff9900 !important;
+    background-color: #ff9900 !important;
+    background-image: none !important;
+    color: #000000 !important;
+    border: 1px solid rgba(255, 153, 0, 0.2) !important;
+    border-radius: 24px !important;
+    padding: 2rem !important;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(18px);
+    transition: all 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+    position: relative;
+    z-index: 1;
+}
+
+.question-card::before,
+.question-card::after {
+    display: none !important;
+    content: none !important;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+}
+
+.question-info {
+    flex: 1;
+}
+
+.question-card h3 {
+    color: #000000 !important;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    background: transparent !important;
+}
+
+.question-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.meta-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.1) !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    border-radius: 12px;
+    color: #000000 !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Action Buttons */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+}
+
+.btn-add {
+    background: #000000 !important;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.btn-add:hover {
+    background: #1a1a1a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.1) !important;
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    color: #dc2626 !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+.btn-delete:hover {
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    transform: translateY(-2px);
+}
+
+.btn-back {
+    background: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-back:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px);
+}
+
+/* Options List */
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px;
+    color: #000000 !important;
+    transition: all 0.3s ease;
+}
+
+.option-item.correct {
+    border-color: rgba(34, 197, 94, 0.5) !important;
+    background: rgba(34, 197, 94, 0.05) !important;
+}
+
+.option-item span {
+    color: #000000 !important;
+    background: transparent !important;
+}
+
+.correct-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    background: rgba(34, 197, 94, 0.15) !important;
+    background-color: rgba(34, 197, 94, 0.15) !important;
+    color: #16a34a !important;
+    border: 1px solid rgba(34, 197, 94, 0.3) !important;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+/* Section Headings */
+.admin-quiz-questions-page h3.fw-bold {
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: transparent !important;
+}
+
+.admin-quiz-questions-page h3.fw-bold i {
+    color: #ff9900 !important;
+}
+
+/* Empty State */
+.question-card.text-center {
+    background: #ff9900 !important;
+}
+
+.question-card.text-center h3 {
+    color: #000000 !important;
+}
+
+.question-card.text-center p {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.question-card.text-center i {
+    color: rgba(0, 0, 0, 0.3) !important;
+}
+
 @media (max-width: 768px) {
     .quiz-meta-group {
         grid-template-columns: 1fr;
@@ -257,8 +497,23 @@
     
     .admin-form-page,
     .admin-quiz-page,
-    .admin-question-page {
+    .admin-question-page,
+    .admin-quiz-questions-page {
         padding: 2rem 0;
+    }
+    
+    .question-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .question-card {
+        padding: 1.5rem !important;
+    }
+    
+    .btn-action {
+        width: 100%;
+        justify-content: center;
     }
 }
 

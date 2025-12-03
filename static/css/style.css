@@ -41,9 +41,9 @@
 /* Light Theme */
 html[data-theme="light"],
 [data-theme="light"] {
-    --bg-primary: #000000;
-    --bg-secondary: #000000;
-    --bg-tertiary: #000000;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
     --text-primary: #1f2937;
     --text-secondary: #6b7280;
     --text-inverse: #ffffff;
@@ -56,10 +56,10 @@ html[data-theme="light"],
     --shadow: rgba(0, 0, 0, 0.1);
     
     /* Extended Theme Variables - Light Mode */
-    --hero-bg: #000000;
-    --section-bg: #000000;
-    --section-bg-alt: #000000;
-    --section-bg-gradient: #000000;
+    --hero-bg: #ffffff;
+    --section-bg: #ffffff;
+    --section-bg-alt: #f9fafb;
+    --section-bg-gradient: #f9fafb;
     --glass-bg: #ff9900;
     --glass-border: rgba(0, 0, 0, 0.1);
     --tile-bg: #ff9900;
@@ -70,8 +70,8 @@ html[data-theme="light"],
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    color: #ffffff;
-    background: #000000;
+    color: var(--text-primary);
+    background: var(--bg-primary);
     overflow-x: hidden;
     transition: background 0.3s ease, color 0.3s ease;
     position: relative;
@@ -117,6 +117,10 @@ html {
 .logo-icon {
     display: inline-flex;
     align-items: center;
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 
 /* Navbar */
@@ -212,7 +216,7 @@ html {
 }
 
 /* Also target any element with card-related class names */
-[class*="card"]:not([class*="backdrop"]):not([class*="modal-backdrop"]):not([class*="grid"]) {
+[class*="card"]:not([class*="backdrop"]):not([class*="modal-backdrop"]):not([class*="grid"]):not(.stats-card):not(.admin-stat-card):not(.student-card):not(.performance-stat-card) {
     background: #ff9900 !important;
     color: #000000 !important;
 }
@@ -649,12 +653,62 @@ textarea.form-control:focus {
 
 .nav-link {
     color: var(--text-primary) !important;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #ff9900, #ff7700);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover {
+    color: #ff9900 !important;
+    transform: translateY(-2px);
+    background: rgba(255, 153, 0, 0.1);
+}
+
+.nav-link:hover::after {
+    width: 80%;
+}
+
+.nav-link.active {
+    color: #ff9900 !important;
+    background: rgba(255, 153, 0, 0.15);
+}
+
+.nav-link.active::after {
+    width: 80%;
+    background: linear-gradient(135deg, #ff9900, #ff7700);
 }
 
 .navbar-brand {
     color: var(--text-primary) !important;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.navbar-brand:hover {
+    color: #ff9900 !important;
+    transform: translateY(-2px);
+    background: rgba(255, 153, 0, 0.1);
+}
+
+.navbar-brand:hover .logo-icon {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .navbar-toggler {
@@ -670,6 +724,85 @@ textarea.form-control:focus {
 /* Light theme - navbar toggler */
 [data-theme="light"] .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(31, 41, 55, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Profile Dropdown Styling */
+.profile-dropdown-toggle {
+    padding: 0.5rem !important;
+    border: none !important;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.profile-dropdown-toggle::after {
+    display: none !important;
+}
+
+.profile-dropdown-toggle:hover {
+    background: rgba(255, 153, 0, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+.profile-dropdown-toggle:hover i {
+    color: #ff9900 !important;
+}
+
+.profile-dropdown-menu {
+    background: linear-gradient(135deg, #ff9900, #ff7700) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.5rem 0 !important;
+    margin-top: 0.5rem !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+    min-width: 200px !important;
+    backdrop-filter: blur(10px);
+}
+
+.profile-dropdown-item {
+    color: #000000 !important;
+    padding: 0.75rem 1.25rem !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    font-weight: 500 !important;
+    background: transparent !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+}
+
+.profile-dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+    color: #000000 !important;
+    transform: translateX(4px);
+    text-decoration: none !important;
+}
+
+.profile-dropdown-item:hover i,
+.profile-dropdown-item:hover span {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.profile-dropdown-item i {
+    font-size: 1.1rem !important;
+    width: 20px !important;
+    text-align: center !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+}
+
+.profile-dropdown-item span {
+    display: inline-block !important;
+    flex: 1 !important;
+    text-decoration: none !important;
+}
+
+.profile-dropdown-menu .dropdown-divider {
+    margin: 0.5rem 0 !important;
+    border-color: rgba(0, 0, 0, 0.2) !important;
+    opacity: 1 !important;
 }
 
 /* Footer Styling */
@@ -708,13 +841,13 @@ footer {
 
 .advanced-toast {
     position: relative;
-    background: var(--card-bg);
-    border: 1px solid var(--glass-border);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     backdrop-filter: blur(30px) saturate(180%);
     box-shadow: 
-        0 25px 80px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 25px 80px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(0, 0, 0, 0.05),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     overflow: hidden;
     margin-bottom: 0;
@@ -727,8 +860,8 @@ footer {
 .advanced-toast:hover {
     transform: translateX(-8px) scale(1.02);
     box-shadow: 
-        0 30px 100px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.15),
+        0 30px 100px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
@@ -774,7 +907,7 @@ footer {
     left: 0;
     width: 100%;
     height: 3px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
     overflow: hidden;
     z-index: 2;
 }
@@ -941,7 +1074,7 @@ footer {
 }
 
 .toast-title-advanced {
-    color: var(--text-white);
+    color: #000000;
     font-weight: 700;
     font-size: 1rem;
     letter-spacing: 0.5px;
@@ -950,23 +1083,24 @@ footer {
 }
 
 .toast-body-advanced {
-    color: var(--text-secondary);
+    color: #000000;
     font-size: 0.9rem;
     line-height: 1.6;
     margin: 0;
+    opacity: 0.8;
 }
 
 /* Advanced Close Button */
 .btn-close-advanced {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     width: 32px;
     height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-white);
+    color: #000000;
     opacity: 0.7;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
@@ -977,9 +1111,10 @@ footer {
 
 .btn-close-advanced:hover {
     opacity: 1;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.1);
     transform: rotate(90deg) scale(1.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: #000000;
 }
 
 .btn-close-advanced:active {

@@ -19,6 +19,38 @@
                 <span><i class="bi bi-bookmark"></i>{{ course.get_category_display }}</span>
                 <span><i class="bi bi-clock-history"></i>Updated {{ course.created_at|timesince }} ago</span>
             </div>
+            {% if not is_enrolled %}
+                {% if user.is_authenticated %}
+                    {% if has_pending_request %}
+                        <div class="enrollment-prompt">
+                            <div class="pending-status">
+                                <i class="bi bi-hourglass-split"></i>
+                                <span>Enrollment Request Pending</span>
+                            </div>
+                            <p class="enrollment-message">Your enrollment request is being reviewed by an admin. You'll be notified once it's approved.</p>
+                        </div>
+                    {% else %}
+                        <div class="enrollment-prompt">
+                            <form method="post" action="{% url 'enroll_course' course.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-enroll-course">
+                                    <i class="bi bi-plus-circle"></i>
+                                    <span>Enroll</span>
+                                </button>
+                            </form>
+                            <p class="enrollment-message">Enroll to unlock all modules. An admin will review your request.</p>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="enrollment-prompt">
+                        <a href="{% url 'login' %}" class="btn-enroll-course">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            <span>Login to Enroll</span>
+                        </a>
+                        <p class="enrollment-message">Please login to enroll in this course and access the modules.</p>
+                    </div>
+                {% endif %}
+            {% endif %}
         </div>
         <div class="modules-grid">
             {% for module in modules %}
@@ -32,7 +64,13 @@
                 <div class="module-lock-badge">
                     <i class="bi bi-lock-fill"></i> Locked
                 </div>
-                <p class="module-lock-message">Complete the previous module's quiz to unlock this module.</p>
+                <p class="module-lock-message">
+                    {% if not is_enrolled %}
+                        Please enroll in this course to access the modules.
+                    {% else %}
+                        Complete the previous module's quiz to unlock this module.
+                    {% endif %}
+                </p>
                 {% else %}
                 <div class="module-actions">
                     <a href="{% url 'module_detail' module.id %}" class="module-action-btn btn-learn">
@@ -40,9 +78,17 @@
                     </a>
                     {% with has_quiz=module_has_quiz|get_item:module.id %}
                     {% if has_quiz %}
-                    <a href="{% url 'take_quiz' module.id %}" class="module-action-btn btn-quiz">
-                        <i class="bi bi-clipboard-check me-1"></i>Take Quiz
-                    </a>
+                        {% with attempt_info=module_attempt_info|get_item:module.id %}
+                        {% if attempt_info.can_take_quiz %}
+                        <a href="{% url 'take_quiz' module.id %}" class="module-action-btn btn-quiz">
+                            <i class="bi bi-clipboard-check me-1"></i>Take Quiz
+                        </a>
+                        {% else %}
+                        <a href="{% url 'request_additional_attempt' module.id %}" class="module-action-btn btn-quiz" style="background: #dc2626;">
+                            <i class="bi bi-envelope-paper me-1"></i>Request Attempt
+                        </a>
+                        {% endif %}
+                        {% endwith %}
                     {% endif %}
                     {% endwith %}
                 </div>

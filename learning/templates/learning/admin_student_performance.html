@@ -1,0 +1,410 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Student Performance - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}?v=8">
+<style>
+  .performance-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .performance-stat-card {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+  
+  .performance-stat-card * {
+    background: transparent !important;
+  }
+  
+  .performance-stat-label {
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: transparent !important;
+  }
+  
+  .performance-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000000;
+    background: transparent !important;
+  }
+  
+  .student-card {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+  
+  .student-card * {
+    background: transparent !important;
+  }
+  
+  .student-card::before,
+  .student-card::after {
+    content: none !important;
+    display: none !important;
+    background: transparent !important;
+    background-image: none !important;
+  }
+  
+  .student-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .student-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #000000;
+  }
+  
+  .student-info p {
+    margin: 0.25rem 0;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.9rem;
+  }
+  
+  .student-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .metric-item {
+    text-align: center;
+    padding: 1rem;
+    background: #000000 !important;
+    background-color: #000000 !important;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff !important;
+    margin-bottom: 0.25rem;
+  }
+  
+  .metric-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .module-performance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  .module-performance-table th {
+    text-align: left;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .module-performance-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .module-performance-table tr:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+  
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  
+  .score-badge.excellent {
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+  }
+  
+  .score-badge.good {
+    background: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+  }
+  
+  .score-badge.average {
+    background: rgba(251, 191, 36, 0.15);
+    color: #ca8a04;
+  }
+  
+  .score-badge.poor {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+  }
+  
+  .score-badge.no-attempt {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .status-icon {
+    font-size: 1.1rem;
+  }
+  
+  .status-icon.passed {
+    color: #16a34a;
+  }
+  
+  .status-icon.failed {
+    color: #dc2626;
+  }
+  
+  .status-icon.locked {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  
+  .expand-toggle {
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease;
+  }
+  
+  .expand-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.3);
+  }
+  
+  .module-details {
+    display: none;
+    margin-top: 1rem;
+  }
+  
+  .module-details.expanded {
+    display: block;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+  <div class="container dashboard-shell">
+    <div class="holo-card">
+      <div class="holo-content">
+        
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <span class="text-uppercase small d-inline-flex align-items-center mb-2">
+              <span class="me-2 d-inline-block"></span>
+              Analytics & Insights
+            </span>
+            <h1>Student Performance</h1>
+            <p>Track student progress, enrollment statistics, module completion, and quiz performance across all courses.</p>
+          </div>
+          <a href="{% url 'admin_dashboard' %}" class="cta-button">
+            <i class="bi bi-arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </a>
+        </div>
+
+        <!-- Overall Statistics -->
+        <div class="performance-stats">
+          <div class="performance-stat-card">
+            <div class="performance-stat-label">Total Students</div>
+            <div class="performance-stat-value">{{ total_students }}</div>
+          </div>
+          <div class="performance-stat-card">
+            <div class="performance-stat-label">Total Enrollments</div>
+            <div class="performance-stat-value">{{ total_enrollments }}</div>
+          </div>
+          <div class="performance-stat-card">
+            <div class="performance-stat-label">Total Quiz Attempts</div>
+            <div class="performance-stat-value">{{ total_quiz_attempts }}</div>
+          </div>
+        </div>
+
+        <!-- Student Performance List -->
+        {% if student_performance %}
+          {% for perf in student_performance %}
+          <div class="student-card">
+            <div class="student-header">
+              <div class="student-info">
+                <h3>{{ perf.student.username }}</h3>
+                <p>{{ perf.student.email }}</p>
+                <p><small>Joined: {{ perf.student.date_joined|date:"M d, Y" }}</small></p>
+              </div>
+              <button class="expand-toggle" onclick="toggleModuleDetails({{ forloop.counter0 }})">
+                <i class="bi bi-chevron-down" id="toggle-icon-{{ forloop.counter0 }}"></i>
+                <span>View Details</span>
+              </button>
+            </div>
+            
+            <div class="student-metrics">
+              <div class="metric-item">
+                <div class="metric-value">{{ perf.courses_enrolled }}</div>
+                <div class="metric-label">Courses Enrolled</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-value">{{ perf.unlocked_modules }}</div>
+                <div class="metric-label">Modules Unlocked</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-value">{{ perf.total_quiz_attempts }}</div>
+                <div class="metric-label">Quiz Attempts</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-value">{{ perf.passed_quizzes }}</div>
+                <div class="metric-label">Quizzes Passed</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-value">
+                  {% if perf.average_score %}
+                    {{ perf.average_score|floatformat:1 }}%
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </div>
+                <div class="metric-label">Average Score</div>
+              </div>
+            </div>
+            
+            <div class="module-details" id="module-details-{{ forloop.counter0 }}">
+              {% if perf.module_performances %}
+              <table class="module-performance-table">
+                <thead>
+                  <tr>
+                    <th>Course</th>
+                    <th>Module</th>
+                    <th>Status</th>
+                    <th>Best Score</th>
+                    <th>Attempts</th>
+                    <th>Passed</th>
+                    <th>Last Attempt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for module_perf in perf.module_performances %}
+                  <tr>
+                    <td><strong>{{ module_perf.course_title }}</strong></td>
+                    <td>{{ module_perf.module_title }}</td>
+                    <td>
+                      {% if module_perf.is_unlocked %}
+                        <i class="bi bi-unlock status-icon"></i> Unlocked
+                      {% else %}
+                        <i class="bi bi-lock status-icon locked"></i> Locked
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if module_perf.best_score is not None %}
+                        {% if module_perf.best_score >= 90 %}
+                          <span class="score-badge excellent">{{ module_perf.best_score|floatformat:1 }}%</span>
+                        {% elif module_perf.best_score >= 70 %}
+                          <span class="score-badge good">{{ module_perf.best_score|floatformat:1 }}%</span>
+                        {% elif module_perf.best_score >= 50 %}
+                          <span class="score-badge average">{{ module_perf.best_score|floatformat:1 }}%</span>
+                        {% else %}
+                          <span class="score-badge poor">{{ module_perf.best_score|floatformat:1 }}%</span>
+                        {% endif %}
+                      {% else %}
+                        <span class="score-badge no-attempt">No Attempt</span>
+                      {% endif %}
+                    </td>
+                    <td>{{ module_perf.total_attempts }}</td>
+                    <td>
+                      {% if module_perf.is_passed %}
+                        <i class="bi bi-check-circle status-icon passed"></i> Yes
+                      {% elif module_perf.total_attempts > 0 %}
+                        <i class="bi bi-x-circle status-icon failed"></i> No
+                      {% else %}
+                        <span style="color: rgba(0, 0, 0, 0.4);">-</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if module_perf.latest_attempt %}
+                        {{ module_perf.latest_attempt|date:"M d, Y H:i" }}
+                      {% else %}
+                        <span style="color: rgba(0, 0, 0, 0.4);">-</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% else %}
+              <div class="empty-state">
+                <p>No module performance data available.</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <i class="bi bi-people"></i>
+            <p>No student performance data available yet.</p>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleModuleDetails(index) {
+  const details = document.getElementById(`module-details-${index}`);
+  const icon = document.getElementById(`toggle-icon-${index}`);
+  const button = icon.closest('.expand-toggle');
+  
+  if (details.classList.contains('expanded')) {
+    details.classList.remove('expanded');
+    icon.classList.remove('bi-chevron-up');
+    icon.classList.add('bi-chevron-down');
+    button.querySelector('span').textContent = 'View Details';
+  } else {
+    details.classList.add('expanded');
+    icon.classList.remove('bi-chevron-down');
+    icon.classList.add('bi-chevron-up');
+    button.querySelector('span').textContent = 'Hide Details';
+  }
+}
+</script>
+{% endblock %}
+

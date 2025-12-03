@@ -45,9 +45,10 @@ class Course(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
     created_at = models.DateTimeField(auto_now_add=True)
     is_featured = models.BooleanField(default=False)
+    order = models.PositiveSmallIntegerField(default=1, help_text='Display order in course list (lower numbers appear first)')
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['order', '-created_at']
     
     def __str__(self):
         return self.title
@@ -197,6 +198,9 @@ class UserQuizAttempt(models.Model):
     passed = models.BooleanField(default=False)
     started_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
+    auto_submitted = models.BooleanField(default=False, help_text='Whether quiz was auto-submitted due to violations')
+    violation_count = models.PositiveIntegerField(default=0, help_text='Number of violations detected')
+    violation_details = models.TextField(blank=True, help_text='Details of violations (tab switches, copy/paste, etc.)')
     
     class Meta:
         ordering = ['-started_at']
@@ -206,7 +210,36 @@ class UserQuizAttempt(models.Model):
     
     def __str__(self):
         status = 'Passed' if self.passed else 'Failed'
-        return f'{self.user.username} - {self.quiz.title} - {status} ({self.score}%)'
+        auto = ' (Auto-submitted)' if self.auto_submitted else ''
+        return f'{self.user.username} - {self.quiz.title} - {status} ({self.score}%){auto}'
+
+
+class QuizAttemptRequest(models.Model):
+    """Request for additional quiz attempts after exhausting 3 attempts"""
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quiz_attempt_requests')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempt_requests')
+    reason = models.TextField(help_text='Reason for requesting additional attempt')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    used = models.BooleanField(default=False, help_text='Whether the approved request has been used for an attempt')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviewed_attempt_requests')
+    admin_notes = models.TextField(blank=True, help_text='Admin notes or comments')
+    
+    class Meta:
+        ordering = ['-requested_at']
+        indexes = [
+            models.Index(fields=['user', 'quiz', 'status']),
+        ]
+    
+    def __str__(self):
+        return f'{self.user.username} - {self.quiz.title} - {self.status}'
 
 
 class UserAnswer(models.Model):
@@ -221,3 +254,48 @@ class UserAnswer(models.Model):
     
     def __str__(self):
         return f'{self.attempt.user.username} - {self.question.question_text[:30]}...'
+
+
+class EnrollmentRequest(models.Model):
+    """Track enrollment requests that need admin approval"""
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollment_requests')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollment_requests')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviewed_enrollments')
+    notes = models.TextField(blank=True, help_text='Admin notes for approval/rejection')
+    
+    class Meta:
+        unique_together = ('user', 'course')
+        ordering = ['-requested_at']
+        indexes = [
+            models.Index(fields=['user', 'course', 'status']),
+        ]
+    
+    def __str__(self):
+        return f'{self.user.username} - {self.course.title} ({self.status})'
+
+
+class CourseEnrollment(models.Model):
+    """Track approved user enrollments in courses"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='course_enrollments')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
+    enrolled_at = models.DateTimeField(auto_now_add=True)
+    enrollment_request = models.OneToOneField(EnrollmentRequest, on_delete=models.SET_NULL, null=True, blank=True, related_name='enrollment')
+    
+    class Meta:
+        unique_together = ('user', 'course')
+        ordering = ['-enrolled_at']
+        indexes = [
+            models.Index(fields=['user', 'course']),
+        ]
+    
+    def __str__(self):
+        return f'{self.user.username} - {self.course.title}'

@@ -3,6 +3,10 @@
 
 {% block title %}Quiz Result - {{ quiz.title }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/quiz-result.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="result-page">
     <div class="container">

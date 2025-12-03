@@ -18,7 +18,7 @@
         </div>
         <div class="courses-grid">
             {% for course in courses %}
-            <div class="course-card" onclick="window.location.href='{% url 'course_detail' course.id %}'">
+            <div class="course-card">
                 <span class="course-category">{{ course.get_category_display }}</span>
                 <h2>{{ course.title }}</h2>
                 <p>{{ course.description|truncatewords:35 }}</p>
@@ -26,11 +26,58 @@
                     <span><i class="bi bi-columns-gap"></i>{{ course.modules.count }} modules</span>
                     <span><i class="bi bi-clock-history"></i>{{ course.created_at|date:'M d, Y' }}</span>
                 </div>
+                <div class="course-actions">
+                    {% if user.is_authenticated %}
+                        {% if course.is_enrolled %}
+                            <a href="{% url 'course_detail' course.id %}" class="btn-start-learning">
+                                <i class="bi bi-play-circle"></i>
+                                <span>Learn</span>
+                            </a>
+                            <form method="post" action="{% url 'unenroll_course' course.id %}" class="enroll-form" onsubmit="return confirm('Are you sure you want to unenroll from this course?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-unenroll">
+                                    <i class="bi bi-x-circle"></i>
+                                    <span>Unenroll</span>
+                                </button>
+                            </form>
+                        {% elif course.has_pending_request %}
+                            <button type="button" class="btn-pending" disabled>
+                                <i class="bi bi-hourglass-split"></i>
+                                <span>Pending</span>
+                            </button>
+                            <a href="{% url 'course_detail' course.id %}" class="btn-view-course">
+                                <i class="bi bi-eye"></i>
+                                <span>View</span>
+                            </a>
+                        {% else %}
+                            <form method="post" action="{% url 'enroll_course' course.id %}" class="enroll-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-enroll">
+                                    <i class="bi bi-plus-circle"></i>
+                                    <span>Enroll</span>
+                                </button>
+                            </form>
+                            <a href="{% url 'course_detail' course.id %}" class="btn-view-course">
+                                <i class="bi bi-eye"></i>
+                                <span>View</span>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn-enroll">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            <span>Login to Enroll</span>
+                        </a>
+                        <a href="{% url 'course_detail' course.id %}" class="btn-view-course">
+                            <i class="bi bi-eye"></i>
+                            <span>View</span>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
             {% empty %}
             <div class="course-card">
                 <h2>No courses yet</h2>
-                <p>Once an admin creates courses, you’ll see them here. Check back soon.</p>
+                <p>Once an admin creates courses, you'll see them here. Check back soon.</p>
             </div>
             {% endfor %}
         </div>

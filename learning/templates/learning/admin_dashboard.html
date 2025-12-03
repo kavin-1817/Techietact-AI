@@ -4,7 +4,7 @@
 {% block title %}Admin Dashboard - Techietact AI Tutor{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}?v=8">
 {% endblock %}
 
 {% block content %}
@@ -12,94 +12,186 @@
   <div class="container dashboard-shell">
     <div class="holo-card">
       <div class="holo-content">
+        
+        <!-- Dashboard Header -->
         <div class="dashboard-header">
           <div class="dashboard-title">
-            <span class="text-uppercase small d-inline-flex align-items-center mb-2" style="letter-spacing:0.4em;color:rgba(255,255,255,0.6);">
-              <span class="me-2 d-inline-block" style="width:36px;height:1px;background:rgba(255,255,255,0.4);"></span>Control Center
+            <span class="text-uppercase small d-inline-flex align-items-center mb-2">
+              <span class="me-2 d-inline-block"></span>
+              Control Center
             </span>
             <h1>Admin Dashboard</h1>
             <p>Monitor course performance, highlight featured tracks, and launch new learning journeys from a single futuristic cockpit.</p>
           </div>
-          <a href="{% url 'admin_course_create' %}" class="cta-button">
-            <i class="bi bi-plus-circle"></i>
-            Create Course
-          </a>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="{% url 'admin_course_create' %}" class="cta-button">
+              <i class="bi bi-plus-circle"></i>
+              <span>Create Course</span>
+            </a>
+            <a href="{% url 'admin_student_performance' %}" class="cta-button" style="background: #000000; color: #ffffff;">
+              <i class="bi bi-graph-up-arrow"></i>
+              <span>Student Performance</span>
+            </a>
+            <a href="{% url 'admin_exam_violations' %}" class="cta-button" style="background: #dc2626; color: #ffffff;">
+              <i class="bi bi-shield-exclamation"></i>
+              <span>Exam Violations</span>
+            </a>
+            {% if pending_attempt_requests > 0 %}
+            <a href="{% url 'admin_quiz_attempt_requests' %}" class="cta-button" style="background: #ca8a04; color: #ffffff;">
+              <i class="bi bi-envelope-paper"></i>
+              <span>Attempt Requests ({{ pending_attempt_requests }})</span>
+            </a>
+            {% endif %}
+            {% if pending_enrollments > 0 %}
+            <a href="{% url 'admin_enrollment_requests' %}" class="cta-button" style="background: #ff9900; color: #000000;">
+              <i class="bi bi-person-check"></i>
+              <span>Review Requests ({{ pending_enrollments }})</span>
+            </a>
+            {% endif %}
+          </div>
         </div>
 
-        <div class="stats-bar">
-          <div class="stats-card">
-            <div class="stats-card-content">
-              <p class="stats-label">Total Courses</p>
-              <p class="stats-value">{{ total_courses }}</p>
-              <p class="stats-desc">Live learning tracks across the platform</p>
+        <!-- Statistics Cards -->
+        <div class="admin-stats-container">
+          <div class="admin-stat-card" style="background: #ffffff !important; background-color: #ffffff !important;">
+            <div class="admin-stat-inner" style="background: transparent !important;">
+              <p class="admin-stat-title" style="background: transparent !important; color: rgba(0, 0, 0, 0.55) !important;">Total Courses</p>
+              <p class="admin-stat-number" style="background: transparent !important; color: #000000 !important;">{{ total_courses }}</p>
+              <p class="admin-stat-text" style="background: transparent !important; color: rgba(0, 0, 0, 0.6) !important;">Live learning tracks across the platform</p>
             </div>
           </div>
-          <div class="stats-card">
-            <div class="stats-card-content">
-              <p class="stats-label">Featured Courses</p>
-              <p class="stats-value">{{ featured_courses }}</p>
-              <p class="stats-desc">Premium experiences spotlighted on home</p>
+          <div class="admin-stat-card" style="background: #ffffff !important; background-color: #ffffff !important;">
+            <div class="admin-stat-inner" style="background: transparent !important;">
+              <p class="admin-stat-title" style="background: transparent !important; color: rgba(0, 0, 0, 0.55) !important;">Featured Courses</p>
+              <p class="admin-stat-number" style="background: transparent !important; color: #000000 !important;">{{ featured_courses }}</p>
+              <p class="admin-stat-text" style="background: transparent !important; color: rgba(0, 0, 0, 0.6) !important;">Premium experiences spotlighted on home</p>
+            </div>
+          </div>
+          <div class="admin-stat-card" style="background: #ffffff !important; background-color: #ffffff !important;">
+            <div class="admin-stat-inner" style="background: transparent !important;">
+              <p class="admin-stat-title" style="background: transparent !important; color: rgba(0, 0, 0, 0.55) !important;">Total Users</p>
+              <p class="admin-stat-number" style="background: transparent !important; color: #000000 !important;">{{ total_users }}</p>
+              <p class="admin-stat-text" style="background: transparent !important; color: rgba(0, 0, 0, 0.6) !important;">Registered learners on the platform</p>
             </div>
           </div>
         </div>
 
+        <!-- Courses Table -->
         <div class="table-wrapper">
           <div class="table-head">
+            <span>Order</span>
             <span>Title</span>
             <span>Category</span>
             <span>Featured</span>
             <span>Created</span>
             <span>Actions</span>
           </div>
+          
           {% if courses %}
-          {% for course in courses %}
-          <div class="course-row">
-            <div>
-              <strong style="font-size:1.05rem;">{{ course.title }}</strong>
-            </div>
-            <div>
-              <span class="category-chip">
-                <i class="bi bi-folder2-open"></i>{{ course.get_category_display }}
-              </span>
-            </div>
-            <div>
-              {% if course.is_featured %}
-              <i class="bi bi-star-fill featured-icon"></i>
-              {% else %}
-              <i class="bi bi-star" style="color:rgba(255,255,255,0.35);font-size:1.2rem;"></i>
-              {% endif %}
-            </div>
-            <div class="created-cell">
-              {{ course.created_at|date:"M d, Y" }}
-            </div>
-            <div>
-              <div class="action-stack">
-                <a href="{% url 'admin_modules_list' course.id %}" class="action-pill">
-                  <i class="bi bi-diagram-3"></i>Modules
-                </a>
-                <a href="{% url 'admin_course_edit' course.id %}" class="action-pill">
-                  <i class="bi bi-pencil"></i>Edit
-                </a>
-                <form method="post" action="{% url 'admin_course_delete' course.id %}" onsubmit="return confirm('Delete this course?');">
-                  {% csrf_token %}
-                  <button type="submit" class="action-pill delete border-0 bg-transparent">
-                    <i class="bi bi-trash"></i>Delete
-                  </button>
-                </form>
+            {% for course in courses %}
+            <div class="course-row" data-course-id="{{ course.id }}">
+              <div class="order-controls">
+                <button class="order-btn" onclick="reorderCourse({{ course.id }}, 'up', event)" 
+                        {% if forloop.first %}disabled title="Already at top"{% else %}title="Move up"{% endif %}>
+                  <i class="bi bi-arrow-up"></i>
+                </button>
+                <span class="order-number">{{ course.order }}</span>
+                <button class="order-btn" onclick="reorderCourse({{ course.id }}, 'down', event)" 
+                        {% if forloop.last %}disabled title="Already at bottom"{% else %}title="Move down"{% endif %}>
+                  <i class="bi bi-arrow-down"></i>
+                </button>
+              </div>
+              <div>
+                <strong>{{ course.title }}</strong>
+              </div>
+              <div>
+                <span class="category-chip">
+                  <i class="bi bi-folder2-open"></i>
+                  {{ course.get_category_display }}
+                </span>
+              </div>
+              <div>
+                {% if course.is_featured %}
+                  <i class="bi bi-star-fill featured-icon"></i>
+                {% else %}
+                  <i class="bi bi-star" style="color: rgba(0, 0, 0, 0.2); font-size: 1.2rem;"></i>
+                {% endif %}
+              </div>
+              <div class="created-cell">
+                {{ course.created_at|date:"M d, Y" }}
+              </div>
+              <div>
+                <div class="action-stack">
+                  <a href="{% url 'admin_modules_list' course.id %}" class="action-pill">
+                    <i class="bi bi-diagram-3"></i>
+                    <span>Modules</span>
+                  </a>
+                  <a href="{% url 'admin_course_edit' course.id %}" class="action-pill">
+                    <i class="bi bi-pencil"></i>
+                    <span>Edit</span>
+                  </a>
+                  <form method="post" action="{% url 'admin_course_delete' course.id %}" onsubmit="return confirm('Are you sure you want to delete this course? This action cannot be undone.');" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="action-pill delete">
+                      <i class="bi bi-trash"></i>
+                      <span>Delete</span>
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-          {% endfor %}
+            {% endfor %}
           {% else %}
-          <div class="empty-state">
-            <i class="bi bi-journal-richtext fs-1 d-block mb-3"></i>
-            <p>No courses yet. Use the create button to launch the first curriculum.</p>
-          </div>
+            <div class="empty-state">
+              <i class="bi bi-journal-richtext"></i>
+              <p>No courses yet. Use the create button to launch the first curriculum.</p>
+            </div>
           {% endif %}
         </div>
+
       </div>
     </div>
   </div>
 </div>
-{% endblock %}
 
+<script>
+function reorderCourse(courseId, direction, event) {
+    const formData = new FormData();
+    formData.append('direction', direction);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    
+    const button = event.target.closest('.order-btn');
+    const originalContent = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+    button.style.opacity = '0.6';
+    
+    fetch(`/admin/courses/${courseId}/reorder/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reload the page to show updated order
+            window.location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'Failed to reorder course'));
+            button.disabled = false;
+            button.innerHTML = originalContent;
+            button.style.opacity = '1';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while reordering the course.');
+        button.disabled = false;
+        button.innerHTML = originalContent;
+        button.style.opacity = '1';
+    });
+}
+</script>
+{% endblock %}

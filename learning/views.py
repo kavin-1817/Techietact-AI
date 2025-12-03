@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 from django.utils.http import url_has_allowed_host_and_scheme
 
-from .models import LearnerProfile, Course, Module, ChatSession, AdminProfile, Quiz, QuizQuestion, QuizOption, UserQuizAttempt, UserAnswer
+from .models import LearnerProfile, Course, Module, ChatSession, AdminProfile, Quiz, QuizQuestion, QuizOption, UserQuizAttempt, UserAnswer, CourseEnrollment, EnrollmentRequest, QuizAttemptRequest
 
 
 def _run_python_code(source: str) -> tuple[str, str]:
@@ -146,11 +146,24 @@ def dashboard(request):
     featured_courses = Course.objects.filter(is_featured=True).prefetch_related('modules')[:5]
     all_courses = Course.objects.prefetch_related('modules')[:8]
     
+    # Calculate unlocked modules count for the user
+    unlocked_modules_count = 0
+    if request.user.is_authenticated:
+        # Get all enrolled courses
+        enrolled_courses = CourseEnrollment.objects.filter(user=request.user).values_list('course_id', flat=True)
+        # Get all modules from enrolled courses
+        enrolled_modules = Module.objects.filter(course_id__in=enrolled_courses)
+        # Count unlocked modules
+        for module in enrolled_modules:
+            if module.is_unlocked_for_user(request.user):
+                unlocked_modules_count += 1
+    
     context = {
         'profile': profile,
         'recent_sessions': recent_sessions,
         'featured_courses': featured_courses,
         'all_courses': all_courses,
+        'unlocked_modules_count': unlocked_modules_count,
     }
     return render(request, 'learning/dashboard.html', context)
 
@@ -158,30 +171,95 @@ def dashboard(request):
 def courses_list(request):
     """List all available courses"""
     courses = Course.objects.prefetch_related('modules').all()
-    return render(request, 'learning/courses_list.html', {'courses': courses})
+    
+    # Check enrollment status and pending requests for logged-in users
+    enrolled_course_ids = set()
+    pending_request_ids = set()
+    if request.user.is_authenticated:
+        enrolled_course_ids = set(
+            CourseEnrollment.objects.filter(user=request.user)
+            .values_list('course_id', flat=True)
+        )
+        pending_request_ids = set(
+            EnrollmentRequest.objects.filter(
+                user=request.user,
+                status='pending'
+            ).values_list('course_id', flat=True)
+        )
+    
+    # Add enrollment status to each course
+    for course in courses:
+        course.is_enrolled = course.id in enrolled_course_ids
+        course.has_pending_request = course.id in pending_request_ids
+    
+    return render(request, 'learning/courses_list.html', {
+        'courses': courses,
+        'enrolled_course_ids': enrolled_course_ids,
+    })
 
 
-@login_required
 def course_detail(request, course_id):
     """Display course details and its modules"""
     course = get_object_or_404(Course.objects.prefetch_related('modules'), id=course_id)
     modules = course.modules.all()
     
+    # Check if user is enrolled and pending request status
+    is_enrolled = False
+    has_pending_request = False
+    if request.user.is_authenticated:
+        is_enrolled = CourseEnrollment.objects.filter(user=request.user, course=course).exists()
+        has_pending_request = EnrollmentRequest.objects.filter(
+            user=request.user,
+            course=course,
+            status='pending'
+        ).exists()
+    
     # Check which modules are unlocked for the user and which have quizzes
     module_status = {}
     module_has_quiz = {}
+    module_attempt_info = {}  # Store attempt info for each module
     for module in modules:
-        is_unlocked = module.is_unlocked_for_user(request.user)
+        # If user is not enrolled, lock all modules
+        if not is_enrolled:
+            is_unlocked = False
+        else:
+            is_unlocked = module.is_unlocked_for_user(request.user)
         # Use integer key - template filter can handle it
         module_status[module.id] = is_unlocked
         # Check if module has a quiz
         module_has_quiz[module.id] = hasattr(module, 'quiz')
+        
+        # Get attempt information for each module with a quiz
+        if is_enrolled and hasattr(module, 'quiz'):
+            quiz = module.quiz
+            attempt_count = UserQuizAttempt.objects.filter(user=request.user, quiz=quiz).count()
+            has_pending_request = QuizAttemptRequest.objects.filter(
+                user=request.user,
+                quiz=quiz,
+                status='pending'
+            ).exists()
+            has_approved_unused_request = QuizAttemptRequest.objects.filter(
+                user=request.user,
+                quiz=quiz,
+                status='approved',
+                used=False
+            ).exists()
+            
+            module_attempt_info[module.id] = {
+                'attempt_count': attempt_count,
+                'has_pending_request': has_pending_request,
+                'has_approved_unused_request': has_approved_unused_request,
+                'can_take_quiz': attempt_count < 3 or has_approved_unused_request,
+            }
     
     return render(request, 'learning/course_detail.html', {
         'course': course,
         'modules': modules,
         'module_status': module_status,
         'module_has_quiz': module_has_quiz,
+        'module_attempt_info': module_attempt_info,
+        'is_enrolled': is_enrolled,
+        'has_pending_request': has_pending_request,
     })
 
 
@@ -189,6 +267,13 @@ def course_detail(request, course_id):
 def module_detail(request, module_id):
     """Display a module and interactive learning assistant"""
     module = get_object_or_404(Module.objects.select_related('course'), id=module_id)
+    
+    # Check if user is enrolled in the course
+    is_enrolled = CourseEnrollment.objects.filter(user=request.user, course=module.course).exists()
+    
+    if not is_enrolled:
+        messages.error(request, 'You must enroll in this course to access its modules.')
+        return redirect('course_detail', course_id=module.course.id)
     
     # Check if module is unlocked for user
     is_unlocked = module.is_unlocked_for_user(request.user)
@@ -362,16 +447,81 @@ def module_ask_api(request, module_id):
                 'is_error': True,
             })
         
+        # Extract suggestions from the response
+        suggestions = []
+        response_text = response
+        
+        # Check for suggestions markers (case-insensitive and handle variations)
+        start_marker = '[SUGGESTIONS_START]'
+        end_marker = '[SUGGESTIONS_END]'
+        
+        # Find markers (case-insensitive search)
+        start_idx = -1
+        end_idx = -1
+        
+        # Try case-sensitive first
+        if start_marker in response:
+            start_idx = response.find(start_marker)
+        if end_marker in response:
+            end_idx = response.find(end_marker)
+        
+        # If not found, try case-insensitive
+        if start_idx == -1 or end_idx == -1:
+            response_lower = response.lower()
+            start_marker_lower = start_marker.lower()
+            end_marker_lower = end_marker.lower()
+            
+            if start_idx == -1 and start_marker_lower in response_lower:
+                start_idx = response_lower.find(start_marker_lower)
+            if end_idx == -1 and end_marker_lower in response_lower:
+                end_idx = response_lower.find(end_marker_lower)
+        
+        if start_idx != -1 and end_idx != -1 and start_idx < end_idx:
+            # Extract suggestions section
+            suggestions_text = response[start_idx + len(start_marker):end_idx].strip()
+            # Split by newlines and clean up
+            raw_suggestions = suggestions_text.split('\n')
+            suggestions = []
+            for s in raw_suggestions:
+                cleaned = s.strip()
+                # Skip empty lines, markers, and invalid entries
+                if (cleaned and 
+                    cleaned.lower() != start_marker.lower() and 
+                    cleaned.lower() != end_marker.lower() and
+                    not cleaned.lower().startswith('[suggestions') and 
+                    not cleaned.lower().endswith(']') and
+                    len(cleaned) > 5):  # Minimum length for a valid suggestion
+                    suggestions.append(cleaned)
+            
+            # Remove the suggestions section from the response text
+            response_text = (response[:start_idx] + response[end_idx + len(end_marker):]).strip()
+            # Clean up any extra newlines or whitespace
+            response_text = response_text.strip()
+            # Remove trailing newlines
+            while response_text.endswith('\n') or response_text.endswith('\r'):
+                response_text = response_text.rstrip('\n\r')
+            response_text = response_text.strip()
+        
+        # CRITICAL: Ensure markers are completely removed from response_text (safety check)
+        # Remove any remaining markers that might have slipped through
+        import re
+        response_text = re.sub(r'\[SUGGESTIONS_START\].*?\[SUGGESTIONS_END\]', '', response_text, flags=re.IGNORECASE | re.DOTALL)
+        response_text = re.sub(r'\[SUGGESTIONS_START\]', '', response_text, flags=re.IGNORECASE)
+        response_text = re.sub(r'\[SUGGESTIONS_END\]', '', response_text, flags=re.IGNORECASE)
+        response_text = response_text.strip()
+        
+        # Store the full response (with suggestions) in the database for history
         chat_session = ChatSession.objects.create(
             user=request.user,
             module=module,
             topic=specific_topic if specific_topic else '',
             question=question,
-            response=response
+            response=response  # Store full response including suggestions for history
         )
         
         return JsonResponse({
-            'response': response,
+            'response': response_text,  # Send cleaned response (without suggestions) to frontend
+            'suggestions': suggestions,  # Send suggestions separately
             'timestamp': chat_session.created_at.isoformat(),
         })
     except Exception as exc:
@@ -379,6 +529,44 @@ def module_ask_api(request, module_id):
             'error': 'An unexpected error occurred. Please try again.',
             'details': str(exc),
             'is_error': True
+        }, status=500)
+
+
+@login_required
+@require_http_methods(['POST'])
+@ensure_csrf_cookie
+def module_delete_memory(request, module_id):
+    """Delete all conversation history for a user in a specific module and topic"""
+    module = get_object_or_404(Module.objects.select_related('course'), id=module_id)
+    
+    try:
+        data = json.loads(request.body)
+        topic = data.get('topic', '').strip()
+        
+        # Delete chat sessions for this user, module, and topic (if specified)
+        if topic:
+            deleted_count = ChatSession.objects.filter(
+                user=request.user,
+                module=module,
+                topic=topic
+            ).delete()[0]
+        else:
+            # If no topic specified, delete all sessions for this module
+            deleted_count = ChatSession.objects.filter(
+                user=request.user,
+                module=module
+            ).delete()[0]
+        
+        return JsonResponse({
+            'success': True,
+            'deleted_count': deleted_count,
+            'message': f'Successfully deleted {deleted_count} conversation(s).'
+        })
+    except Exception as exc:
+        return JsonResponse({
+            'success': False,
+            'error': 'An unexpected error occurred while deleting conversation history.',
+            'details': str(exc)
         }, status=500)
 
 
@@ -414,6 +602,12 @@ def take_quiz(request, module_id):
     """Display quiz for a module"""
     module = get_object_or_404(Module.objects.select_related('course'), id=module_id)
     
+    # Check if user is enrolled in the course
+    is_enrolled = CourseEnrollment.objects.filter(user=request.user, course=module.course).exists()
+    if not is_enrolled:
+        messages.error(request, 'You must enroll in this course to access its quizzes.')
+        return redirect('course_detail', course_id=module.course.id)
+    
     # Check if module is unlocked
     if not module.is_unlocked_for_user(request.user):
         messages.error(request, 'You must complete the previous module\'s quiz to access this module.')
@@ -426,6 +620,24 @@ def take_quiz(request, module_id):
     
     quiz = module.quiz
     
+    # Check if user is admin (admins have unlimited attempts)
+    is_admin = request.user.is_staff or hasattr(request.user, 'admin_profile')
+    
+    # Check attempt limit (max 3 attempts) - skip for admins
+    attempt_count = UserQuizAttempt.objects.filter(user=request.user, quiz=quiz).count()
+    
+    # Check if user has an approved and unused request for additional attempts
+    approved_request = QuizAttemptRequest.objects.filter(
+        user=request.user,
+        quiz=quiz,
+        status='approved',
+        used=False
+    ).first()
+    
+    if not is_admin and attempt_count >= 3 and not approved_request:
+        messages.error(request, 'You have reached the maximum number of attempts (3) for this quiz. Please request additional attempts if needed.')
+        return redirect('module_detail', module_id=module.id)
+    
     # Get questions with options
     questions = quiz.questions.all().prefetch_related('options')
     
@@ -433,10 +645,15 @@ def take_quiz(request, module_id):
         messages.info(request, 'This quiz does not have any questions yet.')
         return redirect('module_detail', module_id=module.id)
     
+    # Calculate remaining attempts (unlimited for admins)
+    remaining_attempts = float('inf') if is_admin else (3 - attempt_count)
+    
     return render(request, 'learning/take_quiz.html', {
         'module': module,
         'quiz': quiz,
         'questions': questions,
+        'attempt_count': attempt_count,
+        'remaining_attempts': remaining_attempts,
     })
 
 
@@ -445,6 +662,12 @@ def take_quiz(request, module_id):
 def submit_quiz(request, module_id):
     """Submit quiz answers and calculate score"""
     module = get_object_or_404(Module.objects.select_related('course'), id=module_id)
+    
+    # Check if user is enrolled in the course
+    is_enrolled = CourseEnrollment.objects.filter(user=request.user, course=module.course).exists()
+    if not is_enrolled:
+        messages.error(request, 'You must enroll in this course to submit quizzes.')
+        return redirect('course_detail', course_id=module.course.id)
     
     # Check if module is unlocked
     if not module.is_unlocked_for_user(request.user):
@@ -463,6 +686,29 @@ def submit_quiz(request, module_id):
         messages.error(request, 'This quiz does not have any questions.')
         return redirect('module_detail', module_id=module.id)
     
+    # Check if user is admin (admins have unlimited attempts)
+    is_admin = request.user.is_staff or hasattr(request.user, 'admin_profile')
+    
+    # Check attempt limit - skip for admins
+    attempt_count = UserQuizAttempt.objects.filter(user=request.user, quiz=quiz).count()
+    
+    # Check if user has an approved and unused request for additional attempts
+    approved_request = QuizAttemptRequest.objects.filter(
+        user=request.user,
+        quiz=quiz,
+        status='approved',
+        used=False
+    ).first()
+    
+    if not is_admin and attempt_count >= 3 and not approved_request:
+        messages.error(request, 'You have reached the maximum number of attempts (3) for this quiz. Please request additional attempts if needed.')
+        return redirect('module_detail', module_id=module.id)
+    
+    # Get violation data
+    auto_submitted = request.POST.get('auto_submitted') == 'true'
+    violation_count = int(request.POST.get('violation_count', 0))
+    violation_details = request.POST.get('violation_details', '')
+    
     # Calculate score
     total_points = quiz.get_total_points()
     earned_points = 0
@@ -476,6 +722,9 @@ def submit_quiz(request, module_id):
         earned_points=0,
         score=0,
         passed=False,
+        auto_submitted=auto_submitted,
+        violation_count=violation_count,
+        violation_details=violation_details,
     )
     
     # Process answers
@@ -512,13 +761,39 @@ def submit_quiz(request, module_id):
     attempt.completed_at = timezone.now()
     attempt.save()
     
+    # Mark approved request as used if this was an additional attempt
+    if not is_admin and attempt_count >= 3:
+        approved_request = QuizAttemptRequest.objects.filter(
+            user=request.user,
+            quiz=quiz,
+            status='approved',
+            used=False
+        ).first()
+        if approved_request:
+            approved_request.used = True
+            approved_request.save()
+    
     # Show result
-    messages.success(request, f'Quiz completed! Your score: {score_percentage:.1f}%')
+    if auto_submitted:
+        messages.error(request, f'Your quiz was automatically submitted due to exam rule violations. Score: {score_percentage:.1f}%')
+        if violation_count > 0:
+            messages.warning(request, f'Violations detected: {violation_count}. Please review the exam rules before your next attempt.')
+    else:
+        messages.success(request, f'Quiz completed! Your score: {score_percentage:.1f}%')
     
     if passed:
         messages.success(request, f'Congratulations! You passed with {score_percentage:.1f}%. The next module is now unlocked!')
     else:
-        messages.warning(request, f'You scored {score_percentage:.1f}%. You need {quiz.passing_score}% to pass. Please try again!')
+        # Check if user is admin
+        is_admin = request.user.is_staff or hasattr(request.user, 'admin_profile')
+        if is_admin:
+            messages.warning(request, f'You scored {score_percentage:.1f}%. You need {quiz.passing_score}% to pass. As an admin, you have unlimited attempts.')
+        else:
+            remaining = 3 - attempt_count - 1
+            if remaining > 0:
+                messages.warning(request, f'You scored {score_percentage:.1f}%. You need {quiz.passing_score}% to pass. You have {remaining} attempt(s) remaining.')
+            else:
+                messages.error(request, f'You scored {score_percentage:.1f}%. You need {quiz.passing_score}% to pass. You have no attempts remaining.')
     
     return render(request, 'learning/quiz_result.html', {
         'module': module,
@@ -527,6 +802,74 @@ def submit_quiz(request, module_id):
         'score_percentage': score_percentage,
         'passed': passed,
         'questions': questions,
+    })
+
+
+@login_required
+def request_additional_attempt(request, module_id):
+    """Request additional quiz attempt after exhausting 3 attempts"""
+    module = get_object_or_404(Module.objects.select_related('course'), id=module_id)
+    
+    # Check if user is enrolled
+    is_enrolled = CourseEnrollment.objects.filter(user=request.user, course=module.course).exists()
+    if not is_enrolled:
+        messages.error(request, 'You must enroll in this course to request additional attempts.')
+        return redirect('course_detail', course_id=module.course.id)
+    
+    # Check if module has a quiz
+    if not hasattr(module, 'quiz'):
+        messages.error(request, 'This module does not have a quiz.')
+        return redirect('module_detail', module_id=module.id)
+    
+    quiz = module.quiz
+    
+    # Check if user has exhausted attempts
+    attempt_count = UserQuizAttempt.objects.filter(user=request.user, quiz=quiz).count()
+    if attempt_count < 3:
+        messages.info(request, 'You still have attempts remaining. You can take the quiz directly.')
+        return redirect('take_quiz', module_id=module.id)
+    
+    # Check if there's already a pending request
+    existing_request = QuizAttemptRequest.objects.filter(
+        user=request.user,
+        quiz=quiz,
+        status='pending'
+    ).first()
+    
+    if existing_request:
+        messages.info(request, 'You already have a pending request for additional attempts.')
+        return redirect('course_detail', course_id=module.course.id)
+    
+    # Check if there's an approved and unused request
+    approved_request = QuizAttemptRequest.objects.filter(
+        user=request.user,
+        quiz=quiz,
+        status='approved',
+        used=False
+    ).first()
+    
+    if approved_request:
+        messages.success(request, 'Your request for additional attempts has been approved! You can now take the quiz.')
+        return redirect('take_quiz', module_id=module.id)
+    
+    if request.method == 'POST':
+        reason = request.POST.get('reason', '').strip()
+        if not reason:
+            messages.error(request, 'Please provide a reason for requesting additional attempts.')
+        else:
+            # Create the request
+            QuizAttemptRequest.objects.create(
+                user=request.user,
+                quiz=quiz,
+                reason=reason
+            )
+            messages.success(request, 'Your request for additional attempts has been submitted. An admin will review it shortly.')
+            return redirect('course_detail', course_id=module.course.id)
+    
+    return render(request, 'learning/request_attempt.html', {
+        'module': module,
+        'quiz': quiz,
+        'attempt_count': attempt_count,
     })
 
 
@@ -1863,6 +2206,39 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
                 f"    Would a real tutor repeat the entire explanation when asked for assignments? No!\n"
                 f"    They'd provide what was asked for directly. If asked for assignments, give assignments. If asked for examples, give examples.\n"
                 f"    Only use the full format when explicitly asked to explain the topic completely.\n"
+                f"12. IMPORTANT - SUGGESTIONS FORMAT:\n"
+                f"    At the END of your response, after your main answer, include 3-6 relevant follow-up suggestions.\n"
+                f"    Format them EXACTLY like this (on a new line):\n"
+                f"    \n"
+                f"    [SUGGESTIONS_START]\n"
+                f"    Can you show more examples of this?\n"
+                f"    What are common mistakes to avoid?\n"
+                f"    How is this used in real projects?\n"
+                f"    Can you give me a practice exercise?\n"
+                f"    [SUGGESTIONS_END]\n"
+                f"    \n"
+                f"    CRITICAL - TOPIC BOUNDARY RULES FOR SUGGESTIONS:\n"
+                f"    - Suggestions MUST be ONLY about '{decoded_topic}' (the current topic)\n"
+                f"    - DO NOT suggest questions about other topics like: {other_topics_str}\n"
+                f"    - DO NOT suggest questions about topics not in the module's topic list\n"
+                f"    - Each suggestion must be directly related to '{decoded_topic}' only\n"
+                f"    - If a suggestion would require teaching a different topic, DO NOT include it\n"
+                f"    - Examples of BAD suggestions (if current topic is '{decoded_topic}'):\n"
+                f"      * 'Can you explain [different topic]?' - NO, this is a different topic\n"
+                f"      * 'What about [other topic]?' - NO, stay within '{decoded_topic}'\n"
+                f"    - Examples of GOOD suggestions (if current topic is '{decoded_topic}'):\n"
+                f"      * 'Can you show more examples of {decoded_topic}?' - YES\n"
+                f"      * 'What are common mistakes with {decoded_topic}?' - YES\n"
+                f"      * 'How is {decoded_topic} used in practice?' - YES\n"
+                f"    \n"
+                f"    Each suggestion should be:\n"
+                f"    - A complete question the student can ask\n"
+                f"    - Directly relevant to '{decoded_topic}' ONLY\n"
+                f"    - Helpful for continuing their learning about '{decoded_topic}'\n"
+                f"    - Specific and actionable\n"
+                f"    - One suggestion per line between [SUGGESTIONS_START] and [SUGGESTIONS_END]\n"
+                f"    - Do NOT include the brackets in the suggestion text itself\n"
+                f"    - STRICTLY stay within the '{decoded_topic}' topic boundary\n"
                 f"\nYour Response:"
             )
         else:
@@ -1980,3 +2356,59 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
                 f"Please check your Gemini API configuration and try again. "
                 f"Error: {error_msg}"
             )
+
+
+@login_required
+@require_http_methods(['POST'])
+def enroll_course(request, course_id):
+    """Request enrollment in a course (requires admin approval)"""
+    course = get_object_or_404(Course, id=course_id)
+    
+    # Check if already enrolled
+    if CourseEnrollment.objects.filter(user=request.user, course=course).exists():
+        messages.info(request, f'You are already enrolled in "{course.title}".')
+        return redirect('courses_list')
+    
+    # Check if there's already an enrollment request (any status)
+    existing_request = EnrollmentRequest.objects.filter(
+        user=request.user,
+        course=course
+    ).first()
+    
+    if existing_request:
+        if existing_request.status == 'pending':
+            messages.info(request, f'You already have a pending enrollment request for "{course.title}". Please wait for admin approval.')
+        else:
+            # Update existing request to pending (user wants to re-enroll after unenrolling)
+            existing_request.status = 'pending'
+            existing_request.reviewed_at = None
+            existing_request.reviewed_by = None
+            existing_request.notes = ''
+            existing_request.save()
+            messages.success(request, f'Enrollment request sent for "{course.title}". An admin will review your request shortly.')
+    else:
+        # Create new enrollment request
+        EnrollmentRequest.objects.create(
+            user=request.user,
+            course=course,
+            status='pending'
+        )
+        messages.success(request, f'Enrollment request sent for "{course.title}". An admin will review your request shortly.')
+    
+    return redirect('courses_list')
+
+
+@login_required
+@require_http_methods(['POST'])
+def unenroll_course(request, course_id):
+    """Unenroll user from a course"""
+    course = get_object_or_404(Course, id=course_id)
+    
+    try:
+        enrollment = CourseEnrollment.objects.get(user=request.user, course=course)
+        enrollment.delete()
+        messages.success(request, f'Successfully unenrolled from "{course.title}".')
+    except CourseEnrollment.DoesNotExist:
+        messages.info(request, f'You are not enrolled in "{course.title}".')
+    
+    return redirect('courses_list')

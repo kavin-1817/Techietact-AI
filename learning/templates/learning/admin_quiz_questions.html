@@ -3,6 +3,10 @@
 
 {% block title %}Manage Quiz Questions - {{ quiz.title }} - Admin{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-forms.css' %}?v=2">
+{% endblock %}
+
 {% block content %}
 <div class="admin-quiz-questions-page">
     <div class="container">
@@ -30,7 +34,7 @@
         <div class="question-card" style="margin-bottom: 2rem;">
             <div class="question-header">
                 <div class="question-info">
-                    <h3 style="color: var(--text-white); margin-bottom: 1rem;">Quiz Details</h3>
+                    <h3 style="color: #000000 !important; margin-bottom: 1rem; background: transparent !important;">Quiz Details</h3>
                     <div class="question-meta">
                         <span class="meta-badge">Passing Score: {{ quiz.passing_score }}%</span>
                         <span class="meta-badge">Total Questions: {{ questions|length }}</span>
@@ -46,7 +50,7 @@
             </div>
         </div>
 
-        <h3 class="fw-bold text-white mb-4" style="color: var(--text-white);">
+        <h3 class="fw-bold text-white mb-4" style="color: #ffffff !important; background: transparent !important;">
             <i class="bi bi-question-circle me-2"></i>Questions ({{ questions|length }})
         </h3>
 
@@ -71,7 +75,7 @@
             <div class="options-list">
                 {% for option in question.options.all %}
                 <div class="option-item {% if option.is_correct %}correct{% endif %}">
-                    <span style="flex: 1; color: var(--text-primary);">{{ option.option_text }}</span>
+                    <span style="flex: 1; color: #000000 !important; background: transparent !important;">{{ option.option_text }}</span>
                     {% if option.is_correct %}
                     <span class="correct-badge">Correct Answer</span>
                     {% endif %}
@@ -82,9 +86,9 @@
         {% endfor %}
         {% else %}
         <div class="question-card text-center" style="padding: 4rem 2rem;">
-            <i class="bi bi-inbox" style="font-size: 4rem; color: var(--text-secondary); margin-bottom: 1.5rem;"></i>
-            <h3 style="color: var(--text-white); margin-bottom: 1rem;">No Questions Yet</h3>
-            <p style="color: var(--text-muted-white); margin-bottom: 2rem;">Add your first question to get started!</p>
+            <i class="bi bi-inbox" style="font-size: 4rem; color: rgba(0, 0, 0, 0.3) !important; margin-bottom: 1.5rem; background: transparent !important;"></i>
+            <h3 style="color: #000000 !important; margin-bottom: 1rem; background: transparent !important;">No Questions Yet</h3>
+            <p style="color: rgba(0, 0, 0, 0.7) !important; margin-bottom: 2rem; background: transparent !important;">Add your first question to get started!</p>
             <a href="{% url 'admin_question_create' course.id module.id %}" class="btn-action btn-add">
                 <i class="bi bi-plus-circle"></i>Add First Question
             </a>

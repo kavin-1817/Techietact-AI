@@ -2,7 +2,7 @@
         position: relative;
         min-height: calc(100vh - 76px);
         padding: 4.5rem 0;
-        background: #000000;
+        background: var(--bg-primary);
         overflow: hidden;
         transition: background 0.3s ease;
     }
@@ -195,12 +195,69 @@
         color: #000000;
         transform: translateY(-2px);
     }
+    .enrollment-prompt {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid rgba(0, 0, 0, 0.1);
+    }
+    .btn-enroll-course {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: #000000;
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .btn-enroll-course:hover {
+        background: #1a1a1a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        color: #ffffff;
+    }
+    .enrollment-message {
+        color: rgba(0, 0, 0, 0.7);
+        font-size: 0.95rem;
+        margin-top: 0.75rem;
+        font-weight: 500;
+    }
+    .pending-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: rgba(255, 193, 7, 0.2);
+        border: 2px solid rgba(255, 193, 7, 0.4);
+        border-radius: 12px;
+        color: rgba(0, 0, 0, 0.8);
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    .pending-status i {
+        font-size: 1.2rem;
+        animation: pending-spin 2s linear infinite;
+    }
+    @keyframes pending-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
     @media (max-width: 768px) {
         .course-detail-page {
             padding: 4rem 0;
         }
         .course-header {
             padding: 2rem;
+        }
+        .btn-enroll-course {
+            width: 100%;
+            justify-content: center;
         }
     }
 

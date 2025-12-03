@@ -1,0 +1,405 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Quiz Attempt Requests - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}?v=8">
+<style>
+  .requests-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .requests-stat-card {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+  
+  .requests-stat-card * {
+    background: transparent !important;
+  }
+  
+  .requests-stat-label {
+    font-size: 0.85rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: transparent !important;
+  }
+  
+  .requests-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000000;
+    background: transparent !important;
+  }
+  
+  .request-card {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+  
+  .request-card * {
+    background: transparent !important;
+  }
+  
+  .request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .request-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #000000;
+  }
+  
+  .request-info p {
+    margin: 0.25rem 0;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.9rem;
+  }
+  
+  .request-status {
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  
+  .request-status.pending {
+    background: rgba(251, 191, 36, 0.15);
+    color: #ca8a04;
+  }
+  
+  .request-status.approved {
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+  }
+  
+  .request-status.rejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+  }
+  
+  .request-reason {
+    background: rgba(0, 0, 0, 0.03);
+    border-left: 4px solid #ff9900;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    color: rgba(0, 0, 0, 0.7);
+    line-height: 1.6;
+  }
+  
+  .request-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .btn-approve {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-approve:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+  }
+  
+  .btn-reject {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-reject:hover {
+    background: #b91c1c;
+    transform: translateY(-2px);
+  }
+  
+  .reject-form {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: 8px;
+    display: none;
+  }
+  
+  .reject-form.show {
+    display: block;
+  }
+  
+  .reject-form textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+  }
+  
+  .requests-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  .requests-table th {
+    text-align: left;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .requests-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .requests-table tr:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+  <div class="container dashboard-shell">
+    <div class="holo-card">
+      <div class="holo-content">
+        
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <span class="text-uppercase small d-inline-flex align-items-center mb-2">
+              <span class="me-2 d-inline-block"></span>
+              Student Requests
+            </span>
+            <h1>Quiz Attempt Requests</h1>
+            <p>Review and manage student requests for additional quiz attempts.</p>
+          </div>
+          <a href="{% url 'admin_dashboard' %}" class="cta-button">
+            <i class="bi bi-arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </a>
+        </div>
+
+        <!-- Statistics -->
+        <div class="requests-stats">
+          <div class="requests-stat-card">
+            <div class="requests-stat-label">Pending Requests</div>
+            <div class="requests-stat-value" style="color: #ca8a04;">{{ total_pending }}</div>
+          </div>
+          <div class="requests-stat-card">
+            <div class="requests-stat-label">Approved</div>
+            <div class="requests-stat-value" style="color: #16a34a;">{{ total_approved }}</div>
+          </div>
+          <div class="requests-stat-card">
+            <div class="requests-stat-label">Rejected</div>
+            <div class="requests-stat-value" style="color: #dc2626;">{{ total_rejected }}</div>
+          </div>
+        </div>
+
+        <!-- Pending Requests -->
+        {% if pending_requests %}
+        <h2 style="margin-bottom: 1.5rem; color: #000000; font-size: 1.5rem; font-weight: 700;">
+          <i class="bi bi-clock-history" style="color: #ca8a04; margin-right: 0.5rem;"></i>
+          Pending Requests
+        </h2>
+        {% for req in pending_requests %}
+        <div class="request-card">
+          <div class="request-header">
+            <div class="request-info">
+              <h3>{{ req.user.username }}</h3>
+              <p><strong>Course:</strong> {{ req.quiz.module.course.title }}</p>
+              <p><strong>Module:</strong> {{ req.quiz.module.title }}</p>
+              <p><strong>Quiz:</strong> {{ req.quiz.title }}</p>
+              <p><small style="color: rgba(0, 0, 0, 0.5);">Requested: {{ req.requested_at|date:"M d, Y H:i" }}</small></p>
+            </div>
+            <span class="request-status pending">Pending</span>
+          </div>
+          
+          <div class="request-reason">
+            <strong>Reason:</strong><br>
+            {{ req.reason|linebreaks }}
+          </div>
+          
+          <div class="request-actions">
+            <form method="post" action="{% url 'admin_approve_attempt_request' req.id %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-approve">
+                <i class="bi bi-check-circle me-2"></i>Approve
+              </button>
+            </form>
+            <button type="button" class="btn-reject" onclick="showRejectForm({{ req.id }})">
+              <i class="bi bi-x-circle me-2"></i>Reject
+            </button>
+          </div>
+          
+          <form method="post" action="{% url 'admin_reject_attempt_request' req.id %}" class="reject-form" id="reject-form-{{ req.id }}">
+            {% csrf_token %}
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: rgba(0, 0, 0, 0.7);">
+              Rejection Notes (Optional):
+            </label>
+            <textarea name="admin_notes" placeholder="Add notes about why this request was rejected..."></textarea>
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="submit" class="btn-reject" style="flex: 1;">
+                <i class="bi bi-x-circle me-2"></i>Confirm Rejection
+              </button>
+              <button type="button" class="btn-cancel" onclick="hideRejectForm({{ req.id }})" style="flex: 1; background: var(--bg-secondary); color: var(--text-primary); border: 2px solid var(--border-color);">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- All Requests History -->
+        <h2 style="margin-top: 3rem; margin-bottom: 1.5rem; color: #000000; font-size: 1.5rem; font-weight: 700;">
+          <i class="bi bi-list-ul" style="margin-right: 0.5rem;"></i>
+          All Requests
+        </h2>
+        {% if all_requests %}
+        <div class="request-card">
+          <table class="requests-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Course / Module</th>
+                <th>Quiz</th>
+                <th>Status</th>
+                <th>Used</th>
+                <th>Requested</th>
+                <th>Reviewed</th>
+                <th>Reviewed By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for req in all_requests %}
+              <tr>
+                <td>
+                  <strong>{{ req.user.username }}</strong><br>
+                  <small style="color: rgba(0, 0, 0, 0.6);">{{ req.user.email }}</small>
+                </td>
+                <td>
+                  <strong>{{ req.quiz.module.course.title }}</strong><br>
+                  <small style="color: rgba(0, 0, 0, 0.6);">{{ req.quiz.module.title }}</small>
+                </td>
+                <td>{{ req.quiz.title }}</td>
+                <td>
+                  <span class="request-status {{ req.status }}">{{ req.get_status_display }}</span>
+                </td>
+                <td>
+                  {% if req.status == 'approved' %}
+                    {% if req.used %}
+                      <span style="background: rgba(107, 114, 128, 0.15); color: #6b7280; padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; font-size: 0.85rem;">
+                        <i class="bi bi-check-circle"></i> Used
+                      </span>
+                    {% else %}
+                      <span style="background: rgba(34, 197, 94, 0.15); color: #16a34a; padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; font-size: 0.85rem;">
+                        <i class="bi bi-clock"></i> Available
+                      </span>
+                    {% endif %}
+                  {% else %}
+                    <span style="color: rgba(0, 0, 0, 0.4);">-</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <small style="color: rgba(0, 0, 0, 0.6);">
+                    {{ req.requested_at|date:"M d, Y" }}<br>
+                    {{ req.requested_at|date:"H:i" }}
+                  </small>
+                </td>
+                <td>
+                  {% if req.reviewed_at %}
+                  <small style="color: rgba(0, 0, 0, 0.6);">
+                    {{ req.reviewed_at|date:"M d, Y" }}<br>
+                    {{ req.reviewed_at|date:"H:i" }}
+                  </small>
+                  {% else %}
+                  <span style="color: rgba(0, 0, 0, 0.4);">-</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if req.reviewed_by %}
+                  <small style="color: rgba(0, 0, 0, 0.6);">{{ req.reviewed_by.username }}</small>
+                  {% else %}
+                  <span style="color: rgba(0, 0, 0, 0.4);">-</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="request-card">
+          <div style="text-align: center; padding: 3rem; color: rgba(0, 0, 0, 0.5);">
+            <i class="bi bi-inbox" style="font-size: 3rem; margin-bottom: 1rem; color: rgba(0, 0, 0, 0.3);"></i>
+            <p>No attempt requests found.</p>
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showRejectForm(requestId) {
+  const form = document.getElementById('reject-form-' + requestId);
+  if (form) {
+    form.classList.add('show');
+  }
+}
+
+function hideRejectForm(requestId) {
+  const form = document.getElementById('reject-form-' + requestId);
+  if (form) {
+    form.classList.remove('show');
+    form.querySelector('textarea').value = '';
+  }
+}
+</script>
+{% endblock %}
+

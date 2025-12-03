@@ -1,6 +1,6 @@
 /* About page specific styles */
 .about-page {
-    background: #000000;
+    background: var(--bg-primary);
     min-height: calc(100vh - 76px);
     padding: 4rem 0;
     position: relative;
@@ -306,8 +306,8 @@
 .value-item {
     background: #ff9900;
     color: #000000;
-    border-left: 4px solid transparent;
-    border-image: linear-gradient(180deg, #ff9900, #ff7700) 1;
+    border-left: 4px solid #ffffff;
+    border-image: none;
     padding: 1.5rem;
     border-radius: 12px;
     transition: all 0.3s ease, background 0.3s ease;

@@ -133,7 +133,7 @@
     font-size: clamp(2.5rem, 8vw, 5.5rem);
     font-weight: 800;
     line-height: 1.1;
-    color: #000000;
+    color: var(--text-white);
     margin-bottom: 2rem;
     letter-spacing: -0.02em;
     transition: color 0.3s ease;
@@ -319,14 +319,22 @@
 .section-light,
 .section-alt,
 .section-gradient {
-    background: #000000;
+    background: var(--section-bg);
     padding: 5rem 0;
     transition: background 0.3s ease;
 }
 
+[data-theme="light"] .section-alt {
+    background: var(--section-bg-alt);
+}
+
+[data-theme="light"] .section-gradient {
+    background: var(--section-bg-gradient);
+}
+
 .section-cta {
     position: relative;
-    background: #000000;
+    background: var(--section-bg);
     padding: 5rem 0;
     overflow: hidden;
     transition: background 0.3s ease;
@@ -366,7 +374,7 @@
 .section-heading h2 {
     font-size: clamp(2.2rem, 4vw, 3.5rem);
     font-weight: 800;
-    color: #000000;
+    color: var(--text-white);
     margin-bottom: 1rem;
     transition: color 0.3s ease;
 }

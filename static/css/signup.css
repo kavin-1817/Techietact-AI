@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    background: #000000;
+    background: var(--bg-primary);
     transition: background 0.3s ease;
 }
 
@@ -117,13 +117,13 @@
 
 .milestone-item i {
     font-size: 1.35rem;
-    color: var(--gradient-end);
+    color: #ffffff !important;
     margin-top: 0.15rem;
     transition: color 0.3s ease;
 }
 
 .milestone-item span {
-    color: var(--text-muted-white);
+    color: #000000 !important;
     font-size: 0.95rem;
     line-height: 1.6;
     transition: color 0.3s ease;
@@ -161,7 +161,7 @@
 }
 
 .auth-card header h2 {
-    color: var(--text-white);
+    color: #000000 !important;
     font-weight: 700;
     margin-bottom: 0.4rem;
     font-size: 2rem;
@@ -169,7 +169,7 @@
 }
 
 .auth-card header p {
-    color: var(--text-muted-white);
+    color: #000000 !important;
     margin-bottom: 2.75rem;
     transition: color 0.3s ease;
 }
@@ -179,7 +179,7 @@
 }
 
 .input-label {
-    color: var(--text-muted-white);
+    color: #000000 !important;
     font-size: 0.95rem;
     margin-bottom: 0.55rem;
     transition: color 0.3s ease;
@@ -202,18 +202,18 @@
     right: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-secondary);
+    color: #000000 !important;
     font-size: 1.15rem;
     transition: color 0.3s ease;
     cursor: pointer;
 }
 
 .toggle-visibility:hover {
-    color: var(--gradient-end);
+    color: rgba(0, 0, 0, 0.7) !important;
 }
 
 .input-shell i {
-    color: var(--text-secondary);
+    color: #000000 !important;
     font-size: 1.1rem;
     transition: color 0.3s ease;
 }
@@ -221,7 +221,7 @@
 .auth-control {
     background: transparent;
     border: none;
-    color: var(--text-primary);
+    color: #000000 !important;
     font-size: 1rem;
     width: 100%;
     padding: 0;
@@ -231,7 +231,7 @@
 }
 
 .auth-control::placeholder {
-    color: var(--text-secondary);
+    color: rgba(0, 0, 0, 0.5) !important;
 }
 
 .input-shell:focus-within {
@@ -240,7 +240,7 @@
 }
 
 .auth-button {
-    background: linear-gradient(135deg, #ff7700 0%, #ff9900 100%);
+    background: #000000 !important;
     border: none;
     border-radius: 18px;
     color: #ffffff;
@@ -249,24 +249,25 @@
     padding: 1rem 1.5rem;
     width: 100%;
     margin-bottom: 1.75rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 22px 45px rgba(255, 119, 0, 0.35);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.4);
     cursor: pointer;
 }
 
 .auth-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 28px 55px rgba(255, 119, 0, 0.45);
+    background: #1a1a1a !important;
+    box-shadow: 0 28px 55px rgba(0, 0, 0, 0.5);
 }
 
 .form-footer {
     text-align: center;
-    color: var(--text-muted-white);
+    color: #000000 !important;
     transition: color 0.3s ease;
 }
 
 .form-footer a {
-    color: var(--gradient-end);
+    color: #ffffff !important;
     font-weight: 600;
     text-decoration: none;
     transition: color 0.3s ease;
@@ -275,7 +276,7 @@
 }
 
 .form-footer a:hover {
-    color: var(--gradient-start);
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .error-text {
@@ -285,7 +286,7 @@
 }
 
 .help-text {
-    color: var(--text-secondary);
+    color: rgba(0, 0, 0, 0.7) !important;
     font-size: 0.8rem;
     margin-top: 0.35rem;
     transition: color 0.3s ease;
@@ -314,5 +315,6 @@
         color: #000000;
     }
 }
+
 
 

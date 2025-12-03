@@ -1,0 +1,136 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Enrollment Requests - Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}?v=8">
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+  <div class="container dashboard-shell">
+    <div class="holo-card">
+      <div class="holo-content">
+        
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <span class="text-uppercase small d-inline-flex align-items-center mb-2">
+              <span class="me-2 d-inline-block"></span>
+              Enrollment Management
+            </span>
+            <h1>Enrollment Requests</h1>
+            <p>Review and manage course enrollment requests from learners.</p>
+          </div>
+          <a href="{% url 'admin_dashboard' %}" class="cta-button">
+            <i class="bi bi-arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </a>
+        </div>
+
+        <!-- Pending Requests -->
+        <div class="table-wrapper" style="margin-bottom: 3rem;">
+          <div class="table-head">
+            <span>User</span>
+            <span>Course</span>
+            <span>Requested</span>
+            <span>Actions</span>
+          </div>
+          
+          {% if pending_requests %}
+            {% for req in pending_requests %}
+            <div class="course-row">
+              <div>
+                <strong>{{ req.user.username }}</strong>
+                <br>
+                <small style="color: rgba(0, 0, 0, 0.6);">{{ req.user.email }}</small>
+              </div>
+              <div>
+                <strong>{{ req.course.title }}</strong>
+                <br>
+                <span class="category-chip">
+                  <i class="bi bi-folder2-open"></i>
+                  {{ req.course.get_category_display }}
+                </span>
+              </div>
+              <div class="created-cell">
+                {{ req.requested_at|date:"M d, Y H:i" }}
+              </div>
+              <div>
+                <div class="action-stack">
+                  <form method="post" action="{% url 'admin_approve_enrollment' req.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="action-pill" style="background: #000000; color: #ffffff; border-color: #000000;">
+                      <i class="bi bi-check-circle"></i>
+                      <span>Approve</span>
+                    </button>
+                  </form>
+                  <form method="post" action="{% url 'admin_reject_enrollment' req.id %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to reject this enrollment request?');">
+                    {% csrf_token %}
+                    <button type="submit" class="action-pill delete">
+                      <i class="bi bi-x-circle"></i>
+                      <span>Reject</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty-state">
+              <i class="bi bi-check-circle"></i>
+              <p>No pending enrollment requests. All clear!</p>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Recently Approved/Rejected -->
+        {% if approved_requests or rejected_requests %}
+        <div class="recent-requests-grid">
+          {% if approved_requests %}
+          <div class="table-wrapper">
+            <div class="table-head">
+              <span>Recently Approved</span>
+            </div>
+            {% for req in approved_requests %}
+            <div class="recent-request-row">
+              <div>
+                <strong>{{ req.user.username }}</strong>
+                <br>
+                <small>{{ req.course.title }}</small>
+                <br>
+                <small style="color: rgba(0, 0, 0, 0.6);">Approved {{ req.reviewed_at|date:"M d, Y" }}</small>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if rejected_requests %}
+          <div class="table-wrapper">
+            <div class="table-head">
+              <span>Recently Rejected</span>
+            </div>
+            {% for req in rejected_requests %}
+            <div class="recent-request-row">
+              <div>
+                <strong>{{ req.user.username }}</strong>
+                <br>
+                <small>{{ req.course.title }}</small>
+                <br>
+                <small style="color: rgba(0, 0, 0, 0.6);">Rejected {{ req.reviewed_at|date:"M d, Y" }}</small>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

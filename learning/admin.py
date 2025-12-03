@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import LearnerProfile, AdminProfile, Course, Module, ChatSession
+from .models import LearnerProfile, AdminProfile, Course, Module, ChatSession, CourseEnrollment, EnrollmentRequest
 
 
 @admin.register(LearnerProfile)
@@ -43,3 +43,20 @@ class ChatSessionAdmin(admin.ModelAdmin):
     list_filter = ['created_at']
     search_fields = ['user__username', 'module__title', 'question', 'response']
     readonly_fields = ['created_at']
+
+
+@admin.register(EnrollmentRequest)
+class EnrollmentRequestAdmin(admin.ModelAdmin):
+    list_display = ['user', 'course', 'status', 'requested_at', 'reviewed_at', 'reviewed_by']
+    list_filter = ['status', 'requested_at', 'reviewed_at']
+    search_fields = ['user__username', 'course__title']
+    readonly_fields = ['requested_at', 'reviewed_at']
+    date_hierarchy = 'requested_at'
+
+
+@admin.register(CourseEnrollment)
+class CourseEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ['user', 'course', 'enrolled_at']
+    list_filter = ['enrolled_at', 'course']
+    search_fields = ['user__username', 'course__title']
+    readonly_fields = ['enrolled_at']

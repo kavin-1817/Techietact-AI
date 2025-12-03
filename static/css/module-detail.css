@@ -3,7 +3,7 @@
     position: relative;
     min-height: calc(100vh - 76px);
     padding: 4.5rem 0;
-    background: #000000;
+    background: var(--bg-primary);
     overflow: hidden;
     transition: background 0.3s ease;
 }
@@ -767,8 +767,8 @@
     backdrop-filter: blur(22px);
     display: flex;
     flex-direction: column;
-    height: 820px;
-    max-height: 820px;
+    height: 1000px;
+    max-height: 1000px;
     transition: background 0.3s ease, border-color 0.3s ease;
 }
 
@@ -776,6 +776,25 @@
     padding: 2rem 2rem 1rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease;
+}
+
+#deleteMemoryBtn {
+    transition: all 0.2s ease;
+}
+
+#deleteMemoryBtn:hover {
+    background: rgba(220, 38, 38, 0.2) !important;
+    border-color: rgba(220, 38, 38, 0.4) !important;
+    transform: translateY(-1px);
+}
+
+#deleteMemoryBtn:active {
+    transform: translateY(0);
+}
+
+#deleteMemoryBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .chat-card .chat-header h2 {
@@ -863,16 +882,22 @@
 
 .chat-input {
     padding: 1.5rem 2rem 2rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
     background: #ff9900;
     color: #000000;
+    border-radius: 0 0 28px 28px;
     transition: background 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    overflow: visible;
 }
 
-.chat-input textarea {
-    background: var(--input-bg);
+.chat-input textarea,
+.chat-input #questionInput {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
     border: 1px solid var(--input-border);
-    color: var(--text-primary);
+    color: #000000 !important;
+    caret-color: #000000 !important;
     border-radius: 18px;
     padding: 1rem 1.25rem;
     resize: none;
@@ -884,61 +909,95 @@
     transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
+.chat-input textarea::placeholder,
+.chat-input #questionInput::placeholder {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
 .chat-input textarea:focus {
     outline: none;
     border-color: rgba(255, 119, 0, 0.65);
     box-shadow: 0 0 0 0.2rem rgba(255, 119, 0, 0.15);
 }
 
-.chat-input button {
-    background: linear-gradient(135deg, #ff9900, #ff7700);
-    border: none;
+.chat-input button,
+.chat-input #sendButton,
+#sendButton {
+    background: #000000 !important;
+    border: none !important;
     border-radius: 16px;
-    color: #ffffff;
+    color: #ffffff !important;
     font-weight: 700;
     padding: 0.85rem 2.5rem;
-    box-shadow: 0 18px 35px rgba(255, 153, 0, 0.35);
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.35);
 }
 
-.chat-input button:hover {
+.chat-input button:hover,
+.chat-input #sendButton:hover,
+#sendButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba(255, 153, 0, 0.45);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    background: #1a1a1a !important;
 }
 
 .chat-suggestions-dropup {
     position: relative;
     margin-top: 1rem;
+    z-index: 100;
+    pointer-events: auto;
 }
 
-.chat-suggestions-toggle {
+.chat-suggestions-toggle,
+#chatSuggestionsToggle {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--input-bg);
-    border: 1px solid var(--input-border);
-    color: var(--text-primary);
+    background: #000000 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
     border-radius: 999px;
     padding: 0.65rem 1rem;
     font-weight: 600;
     letter-spacing: 0.02em;
-    transition: border-color 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 1;
 }
 
-.chat-suggestions-toggle:hover {
-    border-color: rgba(255, 153, 0, 0.6);
-    color: var(--text-white);
+.chat-suggestions-toggle *,
+#chatSuggestionsToggle * {
+    color: #ffffff !important;
+}
+
+.chat-suggestions-toggle:hover,
+#chatSuggestionsToggle:hover {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    background: #1a1a1a !important;
+}
+
+.chat-suggestions-toggle:hover *,
+#chatSuggestionsToggle:hover * {
+    color: #ffffff !important;
 }
 
 .chat-suggestions-toggle .chevron {
     transition: transform 0.2s ease;
+    color: #ffffff !important;
+}
+
+.chat-suggestions-toggle .chevron i {
+    color: #ffffff !important;
 }
 
 .chat-suggestions-toggle.is-open .chevron {
     transform: rotate(180deg);
 }
 
-.chat-suggestions-panel {
+.chat-suggestions-panel,
+#chatSuggestionsPanel {
     position: absolute;
     bottom: calc(100% + 0.75rem);
     left: 0;
@@ -946,14 +1005,23 @@
     display: none;
     padding: 0.9rem;
     border-radius: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(10, 16, 32, 0.95);
-    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
-    z-index: 5;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: #000000 !important;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+    z-index: 1000 !important;
+    pointer-events: auto;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
 }
 
-.chat-suggestions-panel.is-open {
-    display: block;
+.chat-suggestions-panel.is-open,
+#chatSuggestionsPanel.is-open {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
     animation: dropupReveal 0.2s ease;
 }
 
@@ -966,7 +1034,7 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: rgba(255, 255, 255, 0.7);
+    color: #ffffff !important;
     margin-bottom: 0.5rem;
 }
 
@@ -977,22 +1045,31 @@
 }
 
 .chat-suggestion-btn {
-    flex: 1 1 calc(50% - 0.5rem);
-    min-width: 130px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text-primary);
-    padding: 0.65rem 0.75rem;
-    border-radius: 0.8rem;
+    flex: 1 1 auto;
+    min-width: 150px;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
     font-size: 0.9rem;
+    font-weight: 500;
     text-align: left;
     transition: all 0.2s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .chat-suggestion-btn:hover {
-    border-color: rgba(240, 171, 0, 0.7);
-    background: rgba(240, 171, 0, 0.08);
-    transform: translateY(-1px);
+    border-color: rgba(255, 153, 0, 0.4) !important;
+    background: rgba(255, 153, 0, 0.1) !important;
+    color: #000000 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 153, 0, 0.2);
+}
+
+.chat-suggestion-btn:active {
+    transform: translateY(0);
 }
 
 .code-block-container {
@@ -1098,8 +1175,8 @@
     }
 
     .chat-card {
-        height: 600px;
-        max-height: 600px;
+        height: 750px;
+        max-height: 750px;
     }
 
     .chat-card .chat-messages {
@@ -1111,8 +1188,8 @@
     }
 
     .chat-card {
-        height: 640px;
-        max-height: 640px;
+        height: 800px;
+        max-height: 800px;
     }
 
     .chat-suggestions-panel {
