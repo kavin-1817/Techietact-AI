@@ -2,10 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils import timezone
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 import json
 import os
 import subprocess
@@ -84,40 +88,121 @@ def about(request):
 
 
 def signup_view(request):
-    """User signup view"""
+    """User signup view - supports both username and email"""
     if request.user.is_authenticated:
         return redirect('dashboard')
     
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+        
+        # Validation
+        errors = {}
+        
+        # Validate first name
+        if not first_name:
+            errors['first_name'] = 'First name is required.'
+        elif len(first_name) > 150:
+            errors['first_name'] = 'First name must be less than 150 characters.'
+        
+        # Validate last name
+        if not last_name:
+            errors['last_name'] = 'Last name is required.'
+        elif len(last_name) > 150:
+            errors['last_name'] = 'Last name must be less than 150 characters.'
+        
+        # Validate username
+        if not username:
+            errors['username'] = 'Username is required.'
+        elif len(username) < 3:
+            errors['username'] = 'Username must be at least 3 characters long.'
+        elif len(username) > 150:
+            errors['username'] = 'Username must be less than 150 characters.'
+        elif not username.replace('_', '').replace('.', '').isalnum():
+            errors['username'] = 'Username can only contain letters, numbers, underscores, and dots.'
+        elif User.objects.filter(username=username).exists():
+            errors['username'] = 'This username is already taken.'
+        
+        # Validate email
+        if not email:
+            errors['email'] = 'Email is required.'
+        else:
+            # Validate email format using Django's validator
+            try:
+                validate_email(email)
+            except ValidationError:
+                errors['email'] = 'Please enter a valid email address.'
+            
+            # Check email length
+            if not errors.get('email') and len(email) > 254:
+                errors['email'] = 'Email address is too long (maximum 254 characters).'
+            
+            # Check if email already exists (only if format is valid)
+            if not errors.get('email') and User.objects.filter(email__iexact=email).exists():
+                errors['email'] = 'This email is already registered.'
+        
+        # Check password match
+        if password1 != password2:
+            errors['password'] = 'Passwords do not match.'
+        
+        # Check password length
+        if password1 and len(password1) < 8:
+            errors['password'] = 'Password must be at least 8 characters long.'
+        
+        if not errors:
+            # Create user
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password1,
+                first_name=first_name,
+                last_name=last_name
+            )
             # Create learner profile
             LearnerProfile.objects.create(user=user)
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}! Please log in.')
+            messages.success(request, f'Account created successfully! Please log in.')
             return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'learning/signup.html', {'form': form})
+        else:
+            # Pass errors to template
+            for field, error in errors.items():
+                messages.error(request, error)
+    
+    return render(request, 'learning/signup.html')
 
 
 def login_view(request):
-    """User login view"""
+    """User login view - supports both username and email"""
     if request.user.is_authenticated:
         return redirect('dashboard')
     
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username_or_email = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        
+        # Try to authenticate with username first
+        user = authenticate(request, username=username_or_email, password=password)
+        
+        # If authentication fails, try with email
+        if user is None:
+            try:
+                # Check if input looks like an email
+                if '@' in username_or_email:
+                    user_obj = User.objects.get(email=username_or_email)
+                    user = authenticate(request, username=user_obj.username, password=password)
+            except User.DoesNotExist:
+                pass
+        
         if user is not None:
             login(request, user)
             if hasattr(user, 'admin_profile') or user.is_staff:
                 return redirect('admin_dashboard')
             return redirect('dashboard')
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid username/email or password.')
     return render(request, 'learning/login.html')
 
 
@@ -127,6 +212,60 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully.')
     return redirect('home')
+
+
+@login_required
+def profile_view(request):
+    """User profile view - view and edit profile"""
+    profile, created = LearnerProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        # Update User model fields
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        email = request.POST.get('email', '').strip()
+        
+        # Validate email
+        if not email:
+            messages.error(request, 'Email is required.')
+        else:
+            try:
+                validate_email(email)
+                # Check if email is already taken by another user
+                existing_user = User.objects.filter(email__iexact=email).exclude(id=request.user.id).first()
+                if existing_user:
+                    messages.error(request, 'This email is already registered by another user.')
+                else:
+                    request.user.email = email
+                    request.user.first_name = first_name
+                    request.user.last_name = last_name
+                    request.user.save()
+                    
+                    # Update LearnerProfile fields
+                    # Handle profile image upload
+                    if 'profile_image' in request.FILES:
+                        profile.profile_image = request.FILES['profile_image']
+                    
+                    profile.bio = request.POST.get('bio', '').strip()
+                    profile.phone_number = request.POST.get('phone_number', '').strip()
+                    profile.location = request.POST.get('location', '').strip()
+                    profile.skill_level = request.POST.get('skill_level', '')
+                    profile.interests = request.POST.get('interests', '').strip()
+                    profile.learning_goals = request.POST.get('learning_goals', '').strip()
+                    profile.preferred_languages = request.POST.get('preferred_languages', '').strip()
+                    profile.github_username = request.POST.get('github_username', '').strip()
+                    profile.linkedin_url = request.POST.get('linkedin_url', '').strip()
+                    profile.save()
+                    
+                    messages.success(request, 'Profile updated successfully!')
+                    return redirect('profile')
+            except ValidationError:
+                messages.error(request, 'Please enter a valid email address.')
+    
+    context = {
+        'profile': profile,
+    }
+    return render(request, 'learning/profile.html', context)
 
 
 @login_required
@@ -148,15 +287,185 @@ def dashboard(request):
     
     # Calculate unlocked modules count for the user
     unlocked_modules_count = 0
-    if request.user.is_authenticated:
-        # Get all enrolled courses
-        enrolled_courses = CourseEnrollment.objects.filter(user=request.user).values_list('course_id', flat=True)
-        # Get all modules from enrolled courses
-        enrolled_modules = Module.objects.filter(course_id__in=enrolled_courses)
-        # Count unlocked modules
-        for module in enrolled_modules:
-            if module.is_unlocked_for_user(request.user):
-                unlocked_modules_count += 1
+    enrolled_courses = CourseEnrollment.objects.filter(user=request.user)
+    enrolled_course_ids = enrolled_courses.values_list('course_id', flat=True)
+    enrolled_modules = Module.objects.filter(course_id__in=enrolled_course_ids)
+    
+    # Calculate total modules and unlocked modules across all enrolled courses
+    total_modules_in_enrolled_courses = enrolled_modules.count()
+    for module in enrolled_modules:
+        if module.is_unlocked_for_user(request.user):
+            unlocked_modules_count += 1
+    
+    # Calculate Learning Progress: Based on unlocked modules across all enrolled courses
+    # Formula: (Unlocked modules / Total modules in enrolled courses) × 100
+    if total_modules_in_enrolled_courses > 0:
+        profile_score = int((unlocked_modules_count / total_modules_in_enrolled_courses) * 100)
+    else:
+        # If no enrolled courses, learning progress should be 0%
+        profile_score = 0
+    
+    # Profile Views: Count of unique courses viewed (using sessions as proxy)
+    profile_views = ChatSession.objects.filter(user=request.user).values('module__course').distinct().count()
+    
+    # Response Rate: Quiz attempts completed vs started
+    quiz_attempts = UserQuizAttempt.objects.filter(user=request.user)
+    total_attempts = quiz_attempts.count()
+    completed_attempts = quiz_attempts.exclude(completed_at__isnull=True).count()
+    response_rate = int((completed_attempts / total_attempts * 100) if total_attempts > 0 else 0)
+    
+    # Skills Match Rate: Average quiz pass rate
+    passed_quizzes = quiz_attempts.filter(passed=True).count()
+    skills_match_rate = int((passed_quizzes / total_attempts * 100) if total_attempts > 0 else 0)
+    
+    # Get last activity time
+    last_activity = None
+    if recent_sessions.exists():
+        last_activity = recent_sessions.first().created_at
+    elif quiz_attempts.exists():
+        last_activity = quiz_attempts.first().started_at
+    elif enrolled_courses.exists():
+        last_activity = enrolled_courses.first().enrolled_at
+    
+    # Get enrolled courses count
+    enrolled_courses_count = enrolled_courses.count()
+    
+    # Get quiz attempts count
+    quiz_attempts_count = total_attempts
+    
+    # Get enrolled courses with course details for My Enrollments tab
+    enrolled_courses_list = (
+        CourseEnrollment.objects.filter(user=request.user)
+        .select_related('course')
+        .prefetch_related('course__modules')
+        .order_by('-enrolled_at')
+    )
+    
+    # Get quiz attempts with course and module info for My Quizzes tab
+    quiz_attempts_list = (
+        UserQuizAttempt.objects.filter(user=request.user)
+        .select_related('quiz', 'quiz__module', 'quiz__module__course')
+        .order_by('-started_at')
+    )
+    
+    # Calculate learning progress for each enrolled course
+    learning_progress = []
+    for enrollment in enrolled_courses_list:
+        course = enrollment.course
+        modules = course.modules.all().order_by('order')
+        total_modules = modules.count()
+        
+        # Get all quiz attempts for this course
+        course_quiz_attempts = UserQuizAttempt.objects.filter(
+            user=request.user,
+            quiz__module__course=course
+        ).select_related('quiz', 'quiz__module').order_by('started_at')
+        
+        # Calculate module completion
+        completed_modules = 0
+        module_details = []
+        
+        for module in modules:
+            module_quiz = getattr(module, 'quiz', None)
+            module_completed = False
+            module_quiz_attempts = []
+            days_to_complete = None
+            first_attempt_date = None
+            last_passed_date = None
+            
+            if module_quiz:
+                attempts = UserQuizAttempt.objects.filter(
+                    user=request.user,
+                    quiz=module_quiz
+                ).order_by('started_at')
+                
+                if attempts.exists():
+                    first_attempt_date = attempts.first().started_at
+                    passed_attempt = attempts.filter(passed=True).first()
+                    
+                    if passed_attempt:
+                        module_completed = True
+                        completed_modules += 1
+                        last_passed_date = passed_attempt.completed_at or passed_attempt.started_at
+                        
+                        # Calculate days to complete (from enrollment to first pass)
+                        if last_passed_date:
+                            days_to_complete = (last_passed_date.date() - enrollment.enrolled_at.date()).days
+                
+                # Get all attempts for this module
+                for attempt in attempts:
+                    module_quiz_attempts.append({
+                        'attempt': attempt,
+                        'score': float(attempt.score),
+                        'passed': attempt.passed,
+                        'date': attempt.started_at,
+                        'completed_at': attempt.completed_at,
+                    })
+            else:
+                # Module without quiz - consider it completed if unlocked
+                if module.is_unlocked_for_user(request.user):
+                    module_completed = True
+                    completed_modules += 1
+            
+            module_details.append({
+                'module': module,
+                'completed': module_completed,
+                'quiz_attempts': module_quiz_attempts,
+                'has_quiz': module_quiz is not None,
+                'days_to_complete': days_to_complete,
+                'first_attempt_date': first_attempt_date,
+            })
+        
+        # Calculate course completion (all modules with quizzes must be passed)
+        modules_with_quizzes = [m for m in modules if hasattr(m, 'quiz')]
+        passed_quizzes_count = sum(1 for md in module_details if md['completed'] and md['has_quiz'])
+        course_completed = len(modules_with_quizzes) > 0 and passed_quizzes_count == len(modules_with_quizzes)
+        
+        # Calculate days studying (from enrollment to now or last activity)
+        last_course_activity = None
+        if course_quiz_attempts.exists():
+            last_course_activity = course_quiz_attempts.last().started_at
+        else:
+            # Get recent sessions for this course (without slice)
+            course_sessions = ChatSession.objects.filter(
+                user=request.user,
+                module__course=course,
+                module__isnull=False
+            ).select_related('module', 'module__course').order_by('-created_at')
+            if course_sessions.exists():
+                last_course_activity = course_sessions.first().created_at
+        
+        end_date = last_course_activity or timezone.now()
+        days_studying = (end_date.date() - enrollment.enrolled_at.date()).days
+        
+        # Calculate average quiz score for the course
+        all_scores = [float(a.score) for a in course_quiz_attempts if a.completed_at]
+        avg_score = sum(all_scores) / len(all_scores) if all_scores else 0
+        
+        # Calculate best score
+        best_score = max(all_scores) if all_scores else 0
+        
+        # Calculate total quiz attempts
+        total_quiz_attempts = course_quiz_attempts.count()
+        
+        # Calculate completion percentage
+        completion_percentage = int((completed_modules / total_modules * 100) if total_modules > 0 else 0)
+        
+        learning_progress.append({
+            'course': course,
+            'enrollment': enrollment,
+            'total_modules': total_modules,
+            'completed_modules': completed_modules,
+            'pending_modules': total_modules - completed_modules,
+            'module_details': module_details,
+            'course_completed': course_completed,
+            'days_studying': days_studying,
+            'enrolled_date': enrollment.enrolled_at,
+            'avg_score': round(avg_score, 1),
+            'best_score': round(best_score, 1),
+            'total_quiz_attempts': total_quiz_attempts,
+            'completion_percentage': completion_percentage,
+        })
     
     context = {
         'profile': profile,
@@ -164,6 +473,16 @@ def dashboard(request):
         'featured_courses': featured_courses,
         'all_courses': all_courses,
         'unlocked_modules_count': unlocked_modules_count,
+        'profile_score': profile_score,
+        'profile_views': profile_views,
+        'response_rate': response_rate,
+        'skills_match_rate': skills_match_rate,
+        'last_activity': last_activity,
+        'enrolled_courses_count': enrolled_courses_count,
+        'quiz_attempts_count': quiz_attempts_count,
+        'enrolled_courses_list': enrolled_courses_list,
+        'quiz_attempts_list': quiz_attempts_list,
+        'learning_progress': learning_progress,
     }
     return render(request, 'learning/dashboard.html', context)
 

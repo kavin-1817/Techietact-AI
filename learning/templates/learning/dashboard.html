@@ -4,53 +4,117 @@
 {% block title %}Dashboard - Techietact AI Tutor{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=3">
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-shell">
   <div class="container">
-    <div class="dashboard-hero">
-      <div class="hero-unified-card">
-        <div class="hero-main-content">
-          <div class="hero-welcome-section">
-            <p class="hero-greeting">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <div class="welcome-content">
+        <div class="welcome-text">
+          <p class="welcome-label">WELCOME BACK</p>
+          <h1 class="welcome-name">{{ user.first_name|default:user.username }} {{ user.last_name|default:"" }} 👋</h1>
+          <p class="welcome-subtitle">
               {% if recent_sessions %}
-                Welcome back, {{ user.first_name|default:user.username }} 👋
+              Continue your learning journey and unlock new skills with AI-powered guidance.
               {% else %}
-                Hello {{ user.first_name|default:user.username }} 👋
+              Start your personalized learning journey — pick a course and let the AI tutor guide you step by step.
               {% endif %}
             </p>
-            <p class="hero-text">
-              {% if recent_sessions %}
-                Pick up right where you left off or explore a new path. Your tutor remembers every conversation.
-              {% else %}
-                Launch your personalised learning journey — pick a course and the AI tutor will guide you step by step.
-              {% endif %}
-            </p>
-            <div class="hero-actions">
-              <button class="pill-btn primary" onclick="window.location.href='{% url 'courses_list' %}'">
+          <button class="view-profile-btn" onclick="window.location.href='{% url 'courses_list' %}'">
                 <i class="bi bi-journal-code me-2"></i>Explore Courses
               </button>
-              <button class="pill-btn secondary" onclick="window.location.href='{% url 'practice_code' %}'">
-                <i class="bi bi-terminal me-2"></i>Open Practice Lab
-              </button>
+        </div>
+        <div class="welcome-stats">
+          <div class="profile-progress">
+            <div class="circular-progress" data-percent="{{ profile_score }}">
+              <svg class="progress-ring" width="120" height="120">
+                <circle class="progress-ring-circle" cx="60" cy="60" r="54" fill="transparent" stroke="#ff9900" stroke-width="8" stroke-dasharray="339.292" stroke-dashoffset="0"/>
+              </svg>
+              <div class="progress-text">
+                <span class="progress-percent">{{ profile_score }}%</span>
+                <span class="progress-label">Learning Progress</span>
             </div>
-            <div class="hero-metrics">
-              <span class="metric-pill">
-                <i class="bi bi-lightning-charge-fill text-warning"></i> {{ recent_sessions|length }} active chats
-              </span>
-              <span class="metric-pill">
-                <i class="bi bi-bookmark-star text-info"></i> {{ featured_courses|length }} spotlight courses
-              </span>
-              <span class="metric-pill">
-                <i class="bi bi-grid-3x3-gap-fill text-primary"></i> {{ unlocked_modules_count }} tracks unlocked
-              </span>
             </div>
           </div>
-          <div class="hero-resume-section">
+          <p class="last-active">
+            {% if last_activity %}
+              Last active - {{ last_activity|date:"M d, g:i A" }}
+            {% else %}
+              Get started today!
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="dashboard-tabs">
+      <button class="tab-btn active" data-tab="overview">
+        <i class="bi bi-speedometer2 me-2"></i>Overview
+      </button>
+      <button class="tab-btn" data-tab="enrollments">
+        <i class="bi bi-bookmark-check me-2"></i>My Enrollments
+      </button>
+      <button class="tab-btn" data-tab="quizzes">
+        <i class="bi bi-clipboard-check me-2"></i>My Quizzes
+      </button>
+      <button class="tab-btn" data-tab="progress">
+        <i class="bi bi-graph-up me-2"></i>Learning Progress
+      </button>
+    </div>
+
+    <!-- Overview Tab Content -->
+    <div class="tab-content active" id="overview">
+      <!-- Metrics Section -->
+      <div class="metrics-section">
+        <div class="metric-box highlighted">
+          <div class="metric-icon">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <div class="metric-content">
+            <p class="metric-label">LEARNING PROGRESS</p>
+            <p class="metric-value">{{ profile_score }}%</p>
+          </div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
+          <div class="metric-content">
+            <p class="metric-label">COURSES ENROLLED</p>
+            <p class="metric-value">{{ enrolled_courses_count }}</p>
+          </div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="metric-content">
+            <p class="metric-label">QUIZ COMPLETION</p>
+            <p class="metric-value">{{ response_rate }}%</p>
+          </div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon">
+            <i class="bi bi-graph-up-arrow"></i>
+          </div>
+          <div class="metric-content">
+            <p class="metric-label">QUIZ PASS RATE</p>
+            <p class="metric-value">{{ skills_match_rate }}%</p>
+          </div>
+        </div>
+      </div>
+      <!-- Resume Learning Section -->
             {% if recent_sessions %}
               {% with latest_session=recent_sessions|first %}
+        <div class="resume-section">
                 <div class="resume-header">
                   <i class="bi bi-arrow-clockwise resume-icon"></i>
                   <span class="resume-label">Resume Learning</span>
@@ -62,8 +126,10 @@
                 <button class="pill-btn primary resume-btn" onclick="window.location.href='{% url 'module_detail' latest_session.module.id %}'">
                   <i class="bi bi-play-circle me-2"></i>Continue session
                 </button>
+        </div>
               {% endwith %}
             {% else %}
+        <div class="resume-section">
               <div class="resume-header">
                 <i class="bi bi-rocket-takeoff resume-icon"></i>
                 <span class="resume-label">Get Started</span>
@@ -73,39 +139,10 @@
               <button class="pill-btn primary resume-btn" onclick="window.location.href='{% url 'courses_list' %}'">
                 <i class="bi bi-play-circle me-2"></i>Start learning
               </button>
-            {% endif %}
-          </div>
         </div>
-      </div>
-    </div>
+      {% endif %}
 
-    <div class="section-heading">
-      <h2>Personal cockpit</h2>
-    </div>
-    <div class="insights-grid">
-      <article class="insight-card" onclick="window.location.href='{% url 'courses_list' %}'" style="cursor:pointer;">
-        <div class="insight-tag"><i class="bi bi-stars"></i> Curated</div>
-        <h3>Pick your focus</h3>
-        <p>Browse all live learning tracks, unlock new modules, and bookmark your favourites.</p>
-        <span class="hero-insight-meta"><i class="bi bi-map"></i>{{ all_courses|length }} journeys available</span>
-      </article>
-      <article class="insight-card" onclick="window.location.href='{% url 'practice_code' %}'" style="cursor:pointer;">
-        <div class="insight-tag"><i class="bi bi-terminal"></i> Labs</div>
-        <h3>Hands-on lab</h3>
-        <p>Run Python or Java snippets instantly to test what you learn inside each module.</p>
-        <span class="hero-insight-meta"><i class="bi bi-stopwatch"></i>5s runtime sandbox</span>
-      </article>
-      <article class="insight-card">
-        <div class="insight-tag"><i class="bi bi-calendar-check"></i> Plan</div>
-        <h3>Learning nudges</h3>
-        <ul class="list-unstyled mb-0 small insight-list">
-          <li class="mb-2"><i class="bi bi-arrow-right-circle me-2" style="color: #ffffff !important;"></i>Review notes from your latest chat</li>
-          <li class="mb-2"><i class="bi bi-arrow-right-circle me-2" style="color: #ffffff !important;"></i>Attempt a quiz to unlock the next module</li>
-          <li><i class="bi bi-arrow-right-circle me-2" style="color: #ffffff !important;"></i>Schedule a practice slot in the lab</li>
-        </ul>
-      </article>
-    </div>
-
+      <!-- Recent Learning Stream -->
     <div class="section-heading">
       <h2>Recent learning stream</h2>
       <a class="btn btn-outline-light btn-sm" href="{% url 'courses_list' %}">View all courses</a>
@@ -132,49 +169,498 @@
         <p>No conversations yet. Start any module to light up your learning stream.</p>
       </div>
     {% endif %}
-
-    <div class="section-heading">
-      <h2>Featured spotlight</h2>
     </div>
-    {% if featured_courses %}
-      <div class="card-grid">
-        {% for course in featured_courses %}
-          <div class="course-card" onclick="window.location.href='{% url 'course_detail' course.id %}'">
-            <div class="insight-tag mb-3">{{ course.get_category_display }}</div>
-            <h4 class="hero-insight-title" style="font-size:1.35rem;">{{ course.title }}</h4>
-            <p class="hero-insight-subtitle">{{ course.description|truncatewords:28 }}</p>
-            <p class="course-meta"><i class="bi bi-columns-gap me-2"></i>{{ course.modules.count }} modules</p>
+
+    <!-- My Enrollments Tab Content -->
+    <div class="tab-content" id="enrollments">
+    <div class="section-heading">
+        <h2>My Enrollments</h2>
+        <a class="btn btn-outline-light btn-sm" href="{% url 'courses_list' %}">Browse Courses</a>
+      </div>
+      {% if enrolled_courses_list %}
+        <div class="enrollments-list">
+          {% for enrollment in enrolled_courses_list %}
+            <div class="enrollment-item" onclick="window.location.href='{% url 'course_detail' enrollment.course.id %}'">
+              <div class="enrollment-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+              </div>
+              <div class="enrollment-content">
+                <h3 class="enrollment-title">{{ enrollment.course.title }}</h3>
+                <p class="enrollment-meta">
+                  <i class="bi bi-columns-gap me-2"></i>{{ enrollment.course.modules.count }} modules
+                  <span class="enrollment-separator">•</span>
+                  <i class="bi bi-calendar me-2"></i>Enrolled {{ enrollment.enrolled_at|date:"M d, Y" }}
+                </p>
+                <p class="enrollment-description">{{ enrollment.course.description|truncatewords:25 }}</p>
+              </div>
+              <div class="enrollment-action">
+                <i class="bi bi-arrow-right"></i>
+    </div>
           </div>
         {% endfor %}
       </div>
     {% else %}
       <div class="empty-view">
         <i class="bi bi-book"></i>
-        <p>No featured courses yet. Check back soon for curated recommendations.</p>
+          <p>You haven't enrolled in any courses yet. Browse courses to get started!</p>
+          <a href="{% url 'courses_list' %}" class="empty-view-btn">
+            <i class="bi bi-search me-2"></i>Browse Courses
+          </a>
       </div>
     {% endif %}
-
-    <div class="section-heading">
-      <h2>Continue exploring</h2>
-      <button class="pill-btn secondary" onclick="window.location.href='{% url 'courses_list' %}'">
-        See catalog
-      </button>
     </div>
-    {% if all_courses %}
-      <div class="card-grid">
-        {% for course in all_courses %}
-          <div class="course-card" onclick="window.location.href='{% url 'course_detail' course.id %}'">
-            <h4 class="hero-insight-title" style="font-size:1.2rem;">{{ course.title }}</h4>
-            <p class="hero-insight-subtitle">{{ course.description|truncatewords:18 }}</p>
+
+    <!-- My Quizzes Tab Content -->
+    <div class="tab-content" id="quizzes">
+    <div class="section-heading">
+        <h2>My Quizzes</h2>
+      </div>
+      {% if quiz_attempts_list %}
+        <div class="quizzes-list">
+          {% for attempt in quiz_attempts_list %}
+            <div class="quiz-item">
+              <div class="quiz-icon">
+                <i class="bi bi-clipboard-check-fill"></i>
+              </div>
+              <div class="quiz-content">
+                <h3 class="quiz-title">{{ attempt.quiz.title }}</h3>
+                <p class="quiz-meta">
+                  {% if attempt.quiz.module %}
+                    <i class="bi bi-book me-2"></i>{{ attempt.quiz.module.course.title }}
+                    <span class="quiz-separator">•</span>
+                    <i class="bi bi-file-text me-2"></i>{{ attempt.quiz.module.title }}
+                  {% else %}
+                    <i class="bi bi-info-circle me-2"></i>Standalone Quiz
+                  {% endif %}
+                </p>
+                <div class="quiz-details">
+                  <span class="quiz-score {% if attempt.passed %}passed{% else %}failed{% endif %}">
+                    <i class="bi bi-{% if attempt.passed %}check-circle{% else %}x-circle{% endif %}-fill me-1"></i>
+                    Score: {{ attempt.score }}%
+                  </span>
+                  <span class="quiz-status {% if attempt.passed %}passed{% else %}failed{% endif %}">
+                    {% if attempt.passed %}Passed{% else %}Failed{% endif %}
+                  </span>
+                  {% if attempt.auto_submitted %}
+                    <span class="quiz-warning">
+                      <i class="bi bi-exclamation-triangle-fill me-1"></i>Auto-submitted
+                    </span>
+                  {% endif %}
+                </div>
+                <p class="quiz-date">
+                  <i class="bi bi-clock me-2"></i>
+                  Attempted on {{ attempt.started_at|date:"M d, Y g:i A" }}
+                  {% if attempt.completed_at %}
+                    • Completed in {{ attempt.completed_at|timesince:attempt.started_at }}
+                  {% endif %}
+                </p>
+              </div>
+              <div class="quiz-action">
+                {% if attempt.quiz.module %}
+                  <a href="{% url 'module_detail' attempt.quiz.module.id %}" class="quiz-link-btn">
+                    <i class="bi bi-arrow-right"></i>
+                  </a>
+                {% endif %}
+    </div>
           </div>
         {% endfor %}
       </div>
     {% else %}
       <div class="empty-view">
-        <i class="bi bi-collection"></i>
-        <p>No courses published yet. Your catalog will appear here.</p>
+          <i class="bi bi-clipboard"></i>
+          <p>You haven't taken any quizzes yet. Complete modules and take quizzes to track your progress!</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Learning Progress Tab Content -->
+    <div class="tab-content" id="progress">
+      <div class="section-heading">
+        <h2>Learning Progress</h2>
+      </div>
+      {% if learning_progress %}
+        <!-- Overall Progress Charts -->
+        <div class="progress-charts-grid">
+          <div class="chart-card">
+            <h4 class="chart-title">Overall Course Completion</h4>
+            <canvas id="overallCompletionChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h4 class="chart-title">Score Trends</h4>
+            <canvas id="scoreTrendsChart"></canvas>
+          </div>
+        </div>
+
+        <div class="progress-courses-list">
+          {% for progress in learning_progress %}
+            <div class="progress-course-card">
+              <div class="progress-course-header">
+                <div class="progress-course-title-section">
+                  <h3 class="progress-course-title">{{ progress.course.title }}</h3>
+                  <div class="progress-course-badge {% if progress.course_completed %}completed{% else %}in-progress{% endif %}">
+                    <i class="bi bi-{% if progress.course_completed %}check-circle-fill{% else %}clock{% endif %} me-1"></i>
+                    {% if progress.course_completed %}Completed{% else %}In Progress{% endif %}
+                  </div>
+                </div>
+                <div class="progress-course-stats">
+                  <div class="progress-stat-item">
+                    <span class="progress-stat-label">Enrolled</span>
+                    <span class="progress-stat-value">{{ progress.enrolled_date|date:"M d, Y" }}</span>
+                  </div>
+                  <div class="progress-stat-item">
+                    <span class="progress-stat-label">Days Studying</span>
+                    <span class="progress-stat-value">{{ progress.days_studying }} days</span>
+                  </div>
+                  <div class="progress-stat-item">
+                    <span class="progress-stat-label">Avg Score</span>
+                    <span class="progress-stat-value">{{ progress.avg_score }}%</span>
+                  </div>
+                  <div class="progress-stat-item">
+                    <span class="progress-stat-label">Best Score</span>
+                    <span class="progress-stat-value">{{ progress.best_score }}%</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="progress-overview">
+                <div class="progress-charts-row">
+                  <div class="progress-chart-item">
+                    <h5 class="chart-subtitle">Module Progress</h5>
+                    <canvas class="module-progress-chart" data-course-index="{{ forloop.counter0 }}" 
+                            data-completed="{{ progress.completed_modules }}" 
+                            data-pending="{{ progress.pending_modules }}"></canvas>
+                  </div>
+                  <div class="progress-chart-item">
+                    <h5 class="chart-subtitle">Completion Rate</h5>
+                    <div class="circular-progress-mini" data-percent="{{ progress.completion_percentage }}">
+                      <svg class="progress-ring-mini" width="120" height="120">
+                        <circle class="progress-ring-circle-mini" cx="60" cy="60" r="50" fill="transparent" stroke="#ff9900" stroke-width="8" stroke-dasharray="314" stroke-dashoffset="314"/>
+                      </svg>
+                      <div class="progress-text-mini">
+                        <span class="progress-percent-mini">{{ progress.completion_percentage }}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="progress-summary">
+                  <div class="summary-item">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    <span>{{ progress.completed_modules }} Completed</span>
+                  </div>
+                  <div class="summary-item">
+                    <i class="bi bi-clock text-warning"></i>
+                    <span>{{ progress.pending_modules }} Pending</span>
+                  </div>
+                  <div class="summary-item">
+                    <i class="bi bi-clipboard-check text-info"></i>
+                    <span>{{ progress.total_quiz_attempts }} Quiz Attempts</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="progress-modules-list">
+                <h4 class="modules-list-title">Module Details</h4>
+                {% for module_detail in progress.module_details %}
+                  <div class="progress-module-item {% if module_detail.completed %}completed{% else %}pending{% endif %}">
+                    <div class="module-item-header">
+                      <div class="module-item-info">
+                        <div class="module-item-icon">
+                          <i class="bi bi-{% if module_detail.completed %}check-circle-fill{% else %}circle{% endif %}"></i>
+                        </div>
+                        <div class="module-item-content">
+                          <h5 class="module-item-title">
+                            Module {{ module_detail.module.order }}: {{ module_detail.module.title }}
+                          </h5>
+                          <div class="module-item-meta">
+                            {% if module_detail.has_quiz %}
+                              {% if module_detail.completed %}
+                                <span class="module-status-badge passed">
+                                  <i class="bi bi-check-circle me-1"></i>Completed
+                                </span>
+                                {% if module_detail.days_to_complete is not None %}
+                                  <span class="module-meta-text">
+                                    <i class="bi bi-calendar me-1"></i>Completed in {{ module_detail.days_to_complete }} day{{ module_detail.days_to_complete|pluralize }}
+                                  </span>
+                                {% endif %}
+                              {% else %}
+                                <span class="module-status-badge pending">
+                                  <i class="bi bi-clock me-1"></i>Pending
+                                </span>
+                                {% if module_detail.first_attempt_date %}
+                                  <span class="module-meta-text">
+                                    <i class="bi bi-calendar me-1"></i>Started {{ module_detail.first_attempt_date|date:"M d, Y" }}
+                                  </span>
+                                {% endif %}
+                              {% endif %}
+                            {% else %}
+                              <span class="module-status-badge no-quiz">
+                                <i class="bi bi-info-circle me-1"></i>No Quiz
+                              </span>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {% if module_detail.quiz_attempts %}
+                      <div class="module-quiz-attempts">
+                        <div class="quiz-attempts-header">
+                          <span class="quiz-attempts-label">Quiz Attempts ({{ module_detail.quiz_attempts|length }})</span>
+                        </div>
+                        <div class="quiz-attempts-list">
+                          {% for attempt_data in module_detail.quiz_attempts %}
+                            <div class="quiz-attempt-item {% if attempt_data.passed %}passed{% else %}failed{% endif %}">
+                              <div class="attempt-info">
+                                <div class="attempt-score">
+                                  <i class="bi bi-{% if attempt_data.passed %}check-circle{% else %}x-circle{% endif %}-fill me-2"></i>
+                                  <span class="score-value">{{ attempt_data.score }}%</span>
+                                  <span class="attempt-status">{% if attempt_data.passed %}Passed{% else %}Failed{% endif %}</span>
+                                </div>
+                                <div class="attempt-date">
+                                  <i class="bi bi-calendar me-1"></i>{{ attempt_data.date|date:"M d, Y g:i A" }}
+                                  {% if attempt_data.completed_at %}
+                                    <span class="attempt-duration">
+                                      • Completed in {{ attempt_data.completed_at|timesince:attempt_data.date }}
+                                    </span>
+                                  {% endif %}
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% elif module_detail.has_quiz %}
+                      <div class="module-no-attempts">
+                        <i class="bi bi-exclamation-circle me-2"></i>No quiz attempts yet
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-view">
+          <i class="bi bi-graph-up"></i>
+          <p>You haven't enrolled in any courses yet. Enroll in a course to track your learning progress!</p>
+          <a href="{% url 'courses_list' %}" class="empty-view-btn">
+            <i class="bi bi-search me-2"></i>Browse Courses
+          </a>
       </div>
     {% endif %}
+    </div>
   </div>
 </div>
+
+<script>
+// Circular progress animation
+document.addEventListener('DOMContentLoaded', function() {
+  const progressRing = document.querySelector('.progress-ring-circle');
+  const percent = progressRing ? parseInt(document.querySelector('.circular-progress').getAttribute('data-percent')) : 0;
+  const circumference = 2 * Math.PI * 54;
+  const offset = circumference - (percent / 100) * circumference;
+  
+  if (progressRing) {
+    progressRing.style.strokeDashoffset = offset;
+  }
+
+  // Initialize mini circular progress indicators
+  document.querySelectorAll('.circular-progress-mini').forEach(function(progressEl) {
+    const percent = parseInt(progressEl.getAttribute('data-percent'));
+    const ring = progressEl.querySelector('.progress-ring-circle-mini');
+    if (ring) {
+      const circumference = 2 * Math.PI * 50;
+      const offset = circumference - (percent / 100) * circumference;
+      ring.style.strokeDashoffset = offset;
+    }
+  });
+
+  // Tab switching functionality
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      // Skip if button has onclick handler (for redirects)
+      if (this.getAttribute('onclick')) {
+        return;
+      }
+
+      const tabName = this.getAttribute('data-tab');
+      
+      // Remove active class from all tabs and tab contents
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      // Add active class to clicked tab
+      this.classList.add('active');
+      
+      // Show corresponding tab content
+      const tabContent = document.getElementById(tabName);
+      if (tabContent) {
+        tabContent.classList.add('active');
+        
+        // Initialize charts when progress tab is opened
+        if (tabName === 'progress' && typeof Chart !== 'undefined') {
+          initializeProgressCharts();
+        }
+      }
+    });
+  });
+
+  // Initialize charts if progress tab is already active
+  if (document.getElementById('progress') && document.getElementById('progress').classList.contains('active')) {
+    if (typeof Chart !== 'undefined') {
+      initializeProgressCharts();
+    }
+  }
+
+  function initializeProgressCharts() {
+    // Overall Completion Chart (Doughnut)
+    const overallCtx = document.getElementById('overallCompletionChart');
+    if (overallCtx) {
+      const progressData = [
+        {% for progress in learning_progress %}
+        {
+          course: '{{ progress.course.title|escapejs }}',
+          completed: {{ progress.completed_modules }},
+          pending: {{ progress.pending_modules }},
+          percentage: {{ progress.completion_percentage }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ];
+
+      const totalCompleted = progressData.reduce((sum, p) => sum + p.completed, 0);
+      const totalPending = progressData.reduce((sum, p) => sum + p.pending, 0);
+      const totalModules = totalCompleted + totalPending;
+
+      new Chart(overallCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Completed', 'Pending'],
+          datasets: [{
+            data: [totalCompleted, totalPending],
+            backgroundColor: ['#22c55e', '#ff9900'],
+            borderColor: ['#16a34a', '#e68900'],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#ffffff',
+                padding: 15,
+                font: { size: 12 }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Score Trends Chart (Line)
+    const trendsCtx = document.getElementById('scoreTrendsChart');
+    if (trendsCtx) {
+      const scoreData = [
+        {% for progress in learning_progress %}
+        {
+          course: '{{ progress.course.title|escapejs }}',
+          avgScore: {{ progress.avg_score }},
+          bestScore: {{ progress.best_score }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ];
+
+      new Chart(trendsCtx, {
+        type: 'line',
+        data: {
+          labels: scoreData.map(d => d.course.length > 20 ? d.course.substring(0, 20) + '...' : d.course),
+          datasets: [{
+            label: 'Average Score',
+            data: scoreData.map(d => d.avgScore),
+            borderColor: '#ff9900',
+            backgroundColor: 'rgba(255, 153, 0, 0.1)',
+            tension: 0.4,
+            fill: true
+          }, {
+            label: 'Best Score',
+            data: scoreData.map(d => d.bestScore),
+            borderColor: '#22c55e',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                color: '#ffffff',
+                callback: function(value) {
+                  return value + '%';
+                }
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              }
+            },
+            x: {
+              ticks: {
+                color: '#ffffff'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#ffffff'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Module Progress Charts (Pie charts for each course)
+    document.querySelectorAll('.module-progress-chart').forEach(function(canvas) {
+      const courseIndex = parseInt(canvas.getAttribute('data-course-index'));
+      const completed = parseInt(canvas.getAttribute('data-completed'));
+      const pending = parseInt(canvas.getAttribute('data-pending'));
+
+      if (completed === 0 && pending === 0) return;
+
+      new Chart(canvas, {
+        type: 'pie',
+        data: {
+          labels: ['Completed', 'Pending'],
+          datasets: [{
+            data: [completed, pending],
+            backgroundColor: ['#22c55e', '#ff9900'],
+            borderColor: ['#16a34a', '#e68900'],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    });
+  }
+});
+</script>
 {% endblock %}

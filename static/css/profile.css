@@ -1,0 +1,377 @@
+/* Profile Page Styles */
+.profile-page {
+    min-height: calc(100vh - 76px);
+    padding: 3rem 0;
+    background: var(--bg-primary);
+    transition: background 0.3s ease;
+}
+
+.profile-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.profile-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-white);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.profile-subtitle {
+    color: var(--text-muted-white);
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.profile-form {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.profile-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    border: 1px solid rgba(255, 153, 0, 0.3);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: border-color 0.3s ease;
+}
+
+.profile-section:hover {
+    border-color: rgba(255, 153, 0, 0.5);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ff9900;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-white);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.form-label .required {
+    color: #ff9900;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 153, 0, 0.1);
+    border: 1px solid rgba(255, 153, 0, 0.3);
+    border-radius: 12px;
+    color: var(--text-white);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    background: rgba(255, 153, 0, 0.15);
+    border-color: rgba(255, 153, 0, 0.65);
+    box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.12);
+}
+
+/* Profile Image Section */
+.profile-image-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.profile-image-preview {
+    flex-shrink: 0;
+}
+
+.profile-image-display {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ff9900;
+    box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+}
+
+.profile-image-placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(255, 153, 0, 0.1);
+    border: 3px solid rgba(255, 153, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 153, 0, 0.6);
+}
+
+.profile-image-placeholder i {
+    font-size: 4rem;
+}
+
+.profile-image-upload {
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-control-file {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 153, 0, 0.1);
+    border: 1px solid rgba(255, 153, 0, 0.3);
+    border-radius: 12px;
+    color: var(--text-white);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.form-control-file:focus {
+    outline: none;
+    background: rgba(255, 153, 0, 0.15);
+    border-color: rgba(255, 153, 0, 0.65);
+    box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.12);
+}
+
+.form-control-file::-webkit-file-upload-button {
+    padding: 0.5rem 1rem;
+    background: #ff9900;
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-right: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-control-file::-webkit-file-upload-button:hover {
+    background: #ffaa00;
+}
+
+/* Light Theme Profile Image */
+[data-theme="light"] .profile-image-placeholder {
+    background: rgba(255, 153, 0, 0.1);
+    border-color: rgba(255, 153, 0, 0.3);
+    color: rgba(255, 153, 0, 0.8);
+}
+
+[data-theme="light"] .form-control-file {
+    background: rgba(255, 153, 0, 0.1);
+    border-color: rgba(255, 153, 0, 0.3);
+    color: var(--text-primary);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.form-control select {
+    background: rgba(255, 153, 0, 0.1);
+    color: var(--text-white);
+    cursor: pointer;
+}
+
+/* Dropdown options - force white background and black text in all themes */
+.form-control select option {
+    background: #ffffff !important;
+    color: #000000 !important;
+    background-color: #ffffff !important;
+}
+
+/* Additional specificity for dropdown options */
+select.form-control option,
+.form-control select option {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.form-control textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-help {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 1rem;
+    color: #ff9900;
+    font-size: 1.1rem;
+    z-index: 1;
+}
+
+.input-with-icon .form-control {
+    padding-left: 2.5rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 153, 0, 0.2);
+}
+
+.btn-save,
+.btn-cancel {
+    padding: 0.85rem 2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-save {
+    background: #ff9900;
+    color: #000000;
+}
+
+.btn-save:hover {
+    background: #ffaa00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 153, 0, 0.4);
+    color: #000000;
+}
+
+.btn-cancel {
+    background: transparent;
+    color: var(--text-white);
+    border: 1px solid rgba(255, 153, 0, 0.3);
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 153, 0, 0.1);
+    border-color: rgba(255, 153, 0, 0.5);
+    color: var(--text-white);
+    transform: translateY(-2px);
+}
+
+/* Light Theme */
+[data-theme="light"] .profile-header h1 {
+    color: #000000;
+}
+
+[data-theme="light"] .profile-subtitle {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="light"] .profile-section {
+    background: #ffffff;
+    border-color: rgba(255, 153, 0, 0.3);
+}
+
+[data-theme="light"] .form-label {
+    color: #000000;
+}
+
+[data-theme="light"] .form-control {
+    background: rgba(255, 153, 0, 0.1);
+    border-color: rgba(255, 153, 0, 0.3);
+    color: #000000;
+}
+
+[data-theme="light"] .form-control::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] .form-control select {
+    background: rgba(255, 153, 0, 0.1);
+    color: #000000;
+}
+
+[data-theme="light"] .form-control select option {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+[data-theme="light"] .form-help {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] .btn-cancel {
+    color: #000000;
+    border-color: rgba(255, 153, 0, 0.3);
+}
+
+[data-theme="light"] .btn-cancel:hover {
+    color: #000000;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-page {
+        padding: 2rem 0;
+    }
+
+    .profile-header h1 {
+        font-size: 2rem;
+    }
+
+    .profile-section {
+        padding: 1.5rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+        justify-content: center;
+    }
+}
+

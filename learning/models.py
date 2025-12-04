@@ -8,6 +8,27 @@ class LearnerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='learner_profile')
     joined_date = models.DateTimeField(default=timezone.now)
     
+    # Profile Information
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True, help_text='Your profile picture')
+    bio = models.TextField(blank=True, max_length=500, help_text='Tell us about yourself and your learning journey')
+    phone_number = models.CharField(max_length=20, blank=True, help_text='Optional: Your contact number')
+    location = models.CharField(max_length=100, blank=True, help_text='Optional: Your location')
+    
+    # Learning Preferences
+    SKILL_LEVEL_CHOICES = [
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
+    ]
+    skill_level = models.CharField(max_length=20, choices=SKILL_LEVEL_CHOICES, blank=True, help_text='Your current skill level')
+    interests = models.TextField(blank=True, max_length=200, help_text='Your interests (e.g., Web Development, Data Science, AI)')
+    learning_goals = models.TextField(blank=True, max_length=500, help_text='What do you want to achieve?')
+    preferred_languages = models.CharField(max_length=200, blank=True, help_text='Preferred programming languages (comma-separated)')
+    
+    # Social Links (optional)
+    github_username = models.CharField(max_length=100, blank=True, help_text='Optional: Your GitHub username')
+    linkedin_url = models.URLField(blank=True, help_text='Optional: Your LinkedIn profile URL')
+    
     class Meta:
         verbose_name = 'Learner Profile'
         verbose_name_plural = 'Learner Profiles'

@@ -216,7 +216,7 @@ html {
 }
 
 /* Also target any element with card-related class names */
-[class*="card"]:not([class*="backdrop"]):not([class*="modal-backdrop"]):not([class*="grid"]):not(.stats-card):not(.admin-stat-card):not(.student-card):not(.performance-stat-card) {
+[class*="card"]:not([class*="backdrop"]):not([class*="modal-backdrop"]):not([class*="grid"]):not(.stats-card):not(.admin-stat-card):not(.student-card):not(.performance-stat-card):not(.chart-card):not(.progress-course-card):not(.progress-module-item):not(.quiz-attempt-item):not(.auth-card) {
     background: #ff9900 !important;
     color: #000000 !important;
 }
@@ -727,6 +727,26 @@ textarea.form-control:focus {
 }
 
 /* Profile Dropdown Styling */
+/* Navbar Profile Image */
+.navbar-profile-image {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    border: 2.5px solid rgba(255, 153, 0, 0.6);
+    transition: all 0.3s ease;
+    display: block;
+    background: rgba(255, 153, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-dropdown-toggle:hover .navbar-profile-image {
+    border-color: #ff9900;
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
 .profile-dropdown-toggle {
     padding: 0.5rem !important;
     border: none !important;

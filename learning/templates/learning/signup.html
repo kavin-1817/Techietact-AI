@@ -39,16 +39,34 @@
                 <form method="post" novalidate>
                     {% csrf_token %}
                     <div class="input-field">
+                        <div class="input-label">First Name</div>
+                        <div class="input-shell">
+                            <i class="bi bi-person"></i>
+                            <input type="text" name="first_name" id="id_first_name" class="auth-control" placeholder="Enter your first name" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-field">
+                        <div class="input-label">Last Name</div>
+                        <div class="input-shell">
+                            <i class="bi bi-person"></i>
+                            <input type="text" name="last_name" id="id_last_name" class="auth-control" placeholder="Enter your last name" required>
+                        </div>
+                    </div>
+                    <div class="input-field">
                         <div class="input-label">Username</div>
                         <div class="input-shell">
                             <i class="bi bi-person-plus"></i>
-                            <input type="text" name="username" id="id_username" class="auth-control" placeholder="Choose a unique username" value="{{ form.username.value|default_if_none:'' }}" required autofocus>
+                            <input type="text" name="username" id="id_username" class="auth-control" placeholder="Choose a unique username" required>
                         </div>
-                        {% if form.username.errors %}
-                            <div class="error-text">{{ form.username.errors|join:', ' }}</div>
-                        {% else %}
-                            <div class="help-text">Letters, numbers, and underscores are welcome.</div>
-                        {% endif %}
+                        <div class="help-text">Letters, numbers, and underscores are welcome.</div>
+                    </div>
+                    <div class="input-field">
+                        <div class="input-label">Email</div>
+                        <div class="input-shell">
+                            <i class="bi bi-envelope"></i>
+                            <input type="email" name="email" id="id_email" class="auth-control" placeholder="Enter your email address" required>
+                        </div>
+                        <div class="help-text">We'll use this for account verification and login.</div>
                     </div>
                     <div class="input-field">
                         <div class="input-label">Password</div>
@@ -70,12 +88,14 @@
                             <input type="password" name="password2" id="id_password2" class="auth-control" placeholder="Confirm your password" required>
                             <i class="bi bi-eye-slash toggle-visibility" data-target="id_password2" role="button" aria-label="Show password"></i>
                         </div>
-                        {% if form.password2.errors %}
-                            <div class="error-text">{{ form.password2.errors|join:', ' }}</div>
-                        {% endif %}
                     </div>
                     <button type="submit" class="auth-button">Create free Techietact account</button>
                 </form>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="error-text" style="margin-top: 1rem; text-align: center;">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 <div class="form-footer">
                     Already part of Techietact?
                     <a href="{% url 'login' %}">Log in instead</a>

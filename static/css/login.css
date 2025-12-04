@@ -134,12 +134,12 @@
 
 .auth-card {
     position: relative;
-    background: #ff9900;
+    background: #ffffff !important;
     color: #000000;
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 153, 0, 0.3);
     border-radius: 28px;
     padding: 3rem;
-    box-shadow: 0 30px 60px var(--shadow);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(24px);
     transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -159,7 +159,7 @@
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
     mask-composite: exclude;
-    opacity: 0.25;
+    opacity: 0.3;
     pointer-events: none;
 }
 
@@ -193,8 +193,8 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: var(--input-bg);
-    border: 1px solid var(--input-border);
+    background: rgba(255, 153, 0, 0.1);
+    border: 1px solid rgba(255, 153, 0, 0.3);
     border-radius: 14px;
     padding: 0.85rem 1rem;
     transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
@@ -238,6 +238,7 @@
 }
 
 .input-shell:focus-within {
+    background: rgba(255, 153, 0, 0.15);
     border-color: rgba(255, 153, 0, 0.65);
     box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.12);
 }
@@ -270,7 +271,7 @@
 }
 
 .form-footer a {
-    color: #ffffff !important;
+    color: #ff9900 !important;
     font-weight: 600;
     text-decoration: none;
     transition: color 0.3s ease;
@@ -279,7 +280,41 @@
 }
 
 .form-footer a:hover {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: #ff7700 !important;
+}
+
+/* Light theme - black background for auth card */
+[data-theme="light"] .auth-card {
+    background: #000000 !important;
+    color: #ffffff;
+    border-color: rgba(255, 153, 0, 0.3);
+}
+
+[data-theme="light"] .auth-card header h2,
+[data-theme="light"] .auth-card header p,
+[data-theme="light"] .input-label,
+[data-theme="light"] .auth-control,
+[data-theme="light"] .auth-control::placeholder,
+[data-theme="light"] .toggle-visibility,
+[data-theme="light"] .input-shell i,
+[data-theme="light"] .form-footer {
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .auth-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+[data-theme="light"] .toggle-visibility:hover {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme="light"] .form-footer a {
+    color: #ff9900 !important;
+}
+
+[data-theme="light"] .form-footer a:hover {
+    color: #ffaa00 !important;
 }
 
 .error-text {

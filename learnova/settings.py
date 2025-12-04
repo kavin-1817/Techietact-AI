@@ -138,9 +138,22 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Media files (User uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Session Configuration
+# Sessions expire after 24 hours (86400 seconds) - users must login daily
+SESSION_COOKIE_AGE = 86400  # 24 hours in seconds
+SESSION_SAVE_EVERY_REQUEST = False  # Don't extend session on every request - expire at fixed time
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Expire based on time, not browser close
+SESSION_COOKIE_HTTPONLY = True  # Security: prevent JavaScript access to session cookie
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF protection
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

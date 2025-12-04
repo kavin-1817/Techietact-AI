@@ -490,15 +490,14 @@ def admin_reject_enrollment(request, request_id):
 @admin_required
 @require_http_methods(['POST'])
 def admin_course_reorder(request, course_id):
-    """Reorder a course (move up or down)"""
+    """Reorder a course (move up, down, or to specific position)"""
     course = get_object_or_404(Course, id=course_id)
-    direction = request.POST.get('direction')  # 'up' or 'down'
-    
-    if direction not in ['up', 'down']:
-        return JsonResponse({'success': False, 'error': 'Invalid direction'}, status=400)
+    direction = request.POST.get('direction')  # 'up' or 'down' (optional)
+    position = request.POST.get('position')  # Specific position number (optional)
     
     # Get all courses ordered by current order
     all_courses = list(Course.objects.all().order_by('order', '-created_at'))
+    total_courses = len(all_courses)
     
     # Find current course index
     try:
@@ -506,16 +505,44 @@ def admin_course_reorder(request, course_id):
     except StopIteration:
         return JsonResponse({'success': False, 'error': 'Course not found'}, status=404)
     
-    # Calculate new index
-    if direction == 'up' and current_index > 0:
-        new_index = current_index - 1
-    elif direction == 'down' and current_index < len(all_courses) - 1:
-        new_index = current_index + 1
-    else:
-        return JsonResponse({'success': False, 'error': 'Cannot move course in that direction'}, status=400)
+    # Handle position-based reordering
+    if position is not None:
+        try:
+            new_position = int(position)
+            if new_position < 1 or new_position > total_courses:
+                return JsonResponse({'success': False, 'error': f'Position must be between 1 and {total_courses}'}, status=400)
+            
+            # Convert to 0-based index
+            new_index = new_position - 1
+            
+            # If already at the target position, do nothing
+            if current_index == new_index:
+                return JsonResponse({'success': True, 'message': 'Course is already at that position'})
+            
+            # Remove course from current position
+            course_to_move = all_courses.pop(current_index)
+            
+            # Insert at new position
+            all_courses.insert(new_index, course_to_move)
+            
+        except ValueError:
+            return JsonResponse({'success': False, 'error': 'Invalid position value'}, status=400)
     
-    # Swap the courses in the list
-    all_courses[current_index], all_courses[new_index] = all_courses[new_index], all_courses[current_index]
+    # Handle direction-based reordering (up/down)
+    elif direction in ['up', 'down']:
+        # Calculate new index
+        if direction == 'up' and current_index > 0:
+            new_index = current_index - 1
+        elif direction == 'down' and current_index < len(all_courses) - 1:
+            new_index = current_index + 1
+        else:
+            return JsonResponse({'success': False, 'error': 'Cannot move course in that direction'}, status=400)
+        
+        # Swap the courses in the list
+        all_courses[current_index], all_courses[new_index] = all_courses[new_index], all_courses[current_index]
+    
+    else:
+        return JsonResponse({'success': False, 'error': 'Either direction or position must be provided'}, status=400)
     
     # Reassign orders sequentially (1, 2, 3, ...) to avoid gaps
     for index, c in enumerate(all_courses, start=1):

@@ -95,7 +95,16 @@
                         {% if forloop.first %}disabled title="Already at top"{% else %}title="Move up"{% endif %}>
                   <i class="bi bi-arrow-up"></i>
                 </button>
-                <span class="order-number">{{ course.order }}</span>
+                <input type="number" 
+                       class="order-number" 
+                       value="{{ course.order }}" 
+                       min="1" 
+                       max="{{ courses|length }}"
+                       data-course-id="{{ course.id }}"
+                       data-original-value="{{ course.order }}"
+                       onchange="moveCourseToPosition({{ course.id }}, this)"
+                       onkeydown="handleOrderInputKeydown(event, {{ course.id }}, this)"
+                       title="Type a number to move course to that position">
                 <button class="order-btn" onclick="reorderCourse({{ course.id }}, 'down', event)" 
                         {% if forloop.last %}disabled title="Already at bottom"{% else %}title="Move down"{% endif %}>
                   <i class="bi bi-arrow-down"></i>
@@ -191,6 +200,73 @@ function reorderCourse(courseId, direction, event) {
         button.disabled = false;
         button.innerHTML = originalContent;
         button.style.opacity = '1';
+    });
+}
+
+function handleOrderInputKeydown(event, courseId, inputElement) {
+    // Allow Enter key to trigger the move
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        inputElement.blur(); // This will trigger the onchange event
+    }
+    // Allow Escape key to revert the value
+    if (event.key === 'Escape') {
+        inputElement.value = inputElement.getAttribute('data-original-value');
+        inputElement.blur();
+    }
+}
+
+function moveCourseToPosition(courseId, inputElement) {
+    const newPosition = parseInt(inputElement.value);
+    const maxPosition = parseInt(inputElement.getAttribute('max'));
+    const originalValue = parseInt(inputElement.getAttribute('data-original-value'));
+    
+    // Validate the input
+    if (isNaN(newPosition) || newPosition < 1 || newPosition > maxPosition) {
+        alert(`Please enter a number between 1 and ${maxPosition}`);
+        inputElement.value = originalValue;
+        return;
+    }
+    
+    // If the position hasn't changed, do nothing
+    if (newPosition === originalValue) {
+        return;
+    }
+    
+    // Disable the input and show loading state
+    inputElement.disabled = true;
+    inputElement.style.opacity = '0.6';
+    const originalValueForRestore = inputElement.value;
+    
+    const formData = new FormData();
+    formData.append('position', newPosition);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    
+    fetch(`/admin/courses/${courseId}/reorder/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reload the page to show updated order
+            window.location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'Failed to move course to position'));
+            inputElement.value = originalValue;
+            inputElement.disabled = false;
+            inputElement.style.opacity = '1';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while moving the course.');
+        inputElement.value = originalValue;
+        inputElement.disabled = false;
+        inputElement.style.opacity = '1';
     });
 }
 </script>

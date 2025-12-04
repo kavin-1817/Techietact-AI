@@ -31,6 +31,11 @@ class Command(BaseCommand):
         if User.objects.filter(username=username).exists():
             user = User.objects.get(username=username)
             self.stdout.write(self.style.WARNING(f'User "{username}" already exists.'))
+            # Ensure user has staff privileges for Django admin access
+            if not user.is_staff:
+                user.is_staff = True
+                user.save()
+                self.stdout.write(self.style.SUCCESS(f'Granted staff privileges to {username}'))
         else:
             # Create user
             user = User.objects.create_user(
@@ -47,6 +52,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Created admin profile for {username}'))
         else:
             self.stdout.write(self.style.WARNING(f'Admin profile already exists for {username}'))
+        
+        # Ensure user has staff privileges (required for Django admin access)
+        if not user.is_staff:
+            user.is_staff = True
+            user.save()
+            self.stdout.write(self.style.SUCCESS(f'Granted staff privileges to {username}'))
 
         self.stdout.write(
             self.style.SUCCESS(f'\nAdmin user "{username}" is ready!')

@@ -1,0 +1,212 @@
+{% extends 'learning/base.html' %}
+{% load static %}
+
+{% block title %}Profile - Techietact AI Tutor{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="container">
+        <div class="profile-header">
+            <h1><i class="bi bi-person-circle me-2"></i>My Profile</h1>
+            <p class="profile-subtitle">Manage your personal information and learning preferences</p>
+        </div>
+
+        <form method="post" class="profile-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Profile Image Section -->
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="bi bi-image me-2"></i>Profile Picture
+                </h2>
+                <div class="profile-image-section">
+                    <div class="profile-image-preview">
+                        {% if profile.profile_image %}
+                            <img src="{{ profile.profile_image.url }}" alt="Profile Image" id="profile-image-preview" class="profile-image-display">
+                        {% else %}
+                            <div class="profile-image-placeholder" id="profile-image-preview">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="profile-image-upload">
+                        <label for="profile_image" class="form-label">Upload Profile Image</label>
+                        <input type="file" id="profile_image" name="profile_image" class="form-control-file" accept="image/*">
+                        <small class="form-help">Recommended: Square image, max 5MB. JPG, PNG, or GIF format.</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Basic Information Section -->
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="bi bi-person me-2"></i>Basic Information
+                </h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" 
+                               value="{{ user.first_name|default:'' }}" placeholder="Enter your first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" 
+                               value="{{ user.last_name|default:'' }}" placeholder="Enter your last name">
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" 
+                               value="{{ user.username }}" placeholder="Enter your username" readonly style="background: rgba(255, 153, 0, 0.05); cursor: not-allowed;">
+                        <small class="form-help">Username cannot be changed</small>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" class="form-control" 
+                               value="{{ user.email|default:'' }}" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <input type="tel" id="phone_number" name="phone_number" class="form-control" 
+                               value="{{ profile.phone_number|default:'' }}" placeholder="Enter your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" id="location" name="location" class="form-control" 
+                               value="{{ profile.location|default:'' }}" placeholder="Enter your location">
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Me Section -->
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="bi bi-file-text me-2"></i>About Me
+                </h2>
+                <div class="form-group">
+                    <label for="bio" class="form-label">Bio</label>
+                    <textarea id="bio" name="bio" class="form-control" rows="4" 
+                              placeholder="Tell us about yourself and your learning journey...">{{ profile.bio|default:'' }}</textarea>
+                    <small class="form-help">Maximum 500 characters</small>
+                </div>
+            </div>
+
+            <!-- Learning Preferences Section -->
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="bi bi-mortarboard me-2"></i>Learning Preferences
+                </h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="skill_level" class="form-label">Current Skill Level</label>
+                        <select id="skill_level" name="skill_level" class="form-control">
+                            <option value="">Select your level</option>
+                            <option value="beginner" {% if profile.skill_level == 'beginner' %}selected{% endif %}>Beginner</option>
+                            <option value="intermediate" {% if profile.skill_level == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                            <option value="advanced" {% if profile.skill_level == 'advanced' %}selected{% endif %}>Advanced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="preferred_languages" class="form-label">Preferred Programming Languages</label>
+                        <input type="text" id="preferred_languages" name="preferred_languages" class="form-control" 
+                               value="{{ profile.preferred_languages|default:'' }}" 
+                               placeholder="e.g., Python, JavaScript, Java (comma-separated)">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="interests" class="form-label">Interests</label>
+                    <input type="text" id="interests" name="interests" class="form-control" 
+                           value="{{ profile.interests|default:'' }}" 
+                           placeholder="e.g., Web Development, Data Science, AI, Machine Learning">
+                    <small class="form-help">What areas interest you most?</small>
+                </div>
+                <div class="form-group">
+                    <label for="learning_goals" class="form-label">Learning Goals</label>
+                    <textarea id="learning_goals" name="learning_goals" class="form-control" rows="3" 
+                              placeholder="What do you want to achieve? What are your learning objectives?">{{ profile.learning_goals|default:'' }}</textarea>
+                    <small class="form-help">Maximum 500 characters</small>
+                </div>
+            </div>
+
+            <!-- Social Links Section -->
+            <div class="profile-section">
+                <h2 class="section-title">
+                    <i class="bi bi-link-45deg me-2"></i>Social Links (Optional)
+                </h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="github_username" class="form-label">GitHub Username</label>
+                        <div class="input-with-icon">
+                            <i class="bi bi-github"></i>
+                            <input type="text" id="github_username" name="github_username" class="form-control" 
+                                   value="{{ profile.github_username|default:'' }}" placeholder="Your GitHub username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedin_url" class="form-label">LinkedIn Profile URL</label>
+                        <div class="input-with-icon">
+                            <i class="bi bi-linkedin"></i>
+                            <input type="url" id="linkedin_url" name="linkedin_url" class="form-control" 
+                                   value="{{ profile.linkedin_url|default:'' }}" placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="submit" class="btn-save">
+                    <i class="bi bi-check-circle me-2"></i>Save Changes
+                </button>
+                <a href="{% url 'dashboard' %}" class="btn-cancel">
+                    <i class="bi bi-x-circle me-2"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Profile image preview
+    document.getElementById('profile_image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB');
+                e.target.value = '';
+                return;
+            }
+            
+            // Check file type
+            if (!file.type.match('image.*')) {
+                alert('Please select an image file');
+                e.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('profile-image-preview');
+                // If it's a placeholder div, replace it with an img
+                if (preview.tagName === 'DIV') {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = 'Profile Image';
+                    img.className = 'profile-image-display';
+                    img.id = 'profile-image-preview';
+                    preview.parentNode.replaceChild(img, preview);
+                } else {
+                    // If it's already an img, just update the src
+                    preview.src = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}
+
