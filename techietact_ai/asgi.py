@@ -1,5 +1,5 @@
 """
-ASGI config for learnova project.
+ASGI config for Techietact AI project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'learnova.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'techietact_ai.settings')
 
 application = get_asgi_application()

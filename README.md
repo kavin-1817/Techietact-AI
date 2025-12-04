@@ -22,7 +22,7 @@ A modern, Django-based AI learning platform inspired by StudySphere. Techietact 
 
 1. **Clone the repository** (or navigate to the project directory):
    ```bash
-   cd learnova
+   cd Techietact-AI
    ```
 
 2. **Create a virtual environment** (recommended):
@@ -90,7 +90,7 @@ The application is configured to use Google's Gemini API. To enable AI-powered r
    ```
 
    **Method 2: Django Settings**
-   Add to `learnova/settings.py`:
+   Add to `techietact_ai/settings.py`:
    ```python
    GEMINI_API_KEY = "your-gemini-api-key-here"
    ```
@@ -109,8 +109,8 @@ The application is configured to use Google's Gemini API. To enable AI-powered r
 ## 📁 Project Structure
 
 ```
-learnova/
-├── learnova/          # Django project settings
+Techietact-AI/
+├── techietact_ai/     # Django project settings
 │   ├── settings.py
 │   ├── urls.py
 │   └── ...
