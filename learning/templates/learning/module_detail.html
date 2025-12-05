@@ -409,16 +409,13 @@
         });
     }
 
-    function addSuggestions(suggestions) {
-        // Remove any existing suggestions
-        const existingSuggestions = document.getElementById('dynamicSuggestions');
-        if (existingSuggestions) {
-            existingSuggestions.remove();
-        }
+    function addSuggestions(suggestions, insertAfterElement = null) {
+        // If insertAfterElement is provided, add suggestions after that element
+        // Otherwise, add before typing indicator (for new messages)
         
         const suggestionsMessage = document.createElement('div');
         suggestionsMessage.className = 'message message-ai';
-        suggestionsMessage.id = 'dynamicSuggestions';
+        suggestionsMessage.classList.add('suggestions-container');
         
         const bubble = document.createElement('div');
         bubble.className = 'bubble';
@@ -454,7 +451,19 @@
         bubble.appendChild(title);
         bubble.appendChild(buttonsContainer);
         suggestionsMessage.appendChild(bubble);
-        chatMessages.insertBefore(suggestionsMessage, typingIndicator);
+        
+        if (insertAfterElement) {
+            // Insert after the specified element
+            insertAfterElement.insertAdjacentElement('afterend', suggestionsMessage);
+        } else {
+            // For new messages, remove any existing suggestions and add before typing indicator
+            const existingSuggestions = document.getElementById('dynamicSuggestions');
+            if (existingSuggestions) {
+                existingSuggestions.remove();
+            }
+            suggestionsMessage.id = 'dynamicSuggestions';
+            chatMessages.insertBefore(suggestionsMessage, typingIndicator);
+        }
     }
 
     function showTyping() {
@@ -632,12 +641,15 @@
         const rawValue = elem.getAttribute('data-response');
         if (!rawValue) return '';
         
-        // Remove suggestion markers from history responses
-        const cleanedValue = removeSuggestionMarkers(rawValue);
-        
+        // Return raw value - we'll extract suggestions separately before cleaning
         // The browser already decodes HTML entities from data attributes
-        // So we can use the value directly
-        return cleanedValue;
+        return rawValue;
+    }
+    
+    function getRawTextFromDataAttribute(elem) {
+        // Get the raw attribute value without any processing
+        const rawValue = elem.getAttribute('data-response');
+        return rawValue || '';
     }
 
     // Handle topic checkbox clicks - switch to topic-specific chat
@@ -688,21 +700,104 @@
             questionInput.dataset.selectedTopic = currentTopic;
         }
 
-        const historyResponses = document.querySelectorAll('.history-response');
-        historyResponses.forEach(elem => {
-            // Get the text from the data attribute (browser auto-decodes HTML entities)
-            const text = getTextFromDataAttribute(elem);
-            if (!text) return;
+        // Function to extract suggestions from response text
+        function extractSuggestions(text) {
+            if (!text) return { cleanedText: text, suggestions: [] };
             
-            // Process markdown and set the formatted HTML
+            const startMarker = '[SUGGESTIONS_START]';
+            const endMarker = '[SUGGESTIONS_END]';
+            const suggestions = [];
+            let cleanedText = text;
+            
+            // Find markers (case-insensitive)
+            let startIdx = -1;
+            let endIdx = -1;
+            
+            // Try case-sensitive first
+            startIdx = cleanedText.indexOf(startMarker);
+            endIdx = cleanedText.indexOf(endMarker);
+            
+            // If not found, try case-insensitive
+            if (startIdx === -1 || endIdx === -1) {
+                const textLower = cleanedText.toLowerCase();
+                const startMarkerLower = startMarker.toLowerCase();
+                const endMarkerLower = endMarker.toLowerCase();
+                
+                startIdx = textLower.indexOf(startMarkerLower);
+                endIdx = textLower.indexOf(endMarkerLower);
+            }
+            
+            if (startIdx !== -1 && endIdx !== -1 && startIdx < endIdx) {
+                // Extract suggestions section
+                const suggestionsText = cleanedText.substring(startIdx + startMarker.length, endIdx).trim();
+                const rawSuggestions = suggestionsText.split('\n');
+                
+                for (const s of rawSuggestions) {
+                    const cleaned = s.trim();
+                    // Skip empty lines, markers, and invalid entries
+                    if (cleaned && 
+                        cleaned.toLowerCase() !== startMarker.toLowerCase() && 
+                        cleaned.toLowerCase() !== endMarker.toLowerCase() &&
+                        !cleaned.toLowerCase().startsWith('[suggestions') && 
+                        !cleaned.toLowerCase().endsWith(']') &&
+                        cleaned.length > 5) {
+                        suggestions.push(cleaned);
+                    }
+                }
+                
+                // Remove the suggestions section from the response text
+                cleanedText = (cleanedText.substring(0, startIdx) + cleanedText.substring(endIdx + endMarker.length)).trim();
+            }
+            
+            // Remove any remaining markers (safety check)
+            cleanedText = cleanedText.replace(/\[SUGGESTIONS_START\].*?\[SUGGESTIONS_END\]/gi, '');
+            cleanedText = cleanedText.replace(/\[SUGGESTIONS_START\]/gi, '');
+            cleanedText = cleanedText.replace(/\[SUGGESTIONS_END\]/gi, '');
+            cleanedText = cleanedText.trim();
+            
+            return { cleanedText, suggestions };
+        }
+
+        const historyResponses = document.querySelectorAll('.history-response');
+        let lastMessageWithSuggestions = null;
+        
+        // Process all messages to clean them and find the last one with suggestions
+        historyResponses.forEach((elem) => {
+            // Get the raw text from the data attribute (before any cleaning)
+            const rawText = getRawTextFromDataAttribute(elem);
+            if (!rawText) return;
+            
+            // Extract suggestions from the raw response
+            const { cleanedText, suggestions } = extractSuggestions(rawText);
+            
+            // Process markdown and set the formatted HTML (using cleaned text without suggestions)
             try {
-                elem.innerHTML = processMarkdown(text);
+                elem.innerHTML = processMarkdown(cleanedText);
             } catch (error) {
                 console.error('Error processing markdown:', error);
                 // Fallback: just display the text as-is
-                elem.textContent = text;
+                elem.textContent = cleanedText;
+            }
+            
+            // Track the last message with suggestions (most recent one)
+            if (suggestions && suggestions.length > 0) {
+                const aiMessage = elem.closest('.message.message-ai');
+                if (aiMessage) {
+                    lastMessageWithSuggestions = { element: aiMessage, suggestions: suggestions };
+                }
             }
         });
+        
+        // Only add suggestions for the most recent message that has suggestions
+        if (lastMessageWithSuggestions) {
+            const { element: aiMessage, suggestions } = lastMessageWithSuggestions;
+            // Check if suggestions already exist after this message (avoid duplicates on page reload)
+            const nextSibling = aiMessage.nextElementSibling;
+            if (!nextSibling || !nextSibling.classList.contains('suggestions-container')) {
+                // Add suggestions right after this AI message
+                addSuggestions(suggestions, aiMessage);
+            }
+        }
         // Don't auto-scroll on page load - show top of chat
         // scrollToBottom();
 
@@ -711,11 +806,20 @@
     // Handle delete memory button
     if (deleteMemoryBtn) {
         deleteMemoryBtn.addEventListener('click', async function() {
-            if (!confirm('Are you sure you want to delete all conversation history? This action cannot be undone.')) {
+            const currentTopic = "{{ selected_topic|escapejs }}";
+            
+            // Create a more specific confirmation message based on whether a topic is selected
+            let confirmMessage;
+            if (currentTopic) {
+                confirmMessage = `Are you sure you want to delete all conversation history for "${currentTopic}"? This action cannot be undone. Other topic chats will not be affected.`;
+            } else {
+                confirmMessage = 'Are you sure you want to delete all conversation history for this module? This action cannot be undone.';
+            }
+            
+            if (!confirm(confirmMessage)) {
                 return;
             }
 
-            const currentTopic = "{{ selected_topic|escapejs }}";
             const moduleId = {{ module.id }};
             
             try {
@@ -765,7 +869,14 @@
                     successBubble.className = 'bubble';
                     successBubble.style.background = 'rgba(34, 197, 94, 0.1)';
                     successBubble.style.border = '1px solid rgba(34, 197, 94, 0.3)';
-                    successBubble.innerHTML = '<i class="bi bi-check-circle me-2" style="color: #16a34a;"></i><strong style="color: #16a34a;">Conversation history deleted successfully!</strong> The AI will start fresh from now on.';
+                    
+                    let successMessage;
+                    if (currentTopic) {
+                        successMessage = `<i class="bi bi-check-circle me-2" style="color: #16a34a;"></i><strong style="color: #16a34a;">Conversation history for "${currentTopic}" deleted successfully!</strong> Other topic chats are unaffected. The AI will start fresh for this topic.`;
+                    } else {
+                        successMessage = '<i class="bi bi-check-circle me-2" style="color: #16a34a;"></i><strong style="color: #16a34a;">Conversation history deleted successfully!</strong> The AI will start fresh from now on.';
+                    }
+                    successBubble.innerHTML = successMessage;
                     successMsg.appendChild(successBubble);
                     chatMessages.insertBefore(successMsg, typingIndicator);
                     

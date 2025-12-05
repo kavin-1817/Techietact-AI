@@ -845,7 +845,8 @@
 }
 
 .chart-card canvas {
-  max-height: 300px;
+  max-height: 280px;
+  width: 100% !important;
 }
 
 .progress-courses-list {
@@ -875,6 +876,7 @@
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 1rem;
+  position: relative;
 }
 
 .progress-course-title-section {
@@ -942,7 +944,60 @@
   color: #ffffff;
 }
 
+.course-expand-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 153, 0, 0.3);
+  border-radius: 8px;
+  color: #ff9900;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+}
+
+.course-expand-btn:hover {
+  background: rgba(255, 153, 0, 0.1);
+  border-color: rgba(255, 153, 0, 0.5);
+  transform: scale(1.05);
+}
+
+.course-expand-btn.active {
+  background: rgba(255, 153, 0, 0.15);
+  border-color: rgba(255, 153, 0, 0.6);
+}
+
+.course-expand-btn i {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.course-details-collapsible {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.course-details-collapsible.expanded {
+  max-height: 5000px;
+  opacity: 1;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
 .progress-overview {
+  margin-bottom: 2rem;
+}
+
+.progress-overview.course-details-collapsible.expanded {
   margin-bottom: 2rem;
 }
 
@@ -1055,6 +1110,10 @@
 }
 
 .progress-modules-list {
+  margin-top: 2rem;
+}
+
+.progress-modules-list.course-details-collapsible.expanded {
   margin-top: 2rem;
 }
 
@@ -1294,12 +1353,22 @@
 
 @media (max-width: 768px) {
   .progress-course-header {
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .progress-course-title-section {
+    flex: 1;
+  }
+
+  .course-expand-btn {
+    margin-top: 0;
   }
 
   .progress-course-stats {
     width: 100%;
     justify-content: space-between;
+    order: 3;
   }
 
   .progress-stat-item {

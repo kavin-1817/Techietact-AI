@@ -320,9 +320,12 @@
                     <span class="progress-stat-value">{{ progress.best_score }}%</span>
                   </div>
                 </div>
+                <button class="course-expand-btn" type="button" data-course-index="{{ forloop.counter0 }}" aria-label="Toggle course details">
+                  <i class="bi bi-chevron-down"></i>
+                </button>
               </div>
               
-              <div class="progress-overview">
+              <div class="progress-overview course-details-collapsible" data-course-index="{{ forloop.counter0 }}">
                 <div class="progress-charts-row">
                   <div class="progress-chart-item">
                     <h5 class="chart-subtitle">Module Progress</h5>
@@ -358,7 +361,7 @@
                 </div>
               </div>
 
-              <div class="progress-modules-list">
+              <div class="progress-modules-list course-details-collapsible" data-course-index="{{ forloop.counter0 }}">
                 <h4 class="modules-list-title">Module Details</h4>
                 {% for module_detail in progress.module_details %}
                   <div class="progress-module-item {% if module_detail.completed %}completed{% else %}pending{% endif %}">
@@ -560,7 +563,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
-    // Score Trends Chart (Line)
+    // Score Trends Chart (Grouped Bar)
     const trendsCtx = document.getElementById('scoreTrendsChart');
     if (trendsCtx) {
       const scoreData = [
@@ -574,55 +577,107 @@ document.addEventListener('DOMContentLoaded', function() {
       ];
 
       new Chart(trendsCtx, {
-        type: 'line',
+        type: 'bar',
         data: {
           labels: scoreData.map(d => d.course.length > 20 ? d.course.substring(0, 20) + '...' : d.course),
           datasets: [{
             label: 'Average Score',
             data: scoreData.map(d => d.avgScore),
+            backgroundColor: 'rgba(255, 153, 0, 0.85)',
             borderColor: '#ff9900',
-            backgroundColor: 'rgba(255, 153, 0, 0.1)',
-            tension: 0.4,
-            fill: true
+            borderWidth: 1.5,
+            borderRadius: 4,
+            borderSkipped: false,
+            barThickness: 35,
+            maxBarThickness: 40
           }, {
             label: 'Best Score',
             data: scoreData.map(d => d.bestScore),
+            backgroundColor: 'rgba(34, 197, 94, 0.85)',
             borderColor: '#22c55e',
-            backgroundColor: 'rgba(34, 197, 94, 0.1)',
-            tension: 0.4,
-            fill: true
+            borderWidth: 1.5,
+            borderRadius: 4,
+            borderSkipped: false,
+            barThickness: 35,
+            maxBarThickness: 40
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 8,
+              bottom: 8,
+              left: 8,
+              right: 8
+            }
+          },
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
           scales: {
             y: {
               beginAtZero: true,
               max: 100,
               ticks: {
                 color: '#ffffff',
+                font: { size: 11 },
+                padding: 8,
                 callback: function(value) {
                   return value + '%';
-                }
+                },
+                stepSize: 20
               },
               grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
+                color: 'rgba(255, 255, 255, 0.08)',
+                drawBorder: false
               }
             },
             x: {
               ticks: {
-                color: '#ffffff'
+                color: '#ffffff',
+                font: { size: 11 },
+                padding: 8,
+                maxRotation: 0,
+                minRotation: 0
               },
               grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
+                display: false,
+                drawBorder: false
               }
             }
           },
           plugins: {
             legend: {
+              position: 'top',
+              align: 'center',
               labels: {
-                color: '#ffffff'
+                color: '#ffffff',
+                padding: 12,
+                font: { size: 11 },
+                usePointStyle: true,
+                pointStyle: 'circle',
+                boxWidth: 8,
+                boxHeight: 8
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              titleColor: '#ffffff',
+              bodyColor: '#ffffff',
+              borderColor: 'rgba(255, 153, 0, 0.5)',
+              borderWidth: 1,
+              padding: 10,
+              titleFont: { size: 12 },
+              bodyFont: { size: 11 },
+              cornerRadius: 6,
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + context.parsed.y + '%';
+                }
               }
             }
           }
@@ -661,6 +716,32 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
+
+  // Course card expand/collapse functionality
+  document.querySelectorAll('.course-expand-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const courseIndex = this.getAttribute('data-course-index');
+      const collapsibleSections = document.querySelectorAll(`.course-details-collapsible[data-course-index="${courseIndex}"]`);
+      const icon = this.querySelector('i');
+      
+      // Toggle active state
+      this.classList.toggle('active');
+      
+      // Toggle collapsible sections
+      collapsibleSections.forEach(function(section) {
+        section.classList.toggle('expanded');
+      });
+      
+      // Rotate icon
+      if (this.classList.contains('active')) {
+        icon.classList.remove('bi-chevron-down');
+        icon.classList.add('bi-chevron-up');
+      } else {
+        icon.classList.remove('bi-chevron-up');
+        icon.classList.add('bi-chevron-down');
+      }
+    });
+  });
 });
 </script>
 {% endblock %}

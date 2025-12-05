@@ -753,7 +753,7 @@ def module_ask_api(request, module_id):
                 module=module
             ).order_by('created_at')[:10]  # Last 10 messages for context
         
-        response = ask_ai(question, module=module, history=history, specific_topic=specific_topic)
+        response = ask_ai(question, module=module, history=history, specific_topic=specific_topic, user=request.user)
         
         error_indicators = (
             'I encountered an issue', 'Could not', 'I\'ve reached', 'No available',
@@ -829,6 +829,35 @@ def module_ask_api(request, module_id):
         response_text = re.sub(r'\[SUGGESTIONS_END\]', '', response_text, flags=re.IGNORECASE)
         response_text = response_text.strip()
         
+        # Ensure there's always a quiz/exercise suggestion in the list
+        # Check if any existing suggestion is quiz/exercise related
+        quiz_keywords = ['quiz', 'exercise', 'practice', 'test', 'assignment', 'drill', 'challenge']
+        has_quiz_suggestion = any(
+            any(keyword in suggestion.lower() for keyword in quiz_keywords)
+            for suggestion in suggestions
+        )
+        
+        # Add quiz/exercise suggestion if not present
+        # This ensures at least one quiz option, but preserves all AI-generated contextual suggestions
+        if not has_quiz_suggestion:
+            # Determine course type and create appropriate quiz/exercise suggestion
+            course_category = module.course.category if module.course.category else ''
+            is_language_course = course_category == 'language'
+            
+            if specific_topic:
+                if is_language_course:
+                    quiz_suggestion = f"Quiz me with three grammar questions about {specific_topic}. Ask all questions first and wait for my answers."
+                else:
+                    quiz_suggestion = f"Quiz me with three questions about {specific_topic}. Ask all questions first and wait for my answers."
+            else:
+                if is_language_course:
+                    quiz_suggestion = "Quiz me with three grammar questions. Ask all questions first and wait for my answers."
+                else:
+                    quiz_suggestion = "Quiz me with three questions about this topic. Ask all questions first and wait for my answers."
+            
+            # Add quiz suggestion to the end of the suggestions list
+            suggestions.append(quiz_suggestion)
+        
         # Store the full response (with suggestions) in the database for history
         chat_session = ChatSession.objects.create(
             user=request.user,
@@ -855,65 +884,142 @@ def module_ask_api(request, module_id):
 @require_http_methods(['POST'])
 @ensure_csrf_cookie
 def module_delete_memory(request, module_id):
-    """Delete all conversation history for a user in a specific module and topic"""
+    """Delete conversation history for a user in a specific module and topic ONLY"""
     module = get_object_or_404(Module.objects.select_related('course'), id=module_id)
     
     try:
         data = json.loads(request.body)
         topic = data.get('topic', '').strip()
         
-        # Delete chat sessions for this user, module, and topic (if specified)
-        if topic:
-            deleted_count = ChatSession.objects.filter(
-                user=request.user,
-                module=module,
-                topic=topic
-            ).delete()[0]
+        # CRITICAL SAFETY CHECK #1: Never delete all history without explicit topic
+        if not topic or len(topic) == 0:
+            return JsonResponse({
+                'success': False,
+                'error': 'Topic is required to delete chat history. Cannot delete all history without specifying a topic.',
+                'deleted_count': 0
+            }, status=400)
+        
+        # Get ALL sessions for this user and module to analyze what exists
+        all_sessions_queryset = ChatSession.objects.filter(
+            user=request.user,
+            module=module
+        )
+        
+        # Get total count of all sessions (for safety verification)
+        total_sessions_count = all_sessions_queryset.count()
+        
+        # Get list of all unique topics that exist in the database (excluding empty strings)
+        existing_topics = [t for t in all_sessions_queryset.values_list('topic', flat=True).distinct() if t and t.strip()]
+        
+        # Clean the topic we received
+        topic_clean = topic.strip()
+        
+        # CRITICAL SAFETY CHECK #2: Verify topic is not empty after cleaning
+        if not topic_clean or len(topic_clean) == 0:
+            return JsonResponse({
+                'success': False,
+                'error': 'Topic cannot be empty. Please provide a valid topic name.',
+                'deleted_count': 0
+            }, status=400)
+        
+        # Find the exact topic as stored in database
+        matching_topic = None
+        
+        # First, try exact match
+        if topic_clean in existing_topics:
+            matching_topic = topic_clean
         else:
-            # If no topic specified, delete all sessions for this module
-            deleted_count = ChatSession.objects.filter(
-                user=request.user,
-                module=module
-            ).delete()[0]
+            # Try case-insensitive match
+            topic_lower = topic_clean.lower()
+            for stored_topic in existing_topics:
+                if stored_topic and stored_topic.strip().lower() == topic_lower:
+                    matching_topic = stored_topic.strip()  # Use exact stored value
+                    break
+        
+        # CRITICAL SAFETY CHECK #3: If no match found, return error (don't delete anything)
+        if not matching_topic:
+            return JsonResponse({
+                'success': False,
+                'error': f'No chat history found for topic "{topic_clean}". Available topics: {", ".join(existing_topics[:10]) if existing_topics else "none"}.',
+                'deleted_count': 0
+            }, status=404)
+        
+        # CRITICAL SAFETY CHECK #4: Get IDs of records to delete FIRST (before any deletion)
+        # This is the safest approach - we'll delete only these specific IDs
+        records_to_delete = list(ChatSession.objects.filter(
+            user=request.user,
+            module=module,
+            topic=matching_topic
+        ).values_list('id', flat=True))
+        
+        # CRITICAL SAFETY CHECK #5: Verify we have records to delete
+        if not records_to_delete or len(records_to_delete) == 0:
+            return JsonResponse({
+                'success': False,
+                'error': f'No records found to delete for topic "{matching_topic}".',
+                'deleted_count': 0
+            }, status=404)
+        
+        # CRITICAL SAFETY CHECK #6: Verify all records have the correct topic
+        # Double-check each record before deletion
+        verification_queryset = ChatSession.objects.filter(id__in=records_to_delete)
+        topics_in_selected = set(verification_queryset.values_list('topic', flat=True).distinct())
+        
+        # Ensure ALL records have the matching topic (and no other topics)
+        if len(topics_in_selected) != 1 or matching_topic not in topics_in_selected:
+            return JsonResponse({
+                'success': False,
+                'error': f'Safety verification failed: Selected records contain multiple topics. Aborting deletion to prevent data loss.',
+                'deleted_count': 0
+            }, status=500)
+        
+        # CRITICAL SAFETY CHECK #7: Verify we're not deleting all records
+        # If the number of records to delete equals total records, something is wrong
+        if len(records_to_delete) >= total_sessions_count:
+            return JsonResponse({
+                'success': False,
+                'error': f'Safety check failed: Attempting to delete all records ({len(records_to_delete)} of {total_sessions_count}). This is not allowed. Aborting.',
+                'deleted_count': 0
+            }, status=500)
+        
+        # Now safely delete ONLY the specific records by ID
+        # Use filter with explicit ID list to ensure we only delete these exact records
+        deleted_count = ChatSession.objects.filter(
+            id__in=records_to_delete,
+            user=request.user,  # Extra safety: verify user matches
+            module=module,      # Extra safety: verify module matches
+            topic=matching_topic  # Extra safety: verify topic matches
+        ).delete()[0]
+        
+        # CRITICAL SAFETY CHECK #8: Verify deletion count matches expected count
+        if deleted_count != len(records_to_delete):
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Delete count mismatch: Expected {len(records_to_delete)}, deleted {deleted_count} for topic '{matching_topic}'")
+            return JsonResponse({
+                'success': False,
+                'error': f'Deletion count mismatch. Expected {len(records_to_delete)} records, but {deleted_count} were deleted.',
+                'deleted_count': deleted_count
+            }, status=500)
+        
+        message = f'Successfully deleted {deleted_count} conversation(s) for "{matching_topic}".'
         
         return JsonResponse({
             'success': True,
             'deleted_count': deleted_count,
-            'message': f'Successfully deleted {deleted_count} conversation(s).'
+            'message': message
         })
     except Exception as exc:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error in module_delete_memory: {str(exc)}", exc_info=True)
         return JsonResponse({
             'success': False,
-            'error': 'An unexpected error occurred while deleting conversation history.',
-            'details': str(exc)
+            'error': f'An error occurred while deleting chat history: {str(exc)}',
+            'deleted_count': 0
         }, status=500)
 
 
-@login_required
-@require_http_methods(['POST'])
-@ensure_csrf_cookie
-def module_delete_memory(request, module_id):
-    """API endpoint to delete all chat history for a module"""
-    module = get_object_or_404(Module, id=module_id)
-    
-    try:
-        # Delete all chat sessions for this user and module
-        deleted_count, _ = ChatSession.objects.filter(
-            user=request.user,
-            module=module
-        ).delete()
-        
-        return JsonResponse({
-            'success': True,
-            'message': 'Chat history deleted successfully',
-            'deleted_count': deleted_count
-        })
-    except Exception as exc:
-        return JsonResponse({
-            'success': False,
-            'error': 'An error occurred while deleting chat history.',
-            'details': str(exc)
-        }, status=500)
 
 
 @login_required
@@ -1192,7 +1298,7 @@ def request_additional_attempt(request, module_id):
     })
 
 
-def ask_ai(prompt, module=None, history=None, specific_topic=None):
+def ask_ai(prompt, module=None, history=None, specific_topic=None, user=None):
     """
     Gemini API integration for AI responses.
     Uses Google's Gemini model to provide intelligent tutoring responses.
@@ -1203,6 +1309,7 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
         module: The Module object (optional)
         history: List of ChatSession objects for conversation history (optional)
         specific_topic: If provided, teach only this specific topic (optional)
+        user: The User object (optional) - used to personalize responses with student's name
     """
     import os
     from django.conf import settings
@@ -1226,6 +1333,14 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
     
     try:
         import google.generativeai as genai
+        
+        # Get student's name for personalization (prefer first_name, fallback to username)
+        student_name = None
+        if user:
+            if hasattr(user, 'first_name') and user.first_name:
+                student_name = user.first_name.strip()
+            elif hasattr(user, 'username') and user.username:
+                student_name = user.username.strip()
         
         course_category = module.course.category if module else None
         is_language_course = course_category == 'language'
@@ -2136,11 +2251,25 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
             module_context = apply_language_overrides(module_context)
         
         # Create a comprehensive, step-by-step teaching system prompt
+        student_name_context = ""
+        if student_name:
+            student_name_context = (
+                f"STUDENT INFORMATION:\n"
+                f"The student's name is {student_name}. "
+                f"You can use their name naturally in conversation when appropriate, but don't overuse it. "
+                f"Use it in greetings, when providing encouragement, or when making the conversation more personal. "
+                f"Don't force it into every response - use it naturally when it feels right.\n\n"
+            )
+        
         system_prompt = (
             "You are an expert, patient, and natural tutor - think of yourself as a real human teacher, "
             "not a chatbot. Your role is to teach step-by-step when needed, but also to answer questions "
             "naturally and conversationally like a real tutor would.\n\n"
-            
+            f"{student_name_context}"
+            "🚨 CRITICAL: CASUAL CONVERSATION HANDLING 🚨\n"
+            "When a student sends a casual greeting (hi, hello, hey, thanks, ok, etc.) or small talk, "
+            "respond naturally and conversationally. DO NOT immediately launch into teaching or use structured formats. "
+            "Just greet them back warmly and offer to help. Only start teaching when they explicitly ask a learning question.\n\n"
             "CONVERSATION FOLLOW-UP RULES (IMPORTANT):\n"
             "- ALWAYS remember the last question the assistant asked the user.\n"
             "- When the user gives a short response such as:\n"
@@ -2387,14 +2516,18 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
                 last_ai_response_for_context = recent_history[-1].response
         
         # Build the full prompt
+        # Decode topic name early so it's available for all prompts
+        decoded_topic = None
+        if specific_topic:
+            from urllib.parse import unquote
+            decoded_topic = unquote(specific_topic.strip())
+            if '%' in decoded_topic:
+                decoded_topic = unquote(decoded_topic)
+        
         if full_context:
             # Add topic detection instructions if in topic-specific chat
             topic_detection_instructions = ""
-            if specific_topic:
-                from urllib.parse import unquote
-                decoded_topic = unquote(specific_topic.strip())
-                if '%' in decoded_topic:
-                    decoded_topic = unquote(decoded_topic)
+            if specific_topic and decoded_topic:
                 
                 # Get other topics for detection
                 other_topics = []
@@ -2411,6 +2544,9 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
                     f"{'='*60}\n"
                     f"YOU ARE IN A TOPIC-SPECIFIC CHAT FOR: '{decoded_topic}'\n"
                     f"\nBEFORE YOU RESPOND, CHECK THE STUDENT'S QUESTION:\n"
+                    f"0. FIRST: Is this a casual greeting or small talk? (hi, hello, thanks, ok, etc.)\n"
+                    f"   → YES: Respond conversationally (see INSTRUCTIONS section, rule 0)\n"
+                    f"   → NO: Continue to step 1 below\n"
                     f"1. Does the question mention '{decoded_topic}' or ask about '{decoded_topic}'?\n"
                     f"   → YES: Teach '{decoded_topic}' using the full structured format\n"
                     f"   → NO: Check if it mentions any other topic\n"
@@ -2453,7 +2589,42 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
                 f"{prompt}\n"
                 f"{'='*60}\n\n"
                 f"INSTRUCTIONS:\n"
-                f"1. FIRST: If you're in a topic-specific chat (see TOPIC DETECTION section above), "
+                f"🚨🚨🚨 CRITICAL: CHECK FOR CASUAL CONVERSATION FIRST 🚨🚨🚨\n"
+                f"0. CASUAL CONVERSATIONS & GREETINGS (MUST CHECK THIS BEFORE ANYTHING ELSE):\n"
+                f"   \n"
+                f"   STEP 1: Determine if the student's message is a casual greeting or small talk.\n"
+                f"   Common casual messages include:\n"
+                f"   - Simple greetings: 'hi', 'hello', 'hey', 'hi there', 'hey there'\n"
+                f"   - Time-based greetings: 'good morning', 'good afternoon', 'good evening', 'good night'\n"
+                f"   - Casual check-ins: 'how are you', 'how's it going', 'what's up', 'how are things'\n"
+                f"   - Acknowledgments: 'thanks', 'thank you', 'thank you so much', 'thanks a lot'\n"
+                f"   - Simple confirmations: 'ok', 'okay', 'alright', 'got it', 'sure', 'cool' (when no specific question)\n"
+                f"   - Casual responses: 'yeah', 'yep', 'nope', 'maybe', 'hmm'\n"
+                f"   \n"
+                f"   STEP 2: If it's a casual message, respond naturally:\n"
+                f"   - DO NOT launch into a full lesson format\n"
+                f"   - DO NOT use structured format (Overview, Explanation, etc.)\n"
+                f"   - DO NOT start teaching immediately\n"
+                f"   - Just respond conversationally and warmly\n"
+                f"   - Keep it brief (1-2 sentences max)\n"
+                f"   - After greeting, offer to help with the topic\n"
+                f"   \n"
+                f"   EXAMPLE RESPONSES FOR CASUAL MESSAGES:\n"
+                f"   - Student: 'hi' → 'Hi! I'm here to help you learn. What would you like to know?'\n"
+                f"   - Student: 'hello' → 'Hello! Ready to dive in? Feel free to ask me anything!'\n"
+                f"   - Student: 'how are you' → 'I'm doing great, thanks for asking! I'm here to help you learn. What can I help you with today?'\n"
+                f"   - Student: 'thanks' → 'You're welcome! Happy to help. What would you like to explore next?'\n"
+                f"   - Student: 'ok' → 'Great! What would you like to learn about today?'\n"
+                f"   \n"
+                f"   If you know the student's name (from STUDENT INFORMATION above), you can use it naturally:\n"
+                f"   - 'Hi [name]! I'm excited to help you learn. What would you like to know?'\n"
+                f"   - 'Hello [name]! Ready to dive into [topic]? Feel free to ask me anything!'\n"
+                f"   \n"
+                f"   ⚠️ IMPORTANT: Only proceed to teaching/explaining if the student explicitly asks a learning question.\n"
+                f"   A casual greeting like 'hi' or 'hello' is NOT a request to explain the topic.\n"
+                f"   \n"
+                f"1. If the message is NOT a casual greeting, then check topic detection:\n"
+                f"   If you're in a topic-specific chat (see TOPIC DETECTION section above), "
                 f"check if the student's question is about the correct topic.\n"
                 f"   - If question is about a DIFFERENT topic → Redirect immediately, DO NOT teach that topic\n"
                 f"   - If question is about the CORRECT topic → Proceed with answering\n"
@@ -2525,36 +2696,54 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None):
                 f"    Would a real tutor repeat the entire explanation when asked for assignments? No!\n"
                 f"    They'd provide what was asked for directly. If asked for assignments, give assignments. If asked for examples, give examples.\n"
                 f"    Only use the full format when explicitly asked to explain the topic completely.\n"
-                f"12. IMPORTANT - SUGGESTIONS FORMAT:\n"
-                f"    At the END of your response, after your main answer, include 3-6 relevant follow-up suggestions.\n"
-                f"    Format them EXACTLY like this (on a new line):\n"
+                f"12. CRITICAL - CONTEXTUALLY RELEVANT SUGGESTIONS:\n"
+                f"    At the END of your response, after your main answer, ALWAYS include 3-6 follow-up suggestions.\n"
+                f"    These suggestions MUST be based on the ACTUAL content you just provided in your response.\n"
                 f"    \n"
+                f"    IMPORTANT: Even if you just gave quiz questions, exercises, or assignments, you MUST still generate 3-6 contextual suggestions.\n"
+                f"    The suggestions should relate to what you just provided (e.g., 'Can you explain the solutions?', 'Show me more examples like this', etc.).\n"
+                f"    \n"
+                f"    FORMAT:\n"
                 f"    [SUGGESTIONS_START]\n"
-                f"    Can you show more examples of this?\n"
-                f"    What are common mistakes to avoid?\n"
-                f"    How is this used in real projects?\n"
-                f"    Can you give me a practice exercise?\n"
+                f"    [Your contextually relevant suggestion 1]\n"
+                f"    [Your contextually relevant suggestion 2]\n"
+                f"    [Your contextually relevant suggestion 3]\n"
+                f"    [Your contextually relevant suggestion 4]\n"
                 f"    [SUGGESTIONS_END]\n"
                 f"    \n"
-                f"    CRITICAL - TOPIC BOUNDARY RULES FOR SUGGESTIONS:\n"
+                f"    HOW TO GENERATE CONTEXTUALLY RELEVANT SUGGESTIONS:\n"
+                f"    1. Review what you ACTUALLY explained in your response above\n"
+                f"    2. Identify key concepts, examples, or aspects you mentioned\n"
+                f"    3. Generate suggestions that naturally follow from what you just taught\n"
+                f"    4. Make suggestions specific to the content, not generic templates\n"
+                f"    \n"
+                f"    EXAMPLES OF CONTEXTUAL SUGGESTIONS:\n"
+                f"    - If you explained grammar tenses → 'Can you show more examples of present perfect tense?'\n"
+                f"    - If you explained a programming concept → 'Can you show more code examples with error handling?'\n"
+                f"    - If you gave examples → 'Can you explain the differences between these examples?'\n"
+                f"    - If you explained syntax → 'What are common syntax errors to avoid?'\n"
+                f"    - If you explained theory → 'Can you give me a practical exercise to practice this?'\n"
+                f"    - If you explained rules → 'What are exceptions to these rules?'\n"
+                f"    - If you gave quiz questions → 'Can you explain the solutions to these questions?', 'Show me more practice questions', 'What are common mistakes in answering these?', 'Can you give me similar exercises?'\n"
+                f"    - If you gave exercises → 'Can you show me the solutions?', 'Give me more practice problems', 'What are the key concepts I should focus on?', 'Can you explain the approach to solve these?'\n"
+                f"    \n"
+                f"    DO NOT use generic suggestions like:\n"
+                f"    - 'How is this used in real projects?' (if you explained grammar, not programming)\n"
+                f"    - 'Can you show more examples?' (too vague - be specific to what you explained)\n"
+                f"    - 'What are common mistakes?' (if you didn't mention any mistakes)\n"
+                f"    \n"
+                f"    INSTEAD, make suggestions specific to YOUR response:\n"
+                f"    - If you explained present tenses → 'Can you explain past tenses next?'\n"
+                f"    - If you showed code → 'Can you show how to debug this code?'\n"
+                f"    - If you explained concepts → 'Can you give examples of when NOT to use this?'\n"
+                f"    \n"
+                f"    CRITICAL RULES:\n"
                 f"    - Suggestions MUST be ONLY about '{decoded_topic}' (the current topic)\n"
                 f"    - DO NOT suggest questions about other topics like: {other_topics_str}\n"
-                f"    - DO NOT suggest questions about topics not in the module's topic list\n"
                 f"    - Each suggestion must be directly related to '{decoded_topic}' only\n"
-                f"    - If a suggestion would require teaching a different topic, DO NOT include it\n"
-                f"    - Examples of BAD suggestions (if current topic is '{decoded_topic}'):\n"
-                f"      * 'Can you explain [different topic]?' - NO, this is a different topic\n"
-                f"      * 'What about [other topic]?' - NO, stay within '{decoded_topic}'\n"
-                f"    - Examples of GOOD suggestions (if current topic is '{decoded_topic}'):\n"
-                f"      * 'Can you show more examples of {decoded_topic}?' - YES\n"
-                f"      * 'What are common mistakes with {decoded_topic}?' - YES\n"
-                f"      * 'How is {decoded_topic} used in practice?' - YES\n"
-                f"    \n"
-                f"    Each suggestion should be:\n"
-                f"    - A complete question the student can ask\n"
-                f"    - Directly relevant to '{decoded_topic}' ONLY\n"
-                f"    - Helpful for continuing their learning about '{decoded_topic}'\n"
-                f"    - Specific and actionable\n"
+                f"    - Suggestions must be contextually relevant to what you ACTUALLY explained\n"
+                f"    - Base suggestions on the specific content of your response, not generic templates\n"
+                f"    - Make each suggestion a complete, actionable question\n"
                 f"    - One suggestion per line between [SUGGESTIONS_START] and [SUGGESTIONS_END]\n"
                 f"    - Do NOT include the brackets in the suggestion text itself\n"
                 f"    - STRICTLY stay within the '{decoded_topic}' topic boundary\n"
