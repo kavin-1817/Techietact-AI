@@ -1,6 +1,5 @@
-Django>=5.2.4
-google-generativeai>=0.8.0
-python-dotenv>=1.0.0
-mysqlclient>=2.2.0
-Pillow>=10.0.0
-
+Django==4.2.9
+mysqlclient==2.2.7
+google-generativeai==0.8.5
+python-dotenv==1.0.1
+Pillow==10.4.0

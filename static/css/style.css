@@ -216,7 +216,7 @@ html {
 }
 
 /* Also target any element with card-related class names */
-[class*="card"]:not([class*="backdrop"]):not([class*="modal-backdrop"]):not([class*="grid"]):not(.stats-card):not(.admin-stat-card):not(.student-card):not(.performance-stat-card):not(.chart-card):not(.progress-course-card):not(.progress-module-item):not(.quiz-attempt-item):not(.auth-card) {
+[class*="card"]:not([class*="backdrop"]):not([class*="modal-backdrop"]):not([class*="grid"]):not(.stats-card):not(.admin-stat-card):not(.student-card):not(.performance-stat-card):not(.chart-card):not(.progress-course-card):not(.progress-module-item):not(.quiz-attempt-item):not(.auth-card):not(.result-card) {
     background: #ff9900 !important;
     color: #000000 !important;
 }
