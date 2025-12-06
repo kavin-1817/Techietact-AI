@@ -664,6 +664,23 @@
         // Store the currently selected topic
         const currentTopic = "{{ selected_topic|escapejs }}";
         
+        // Ensure checkbox is checked if topic is selected
+        if (currentTopic) {
+            document.querySelectorAll('.topic-checkbox').forEach(checkbox => {
+                const checkboxTopic = checkbox.value.trim();
+                const selectedTopic = currentTopic.trim();
+                // Check if topics match (case-insensitive)
+                if (checkboxTopic.toLowerCase() === selectedTopic.toLowerCase()) {
+                    checkbox.checked = true;
+                    // Also ensure the parent label has the active class
+                    const label = checkbox.closest('.topic-checkbox-item');
+                    if (label) {
+                        label.classList.add('active');
+                    }
+                }
+            });
+        }
+        
         // Add event listeners to topic checkboxes
         document.querySelectorAll('.topic-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function() {

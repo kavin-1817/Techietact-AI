@@ -749,13 +749,10 @@ class Command(BaseCommand):
             {
                 'question': 'What is ng-container used for?',
                 'options': [
-                    ',
-                    ',
-                    'A container that doesn\',
-                    ',
-                    ',
-                    ',
-                    '
+                    'To create a visible container element',
+                    'A container that doesn\'t render in the DOM',
+                    'To create a component',
+                    'To create a service'
                 ],
                 'correct_answer': 2
             },

@@ -10,6 +10,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils import timezone
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from typing import Optional, Tuple
 import json
 import os
 import subprocess
@@ -634,6 +635,11 @@ def module_detail(request, module_id):
             'is_language_course': is_language_course,
         })
     
+    # Get all topics from the module first (needed for topic matching)
+    topic_items = []
+    if module.topics:
+        topic_items = [obj.strip() for obj in module.topics.splitlines() if obj.strip()]
+    
     # Get the selected topic from query parameter (if any)
     # URL decode it properly (handles double encoding like Print%2520statements)
     from urllib.parse import unquote
@@ -642,6 +648,26 @@ def module_detail(request, module_id):
     # Handle double encoding
     if selected_topic and '%' in selected_topic:
         selected_topic = unquote(selected_topic)
+    
+    # Normalize the selected topic - match it with the exact topic from module.topics
+    # This ensures case-insensitive matching and handles whitespace differences
+    if selected_topic and topic_items:
+        selected_topic_normalized = selected_topic.strip()
+        # Try to find exact match first
+        exact_match = None
+        for topic in topic_items:
+            if topic == selected_topic_normalized:
+                exact_match = topic
+                break
+        # If no exact match, try case-insensitive match
+        if not exact_match:
+            for topic in topic_items:
+                if topic.lower() == selected_topic_normalized.lower():
+                    exact_match = topic
+                    break
+        # Use the matched topic (exact from module) or keep original if no match
+        if exact_match:
+            selected_topic = exact_match
     
     # Filter history by topic if a specific topic is selected
     if selected_topic:
@@ -655,11 +681,6 @@ def module_detail(request, module_id):
             ChatSession.objects.filter(user=request.user, module=module)
             .order_by('created_at')
         )
-    
-    # Get all topics from the module
-    topic_items = []
-    if module.topics:
-        topic_items = [obj.strip() for obj in module.topics.splitlines() if obj.strip()]
     
     # Get chat history count per topic
     topic_chat_counts = {}
@@ -702,7 +723,7 @@ def practice_code_lab(request):
         },
     }
     
-    def _resolve_previous_url() -> tuple[str | None, str]:
+    def _resolve_previous_url() -> Tuple[Optional[str], str]:
         candidate = request.GET.get('from') or request.META.get('HTTP_REFERER')
         label = request.GET.get('from_label', '').strip() or 'Previous page'
         if candidate and url_has_allowed_host_and_scheme(candidate, allowed_hosts={request.get_host()}):
@@ -1364,7 +1385,7 @@ def ask_ai(prompt, module=None, history=None, specific_topic=None, user=None):
         is_language_course = course_category == 'language'
         is_programming_course = course_category == 'programming'
         
-        def apply_language_overrides(value: str | None) -> str | None:
+        def apply_language_overrides(value: Optional[str]) -> Optional[str]:
             """Adjust prompt copy for language-focused courses."""
             if not (is_language_course and value):
                 return value

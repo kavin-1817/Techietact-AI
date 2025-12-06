@@ -123,7 +123,7 @@
                 <p class="resume-subtitle">
                   Inside {{ latest_session.module.course.title }} · Last activity {{ latest_session.created_at|timesince }} ago
                 </p>
-                <button class="pill-btn primary resume-btn" onclick="window.location.href='{% url 'module_detail' latest_session.module.id %}'">
+                <button class="pill-btn primary resume-btn" onclick="window.location.href='{% url 'module_detail' latest_session.module.id %}{% if latest_session.topic %}?topic={{ latest_session.topic|urlencode }}{% endif %}'">
                   <i class="bi bi-play-circle me-2"></i>Continue session
                 </button>
         </div>
@@ -150,7 +150,7 @@
     {% if recent_sessions %}
       <div class="timeline mb-4">
         {% for session in recent_sessions|slice:":5" %}
-          <div class="timeline-item" onclick="window.location.href='{% url 'module_detail' session.module.id %}'" style="cursor:pointer;">
+          <div class="timeline-item" onclick="window.location.href='{% url 'module_detail' session.module.id %}{% if session.topic %}?topic={{ session.topic|urlencode }}{% endif %}'" style="cursor:pointer;">
             <div class="timeline-marker">
               <i class="bi bi-chat-dots"></i>
             </div>

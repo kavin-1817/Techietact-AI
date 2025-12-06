@@ -1730,7 +1730,6 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 3
             },
-        ]
             {
                 'question': 'Which method is used to get a database connection from JNDI?',
                 'options': [

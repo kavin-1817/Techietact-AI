@@ -427,10 +427,20 @@
         transition: color 0.3s ease;
     }
     
+    /* Container for feature cards - ensures consistent appearance across devices */
+    #features .container,
+    .section-gradient .container,
+    .section-light .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+    
     .tile-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 1.75rem;
+        width: 100%;
     }
     
     .tile-card {
@@ -724,6 +734,13 @@
     }
     
     /* Responsive */
+    @media (max-width: 1200px) {
+        .tile-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+    }
+    
     @media (max-width: 992px) {
         .hero-right-content {
             padding-left: 0;
@@ -732,6 +749,21 @@
     }
     
     @media (max-width: 768px) {
+        #features .container,
+        .section-gradient .container,
+        .section-light .container {
+            padding: 0 1rem;
+        }
+        
+        .tile-grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+        
+        .tile-card {
+            padding: 1.75rem;
+        }
+        
         .hero-section {
             min-height: auto;
             padding: 4rem 0;
@@ -753,6 +785,26 @@
         .btn-outline-white {
             width: 100%;
             justify-content: center;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .tile-card {
+            padding: 1.5rem;
+        }
+        
+        .tile-icon {
+            width: 56px;
+            height: 56px;
+            font-size: 1.5rem;
+        }
+        
+        .tile-card h3 {
+            font-size: 1.2rem;
+        }
+        
+        .tile-card p {
+            font-size: 0.95rem;
         }
     }
 </style>

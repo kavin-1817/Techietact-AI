@@ -1164,21 +1164,18 @@ class Command(BaseCommand):
                 'question': 'Which phrase is appropriate for asking for clarification?',
                 'options': [
                     'What?',
-                    'I don\',
-                    ',
-                    ',
-                    ',
-                    '
+                    'I don\'t understand.',
+                    'Could you please clarify?',
+                    'I need more information.'
                 ],
-                'correct_answer': 4
+                'correct_answer': 3
             },
             {
                 'question': 'Which phrase expresses an opinion politely?',
                 'options': [
                     'You are wrong.',
-                    'That\',
-                    ',
-                    ',
+                    'That\'s not right.',
+                    'I disagree completely.',
                     'I think...'
                 ],
                 'correct_answer': 4
