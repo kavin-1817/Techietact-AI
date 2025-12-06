@@ -123,6 +123,24 @@ html {
     transition: transform 0.3s ease;
 }
 
+/* Logo for dark mode (default) */
+.logo-dark {
+    display: inline-flex !important;
+}
+
+.logo-light {
+    display: none !important;
+}
+
+/* Logo for light mode */
+[data-theme="light"] .logo-dark {
+    display: none !important;
+}
+
+[data-theme="light"] .logo-light {
+    display: inline-flex !important;
+}
+
 /* Navbar */
 .navbar {
     padding: 1rem 0;
@@ -130,7 +148,7 @@ html {
 
 .navbar-brand {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .nav-link.active {

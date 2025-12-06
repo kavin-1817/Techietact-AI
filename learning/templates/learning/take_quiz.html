@@ -7,15 +7,15 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/quiz-take.css' %}">
 <style>
-    .exam-rules {
-        background: rgba(239, 68, 68, 0.1);
-        border: 2px solid rgba(239, 68, 68, 0.3);
+    .quiz-instructions {
+        background: rgba(59, 130, 246, 0.1);
+        border: 2px solid rgba(59, 130, 246, 0.3);
         border-radius: 12px;
         padding: 1.5rem;
         margin-bottom: 2rem;
     }
-    .exam-rules h3 {
-        color: #dc2626;
+    .quiz-instructions h3 {
+        color: #3b82f6;
         font-size: 1.2rem;
         font-weight: 700;
         margin-bottom: 1rem;
@@ -23,12 +23,12 @@
         align-items: center;
         gap: 0.5rem;
     }
-    .exam-rules ul {
+    .quiz-instructions ul {
         margin: 0;
         padding-left: 1.5rem;
         color: var(--text-white);
     }
-    .exam-rules li {
+    .quiz-instructions li {
         margin-bottom: 0.5rem;
         line-height: 1.6;
     }
@@ -128,20 +128,15 @@
             </div>
             {% endif %}
 
-            <!-- Exam Rules -->
-            <div class="exam-rules">
-                <h3><i class="bi bi-shield-exclamation"></i>AI-Proctored Exam Rules</h3>
+            <!-- Quiz Instructions -->
+            <div class="quiz-instructions">
+                <h3><i class="bi bi-info-circle"></i>Important Instructions</h3>
                 <ul>
-                    <li><strong>Fullscreen Required:</strong> The exam must be taken in fullscreen mode.</li>
-                    <li><strong>No Tab Switching:</strong> Switching tabs or windows will result in warnings. After 2 warnings, the exam will be auto-submitted.</li>
-                    <li><strong>No Copy/Paste:</strong> Copying, pasting, or cutting text is strictly prohibited.</li>
-                    <li><strong>No Developer Tools:</strong> Opening developer tools or console will be detected and may result in auto-submission.</li>
-                    <li><strong>No Right-Click:</strong> Right-clicking is disabled during the exam.</li>
-                    <li><strong>Keyboard Shortcuts Blocked:</strong> Common shortcuts (Ctrl+C, Ctrl+V, F12, etc.) are disabled.</li>
-                    <li><strong>No Screenshots:</strong> Taking screenshots (Print Screen, Snipping Tool, etc.) is strictly prohibited and will result in violations.</li>
-                    <li><strong>Watermarked Content:</strong> All quiz content is watermarked with your session information to prevent sharing.</li>
-                    <li><strong>Maximum Attempts:</strong> You have a maximum of 3 attempts for this quiz.</li>
-                    <li><strong>AI Ethics:</strong> This exam contains hidden markers to prevent AI models from answering. Please answer honestly.</li>
+                    <li><strong>Fullscreen Mode:</strong> Please remain in fullscreen mode throughout the entire quiz.</li>
+                    <li><strong>Academic Integrity:</strong> This quiz is designed to assess your understanding. Please answer all questions honestly and independently.</li>
+                    <li><strong>Focus:</strong> Stay focused on the quiz and avoid distractions during the test.</li>
+                    <li><strong>Time Management:</strong> {% if quiz.time_limit %}You have {{ quiz.time_limit }} minutes to complete this quiz.{% else %}Take your time to read and answer each question carefully.{% endif %}</li>
+                    <li><strong>Attempts:</strong> You have a maximum of 3 attempts for this quiz.</li>
                 </ul>
             </div>
 
