@@ -435,8 +435,10 @@ def dashboard(request):
             if course_sessions.exists():
                 last_course_activity = course_sessions.first().created_at
         
-        end_date = last_course_activity or timezone.now()
-        days_studying = (end_date.date() - enrollment.enrolled_at.date()).days
+        # Use current time as end date to calculate days since enrollment
+        # This ensures we always show days from enrollment to now
+        end_date = timezone.now()
+        days_studying = max(0, (end_date.date() - enrollment.enrolled_at.date()).days)
         
         # Calculate average quiz score for the course
         all_scores = [float(a.score) for a in course_quiz_attempts if a.completed_at]
@@ -537,6 +539,7 @@ def course_detail(request, course_id):
     module_status = {}
     module_has_quiz = {}
     module_attempt_info = {}  # Store attempt info for each module
+    previous_module_info = {}  # Store previous module info for locked modules
     for module in modules:
         # If user is not enrolled, lock all modules
         if not is_enrolled:
@@ -547,6 +550,20 @@ def course_detail(request, course_id):
         module_status[module.id] = is_unlocked
         # Check if module has a quiz
         module_has_quiz[module.id] = hasattr(module, 'quiz')
+        
+        # Get previous module info for locked modules
+        if not is_unlocked and is_enrolled and module.order > 1:
+            previous_module = Module.objects.filter(
+                course=module.course,
+                order=module.order - 1
+            ).first()
+            if previous_module:
+                previous_module_info[module.id] = {
+                    'id': previous_module.id,
+                    'title': previous_module.title,
+                    'order': previous_module.order,
+                    'has_quiz': hasattr(previous_module, 'quiz'),
+                }
         
         # Get attempt information for each module with a quiz
         if is_enrolled and hasattr(module, 'quiz'):
@@ -577,6 +594,7 @@ def course_detail(request, course_id):
         'module_status': module_status,
         'module_has_quiz': module_has_quiz,
         'module_attempt_info': module_attempt_info,
+        'previous_module_info': previous_module_info,
         'is_enrolled': is_enrolled,
         'has_pending_request': has_pending_request,
     })

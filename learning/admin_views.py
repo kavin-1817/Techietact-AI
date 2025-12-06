@@ -329,6 +329,14 @@ def admin_quiz_questions(request, course_id, module_id):
     quiz = module.quiz
     questions = quiz.questions.all().prefetch_related('options')
     
+    # Warn if quiz has less than 10 questions
+    question_count = questions.count()
+    if question_count < 10:
+        messages.warning(
+            request,
+            f'This quiz has only {question_count} question(s). Please add at least 10 questions for a complete quiz.'
+        )
+    
     context = {
         'course': course,
         'module': module,

@@ -147,8 +147,8 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Session Configuration
-# Sessions expire after 24 hours (86400 seconds) - users must login daily
-SESSION_COOKIE_AGE = 86400  # 24 hours in seconds
+# Sessions expire after 12 hours (43200 seconds) - users must login daily
+SESSION_COOKIE_AGE = 43200 # 12 hours in seconds
 SESSION_SAVE_EVERY_REQUEST = False  # Don't extend session on every request - expire at fixed time
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Expire based on time, not browser close
 SESSION_COOKIE_HTTPONLY = True  # Security: prevent JavaScript access to session cookie

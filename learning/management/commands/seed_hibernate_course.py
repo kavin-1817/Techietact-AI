@@ -185,6 +185,66 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 1
             },
+            {
+                'question': 'What is the main advantage of using Hibernate?',
+                'options': [
+                    'Reduces boilerplate JDBC code',
+                    'Provides object-relational mapping',
+                    'Handles database connections automatically',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the minimum Java version required for Hibernate 5?',
+                'options': [
+                    'Java 6',
+                    'Java 7',
+                    'Java 8',
+                    'Java 11'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of Hibernate configuration?',
+                'options': [
+                    'To configure database connection',
+                    'To configure entity mappings',
+                    'To configure Hibernate properties',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is a dialect in Hibernate?',
+                'options': [
+                    'Database-specific SQL syntax',
+                    'A programming language',
+                    'A query language',
+                    'A configuration file'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which property is used to specify database dialect in Hibernate?',
+                'options': [
+                    'hibernate.dialect',
+                    'hibernate.database',
+                    'hibernate.dbtype',
+                    'hibernate.sql'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of hibernate.show_sql property?',
+                'options': [
+                    'To display SQL queries in console',
+                    'To hide SQL queries',
+                    'To validate SQL queries',
+                    'To format SQL queries'
+                ],
+                'correct_answer': 1
+            },
         ]
 
     # Module 2 Questions - Hibernate Framework Setup
@@ -240,6 +300,56 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 1
             },
+            {
+                'question': 'What is the lifecycle of a SessionFactory?',
+                'options': [
+                    'Created once, used throughout application',
+                    'Created per request',
+                    'Created per session',
+                    'Created per transaction'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which method is used to save an entity in Hibernate?',
+                'options': [
+                    'session.save()',
+                    'session.persist()',
+                    'session.saveOrUpdate()',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the difference between save() and persist()?',
+                'options': [
+                    'save() returns generated ID, persist() returns void',
+                    'persist() returns generated ID, save() returns void',
+                    'They are identical',
+                    'save() is for updates, persist() is for inserts'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which annotation is used to specify the primary key?',
+                'options': [
+                    '@PrimaryKey',
+                    '@Id',
+                    '@Key',
+                    '@GeneratedValue'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is @GeneratedValue used for?',
+                'options': [
+                    'To generate values for all fields',
+                    'To auto-generate primary key values',
+                    'To generate SQL queries',
+                    'To generate entity classes'
+                ],
+                'correct_answer': 2
+            },
         ]
 
     # Module 3 Questions - Hibernate Query Language (HQL)
@@ -248,12 +358,12 @@ class Command(BaseCommand):
             {
                 'question': 'What does HQL stand for?',
                 'options': [
-                    'Hibernate Query Language',
                     'Hibernate Question Language',
+                    'Hibernate Query Language',
                     'Hibernate Query Library',
                     'Hibernate Question Library'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'In HQL, what do you query?',
@@ -268,22 +378,82 @@ class Command(BaseCommand):
             {
                 'question': 'Which method is used to execute HQL queries?',
                 'options': [
-                    'createQuery()',
                     'createSQLQuery()',
+                    'createQuery()',
                     'executeQuery()',
                     'runQuery()'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'How do you update records using HQL?',
                 'options': [
-                    'Using UPDATE statement in HQL',
                     'Using SQL UPDATE',
+                    'Using UPDATE statement in HQL',
                     'Using session.update()',
                     'Using session.save()'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the syntax for HQL SELECT query?',
+                'options': [
+                    'FROM EntityName',
+                    'SELECT e FROM EntityName e',
+                    'Both A and B',
+                    'SELECT * FROM table'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'How do you use WHERE clause in HQL?',
+                'options': [
+                    'FROM EntityName WHERE condition',
+                    'SELECT e FROM EntityName e WHERE e.property = :value',
+                    'Both A and B',
+                    'WHERE condition FROM EntityName'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the difference between HQL and SQL?',
+                'options': [
+                    'SQL works with objects, HQL works with tables',
+                    'HQL works with objects, SQL works with tables',
+                    'They are identical',
+                    'HQL is for queries, SQL is for updates'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'How do you use named parameters in HQL?',
+                'options': [
+                    'Using ? parameter',
+                    'Using :parameterName',
+                    'Using @parameterName',
+                    'Using $parameterName'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What method is used to set parameters in HQL query?',
+                'options': [
+                    'setValue()',
+                    'setParameter()',
+                    'setProperty()',
+                    'setAttribute()'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'How do you delete records using HQL?',
+                'options': [
+                    'Using session.delete()',
+                    'DELETE FROM EntityName WHERE condition',
+                    'Using SQL DELETE',
+                    'All of the above'
+                ],
+                'correct_answer': 2
             },
         ]
 
@@ -313,22 +483,82 @@ class Command(BaseCommand):
             {
                 'question': 'How should Session objects be managed in web applications?',
                 'options': [
-                    'One Session per request',
                     'One Session per application',
                     'One Session per user',
+                    'One Session per request',
                     'One Session per transaction'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'Which pattern is commonly used to manage Hibernate Session in web applications?',
                 'options': [
-                    'Session-per-request pattern',
                     'Session-per-application pattern',
                     'Session-per-user pattern',
+                    'Session-per-request pattern',
                     'Session-per-transaction pattern'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of ServletContextListener in Hibernate integration?',
+                'options': [
+                    'To initialize SessionFactory at application startup',
+                    'To close SessionFactory at application shutdown',
+                    'Both A and B',
+                    'To manage sessions'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'How do you access SessionFactory in a servlet?',
+                'options': [
+                    'Create new SessionFactory',
+                    'From HttpSession',
+                    'From ServletContext attribute',
+                    'From request parameter'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What should be done with Session after use in a servlet?',
+                'options': [
+                    'Keep it open',
+                    'Store it in session',
+                    'Close the session',
+                    'Return it to pool'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of @WebListener annotation?',
+                'options': [
+                    'To mark a class as a servlet',
+                    'To mark a class as a filter',
+                    'To mark a class as a servlet listener',
+                    'To mark a class as a controller'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the best practice for transaction management in web applications?',
+                'options': [
+                    'One transaction per application',
+                    'One transaction per user',
+                    'One transaction per request',
+                    'No transactions needed'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'How do you handle exceptions in Hibernate web applications?',
+                'options': [
+                    'Let exceptions propagate',
+                    'Log and ignore',
+                    'Catch HibernateException and handle appropriately',
+                    'Convert to runtime exceptions'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -360,10 +590,10 @@ class Command(BaseCommand):
                 'options': [
                     'session.delete(entity)',
                     'Using HQL DELETE',
-                    'Both A and B',
-                    'session.remove(entity)'
+                    'session.remove(entity)',
+                    'Both A and B'
                 ],
-                'correct_answer': 3
+                'correct_answer': 4
             },
             {
                 'question': 'What should be done before deleting an entity in Hibernate?',
@@ -372,6 +602,66 @@ class Command(BaseCommand):
                     'Check if entity exists',
                     'Close all sessions',
                     'Both A and B'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of @Lob annotation?',
+                'options': [
+                    'To mark a field as local',
+                    'To mark a field as lazy',
+                    'To mark a field as loadable',
+                    'To mark a field as Large Object (BLOB/CLOB)'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'How do you retrieve an entity by ID in Hibernate?',
+                'options': [
+                    'session.get(EntityClass.class, id)',
+                    'session.load(EntityClass.class, id)',
+                    'session.find(EntityClass.class, id)',
+                    'Both A and B'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the difference between get() and load()?',
+                'options': [
+                    'load() returns null if not found, get() throws exception',
+                    'They are identical',
+                    'get() is lazy, load() is eager',
+                    'get() returns null if not found, load() throws exception'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of session.flush()?',
+                'options': [
+                    'To clear the session',
+                    'To close the session',
+                    'To validate the session',
+                    'To synchronize session state with database'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of session.clear()?',
+                'options': [
+                    'To clear all entities from session',
+                    'To clear cache',
+                    'To clear transactions',
+                    'To clear configuration'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'How do you list all entities of a type in Hibernate?',
+                'options': [
+                    'Using HQL: FROM EntityName',
+                    'Using Criteria API',
+                    'Using session.createQuery()',
+                    'All of the above'
                 ],
                 'correct_answer': 4
             },

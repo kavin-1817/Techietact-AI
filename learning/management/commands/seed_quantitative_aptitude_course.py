@@ -210,6 +210,36 @@ class Command(BaseCommand):
                 'options': ['1', '2', '3', '4'],
                 'correct_answer': 2
             },
+            {
+                'question': 'What is the LCM of 12 and 18?',
+                'options': ['24', '36', '48', '72'],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the HCF of 24 and 36?',
+                'options': ['6', '12', '18', '24'],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the sum of first 10 natural numbers?',
+                'options': ['45', '50', '55', '60'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the unit digit of 7^4?',
+                'options': ['1', '7', '9', '3'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is 0.25 as a fraction?',
+                'options': ['1/2', '1/3', '1/4', '1/5'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the value of 15% of 200?',
+                'options': ['25', '30', '35', '40'],
+                'correct_answer': 2
+            },
         ]
 
     # Module 2 Questions - Arithmetic – Fundamentals
@@ -238,6 +268,26 @@ class Command(BaseCommand):
             {
                 'question': 'What is the simple interest on Rs. 1000 at 10% per annum for 2 years?',
                 'options': ['Rs. 100', 'Rs. 200', 'Rs. 300', 'Rs. 400'],
+                'correct_answer': 2
+            },
+            {
+                'question': 'If 3A = 4B = 5C, what is A:B:C?',
+                'options': ['20:15:12', '15:12:20', '12:15:20', '20:12:15'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'A number is increased by 20% and then decreased by 20%. What is the net change?',
+                'options': ['No change', '4% increase', '4% decrease', '20% decrease'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'The average of 10 numbers is 25. If 5 is added to each number, what is the new average?',
+                'options': ['25', '30', '35', '40'],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the compound interest on Rs. 1000 at 10% per annum for 2 years?',
+                'options': ['Rs. 200', 'Rs. 210', 'Rs. 220', 'Rs. 230'],
                 'correct_answer': 2
             },
         ]
@@ -270,6 +320,26 @@ class Command(BaseCommand):
                 'options': ['1 hour', '2 hours', '3 hours', '4 hours'],
                 'correct_answer': 2
             },
+            {
+                'question': 'A train 200m long crosses a pole in 10 seconds. What is its speed?',
+                'options': ['20 m/s', '72 km/h', '60 km/h', 'Both A and B'],
+                'correct_answer': 4
+            },
+            {
+                'question': 'If the speed of a boat in still water is 15 km/h and the speed of stream is 5 km/h, what is the downstream speed?',
+                'options': ['10 km/h', '15 km/h', '20 km/h', '25 km/h'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'Two persons start from the same point and walk in opposite directions at 4 km/h and 6 km/h. After 2 hours, how far apart are they?',
+                'options': ['10 km', '20 km', '24 km', '30 km'],
+                'correct_answer': 2
+            },
+            {
+                'question': 'A car covers 300 km in 5 hours. What is its average speed?',
+                'options': ['50 km/h', '60 km/h', '70 km/h', '80 km/h'],
+                'correct_answer': 2
+            },
         ]
 
     # Module 4 Questions - Algebra
@@ -300,6 +370,26 @@ class Command(BaseCommand):
                 'options': ['2', '3', '4', '5'],
                 'correct_answer': 2
             },
+            {
+                'question': 'If x + y = 10 and x - y = 4, what is the value of x?',
+                'options': ['5', '6', '7', '8'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the value of (a - b)²?',
+                'options': ['a² - b²', 'a² - 2ab + b²', 'a² + 2ab + b²', 'a² + b²'],
+                'correct_answer': 2
+            },
+            {
+                'question': 'If x² + 1/x² = 7, what is x + 1/x?',
+                'options': ['3', '4', '5', '6'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the value of √(16 + 9)?',
+                'options': ['5', '7', '9', '25'],
+                'correct_answer': 1
+            },
         ]
 
     # Module 5 Questions - Geometry & Mensuration
@@ -322,13 +412,43 @@ class Command(BaseCommand):
             },
             {
                 'question': 'What is the surface area of a cube with side 4 cm?',
-                'options': ['64 cm²', '96 cm²', '128 cm²', '144 cm²'],
-                'correct_answer': 2
+                'options': [
+                    '64 cm²',
+                    '128 cm²',
+                    '96 cm²',
+                    '144 cm²'
+                ],
+                'correct_answer': 3
             },
             {
                 'question': 'What is the area of a rectangle with length 12 cm and breadth 8 cm?',
-                'options': ['80 cm²', '96 cm²', '100 cm²', '120 cm²'],
-                'correct_answer': 2
+                'options': [
+                    '80 cm²',
+                    '100 cm²',
+                    '96 cm²',
+                    '120 cm²'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the perimeter of a square with side 10 cm?',
+                'options': ['20 cm', '30 cm', '40 cm', '50 cm'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the volume of a cylinder with radius 7 cm and height 10 cm? (Use π = 22/7)',
+                'options': ['1540 cm³', '154 cm³', '15400 cm³', '15400 cm³'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the area of a triangle with sides 5 cm, 12 cm, and 13 cm?',
+                'options': ['30 cm²', '60 cm²', '90 cm²', '120 cm²'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the surface area of a sphere with radius 7 cm? (Use π = 22/7)',
+                'options': ['154 cm²', '308 cm²', '616 cm²', '1232 cm²'],
+                'correct_answer': 3
             },
         ]
 
@@ -347,18 +467,48 @@ class Command(BaseCommand):
             },
             {
                 'question': 'In a line graph, if the line goes upward from left to right, what does it indicate?',
-                'options': ['Decreasing trend', 'Increasing trend', 'No change', 'Fluctuating trend'],
-                'correct_answer': 2
+                'options': [
+                    'Decreasing trend',
+                    'No change',
+                    'Increasing trend',
+                    'Fluctuating trend'
+                ],
+                'correct_answer': 3
             },
             {
                 'question': 'If a table shows 30% increase from year 1 to year 2, and the value in year 1 is 100, what is the value in year 2?',
-                'options': ['120', '130', '140', '150'],
-                'correct_answer': 2
+                'options': [
+                    '120',
+                    '140',
+                    '130',
+                    '150'
+                ],
+                'correct_answer': 3
             },
             {
                 'question': 'In a caselet DI, if total students are 200 and 40% are girls, how many are boys?',
                 'options': ['80', '100', '120', '160'],
                 'correct_answer': 3
+            },
+            {
+                'question': 'If a bar chart shows 4 bars with heights 2cm, 4cm, 6cm, 8cm and scale is 1cm = 100 units, what is the total value?',
+                'options': ['2000', '200', '20', '20000'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'In a pie chart with total value 360, if one sector is 90, what percentage does it represent?',
+                'options': ['20%', '25%', '30%', '35%'],
+                'correct_answer': 2
+            },
+            {
+                'question': 'If a line graph shows values increasing from 50 to 100 over 5 years, what is the average annual increase?',
+                'options': ['5', '10', '15', '20'],
+                'correct_answer': 2
+            },
+            {
+                'question': 'In a table, if row total is 500 and column total is 300, what is the grand total?',
+                'options': ['800', '200', '150000', 'Cannot be determined'],
+                'correct_answer': 4
             },
         ]
 
@@ -367,18 +517,33 @@ class Command(BaseCommand):
         return [
             {
                 'question': 'What is the probability of getting a head when tossing a fair coin?',
-                'options': ['0.25', '0.5', '0.75', '1'],
-                'correct_answer': 2
+                'options': [
+                    '0.25',
+                    '0.75',
+                    '0.5',
+                    '1'
+                ],
+                'correct_answer': 3
             },
             {
                 'question': 'In how many ways can 3 people be arranged in a line?',
-                'options': ['3', '6', '9', '12'],
-                'correct_answer': 2
+                'options': [
+                    '3',
+                    '9',
+                    '6',
+                    '12'
+                ],
+                'correct_answer': 3
             },
             {
                 'question': 'What is the number of ways to choose 2 items from 5 items?',
-                'options': ['5', '10', '15', '20'],
-                'correct_answer': 2
+                'options': [
+                    '5',
+                    '15',
+                    '10',
+                    '20'
+                ],
+                'correct_answer': 3
             },
             {
                 'question': 'What is the probability of drawing an ace from a standard deck of 52 cards?',
@@ -388,6 +553,32 @@ class Command(BaseCommand):
             {
                 'question': 'In how many ways can 4 people sit around a circular table?',
                 'options': ['6', '12', '24', '120'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the probability of drawing a red card from a standard deck of 52 cards?',
+                'options': ['1/2', '1/4', '1/13', '1/26'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'In how many ways can 5 books be arranged on a shelf?',
+                'options': ['60',
+                '240',
+                '120',
+                '720'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the number of ways to choose 3 items from 6 items?',
+                'options': ['15',
+                '30',
+                '20',
+                '60'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'If two dice are thrown, what is the probability of getting a sum of 7?',
+                'options': ['1/6', '1/12', '1/18', '1/36'],
                 'correct_answer': 1
             },
         ]
@@ -417,7 +608,35 @@ class Command(BaseCommand):
             },
             {
                 'question': 'If in a number puzzle, 5 + 3 = 28, 9 + 1 = 810, what is 7 + 5?',
-                'options': ['212', '122', '221', '112'],
+                'options': [
+                    '122',
+                    '221',
+                    '112',
+                    '212'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'If the present age of A is twice that of B, and after 10 years A will be 1.5 times B, what is the present age of B?',
+                'options': ['10 years', '15 years', '20 years', '25 years'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'At what time between 3 and 4 o\'clock will the hands of a clock be at right angles?',
+                'options': ['3:32', '3:33', '3:34', '3:35'],
+                'correct_answer': 1
+            },
+            {
+                'question': 'If today is Friday, what day will it be after 100 days?',
+                'options': ['Friday',
+                'Saturday',
+                'Monday',
+                'Sunday'],
+                'correct_answer': 4
+            },
+            {
+                'question': 'A person walks 3 km East, then 4 km North. How far is he from the starting point?',
+                'options': ['5 km', '7 km', '12 km', '25 km'],
                 'correct_answer': 1
             },
         ]
@@ -427,28 +646,85 @@ class Command(BaseCommand):
         return [
             {
                 'question': 'What is log₁₀(100)?',
-                'options': ['1', '2', '10', '100'],
-                'correct_answer': 2
+                'options': [
+                    '1',
+                    '10',
+                    '100',
+                    '2'
+                ],
+                'correct_answer': 4
             },
             {
                 'question': 'If A = {1, 2, 3} and B = {3, 4, 5}, what is A ∩ B?',
-                'options': ['{1, 2, 3, 4, 5}', '{3}', '{1, 2}', '{4, 5}'],
-                'correct_answer': 2
+                'options': [
+                    '{1, 2, 3, 4, 5}',
+                    '{1, 2}',
+                    '{4, 5}',
+                    '{3}'
+                ],
+                'correct_answer': 4
             },
             {
                 'question': 'What is the value of log₂(8)?',
-                'options': ['2', '3', '4', '8'],
-                'correct_answer': 2
+                'options': [
+                    '2',
+                    '4',
+                    '8',
+                    '3'
+                ],
+                'correct_answer': 4
             },
             {
                 'question': 'If A = {1, 2, 3} and B = {3, 4, 5}, what is A ∪ B?',
-                'options': ['{1, 2, 3, 4, 5}', '{3}', '{1, 2}', '{4, 5}'],
-                'correct_answer': 1
+                'options': [
+                    '{3}',
+                    '{1, 2}',
+                    '{4, 5}',
+                    '{1, 2, 3, 4, 5}'
+                ],
+                'correct_answer': 4
             },
             {
                 'question': 'In a Venn diagram, if 20 students like Math, 25 like Science, and 10 like both, how many students are there in total?',
-                'options': ['35', '45', '55', '65'],
-                'correct_answer': 1
+                'options': [
+                    '45',
+                    '55',
+                    '65',
+                    '35'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is log₁₀(1000)?',
+                'options': ['1',
+                '2',
+                '4',
+                '3'],
+                'correct_answer': 4
+            },
+            {
+                'question': 'If A = {1, 2, 3, 4} and B = {3, 4, 5, 6}, what is A - B?',
+                'options': ['{3, 4}',
+                '{5, 6}',
+                '{1, 2, 3, 4}',
+                '{1, 2}'],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the value of log₅(25)?',
+                'options': ['3',
+                '4',
+                '5',
+                '2'],
+                'correct_answer': 4
+            },
+            {
+                'question': 'If f(x) = 2x + 3, what is f(5)?',
+                'options': ['10',
+                '15',
+                '18',
+                '13'],
+                'correct_answer': 4
             },
         ]
 
@@ -457,28 +733,77 @@ class Command(BaseCommand):
         return [
             {
                 'question': 'In TCS NQT pattern, what is typically the time limit for the Quantitative Aptitude section?',
-                'options': ['20 minutes', '30 minutes', '40 minutes', '50 minutes'],
-                'correct_answer': 3
+                'options': [
+                    '20 minutes',
+                    '30 minutes',
+                    '50 minutes',
+                    '40 minutes'
+                ],
+                'correct_answer': 4
             },
             {
                 'question': 'Infosys aptitude test usually focuses on which type of problems?',
-                'options': ['Only algebra', 'Only geometry', 'Mixed quantitative problems', 'Only data interpretation'],
-                'correct_answer': 3
+                'options': [
+                    'Only algebra',
+                    'Only geometry',
+                    'Only data interpretation',
+                    'Mixed quantitative problems'
+                ],
+                'correct_answer': 4
             },
             {
                 'question': 'For speed improvement in aptitude tests, what is the recommended approach?',
-                'options': ['Solve all questions slowly', 'Skip difficult questions', 'Practice with time limits', 'Only attempt easy questions'],
-                'correct_answer': 3
+                'options': [
+                    'Solve all questions slowly',
+                    'Skip difficult questions',
+                    'Only attempt easy questions',
+                    'Practice with time limits'
+                ],
+                'correct_answer': 4
             },
             {
                 'question': 'Bank exam aptitude pattern typically includes questions on:',
-                'options': ['Only arithmetic', 'Only data interpretation', 'Mixed topics including arithmetic, DI, and reasoning', 'Only algebra'],
-                'correct_answer': 3
+                'options': [
+                    'Only arithmetic',
+                    'Only data interpretation',
+                    'Only algebra',
+                    'Mixed topics including arithmetic, DI, and reasoning'
+                ],
+                'correct_answer': 4
             },
             {
                 'question': 'SSC aptitude pattern usually has how many questions in the quantitative section?',
-                'options': ['20-25', '25-30', '30-35', '35-40'],
-                'correct_answer': 2
+                'options': ['20-25',
+                '30-35',
+                '35-40',
+                '25-30'],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the typical negative marking in TCS NQT?',
+                'options': ['No negative marking',
+                '1/4 mark',
+                '1/2 mark',
+                '1/3 mark'],
+                'correct_answer': 4
+            },
+            {
+                'question': 'For Infosys aptitude test, what is the recommended time per question?',
+                'options': ['30 seconds',
+                '1.5 minutes',
+                '2 minutes',
+                '1 minute'],
+                'correct_answer': 4
+            },
+            {
+                'question': 'Which topic is most frequently asked in bank exams?',
+                'options': ['Algebra', 'Geometry', 'Data Interpretation', 'Probability'],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the best strategy for solving DI questions quickly?',
+                'options': ['Read all data first', 'Calculate all values', 'Approximate and eliminate', 'Skip DI questions'],
+                'correct_answer': 3
             },
         ]
 

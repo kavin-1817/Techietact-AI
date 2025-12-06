@@ -140,12 +140,12 @@ class Command(BaseCommand):
             {
                 'question': 'What is the time complexity of accessing an element in an ArrayList by index?',
                 'options': [
-                    'O(1)',
                     'O(n)',
                     'O(log n)',
-                    'O(n²)'
+                    'O(n²)',
+                    'O(1)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is the principle of Stack data structure?',
@@ -187,6 +187,56 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 1
             },
+            {
+                'question': 'What is the time complexity of searching in an unsorted ArrayList?',
+                'options': [
+                    'O(1)',
+                    'O(n)',
+                    'O(log n)',
+                    'O(n²)'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the main advantage of Linked List over ArrayList?',
+                'options': [
+                    'Efficient insertion and deletion',
+                    'Random access',
+                    'Better memory usage',
+                    'Faster searching'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is a doubly linked list?',
+                'options': [
+                    'A list with nodes pointing to both next and previous nodes',
+                    'A list with two heads',
+                    'A list with duplicate values',
+                    'A list with sorted elements'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the time complexity of inserting at the end of an ArrayList?',
+                'options': [
+                    'O(1) amortized',
+                    'O(n)',
+                    'O(log n)',
+                    'O(n²)'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which data structure uses LIFO principle?',
+                'options': [
+                    'Stack',
+                    'Queue',
+                    'Array',
+                    'Tree'
+                ],
+                'correct_answer': 1
+            },
         ]
 
     # Module 2 Questions - Searching Algorithms
@@ -195,42 +245,102 @@ class Command(BaseCommand):
             {
                 'question': 'What is the time complexity of Linear Search?',
                 'options': [
-                    'O(n)',
                     'O(log n)',
+                    'O(n)',
                     'O(1)',
                     'O(n²)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is the time complexity of Binary Search?',
                 'options': [
-                    'O(log n)',
                     'O(n)',
+                    'O(log n)',
                     'O(1)',
                     'O(n²)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is a prerequisite for Binary Search?',
                 'options': [
-                    'Array must be sorted',
                     'Array must be unsorted',
+                    'Array must be sorted',
                     'Array must be empty',
                     'Array must have duplicates'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is the time complexity of Ternary Search?',
                 'options': [
+                    'O(n)',
                     'O(log₃ n)',
+                    'O(log n)',
+                    'O(n²)'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the best case time complexity of Linear Search?',
+                'options': [
+                    'O(1)',
                     'O(n)',
                     'O(log n)',
                     'O(n²)'
                 ],
                 'correct_answer': 1
+            },
+            {
+                'question': 'What is the worst case time complexity of Binary Search?',
+                'options': [
+                    'O(n)',
+                    'O(log n)',
+                    'O(1)',
+                    'O(n²)'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'Which search algorithm works on unsorted arrays?',
+                'options': [
+                    'Linear Search',
+                    'Binary Search',
+                    'Ternary Search',
+                    'All of the above'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the space complexity of Binary Search (iterative)?',
+                'options': [
+                    'O(n)',
+                    'O(1)',
+                    'O(log n)',
+                    'O(n²)'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the space complexity of Binary Search (recursive)?',
+                'options': [
+                    'O(1)',
+                    'O(n)',
+                    'O(log n)',
+                    'O(n²)'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'Which search algorithm divides the search space into three parts?',
+                'options': [
+                    'Linear Search',
+                    'Binary Search',
+                    'Ternary Search',
+                    'Jump Search'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -240,52 +350,102 @@ class Command(BaseCommand):
             {
                 'question': 'What is the time complexity of Bubble Sort in worst case?',
                 'options': [
-                    'O(n²)',
                     'O(n log n)',
                     'O(n)',
+                    'O(n²)',
                     'O(log n)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the time complexity of Merge Sort?',
                 'options': [
-                    'O(n log n)',
                     'O(n²)',
                     'O(n)',
+                    'O(n log n)',
                     'O(log n)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the time complexity of Quick Sort in average case?',
                 'options': [
-                    'O(n log n)',
                     'O(n²)',
                     'O(n)',
+                    'O(n log n)',
                     'O(log n)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'Which sorting algorithm is stable?',
                 'options': [
-                    'Merge Sort',
                     'Quick Sort',
                     'Heap Sort',
+                    'Merge Sort',
                     'Selection Sort'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'Which sorting algorithm has the best average time complexity?',
                 'options': [
-                    'Quick Sort',
                     'Bubble Sort',
                     'Selection Sort',
+                    'Insertion Sort',
+                    'Quick Sort'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the time complexity of Selection Sort?',
+                'options': [
+                    'O(n log n)',
+                    'O(n)',
+                    'O(n²)',
+                    'O(log n)'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the time complexity of Insertion Sort in best case?',
+                'options': [
+                    'O(n log n)',
+                    'O(n)',
+                    'O(n²)',
+                    'O(log n)'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the space complexity of Merge Sort?',
+                'options': [
+                    'O(1)',
+                    'O(n)',
+                    'O(log n)',
+                    'O(n²)'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the space complexity of Quick Sort?',
+                'options': [
+                    'O(1)',
+                    'O(n)',
+                    'O(log n)',
+                    'O(n²)'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'Which sorting algorithm uses divide and conquer approach?',
+                'options': [
+                    'Bubble Sort',
+                    'Selection Sort',
+                    'Merge Sort',
                     'Insertion Sort'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
         ]
 
@@ -295,32 +455,32 @@ class Command(BaseCommand):
             {
                 'question': 'What data structure is typically used to implement DFS?',
                 'options': [
-                    'Stack',
                     'Queue',
                     'Heap',
-                    'Tree'
+                    'Tree',
+                    'Stack'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What data structure is typically used to implement BFS?',
                 'options': [
-                    'Queue',
                     'Stack',
                     'Heap',
-                    'Tree'
+                    'Tree',
+                    'Queue'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is the time complexity of BFS?',
                 'options': [
-                    'O(V + E)',
                     'O(V × E)',
                     'O(V²)',
-                    'O(E²)'
+                    'O(E²)',
+                    'O(V + E)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is Dijkstra\'s algorithm used for?',
@@ -339,6 +499,56 @@ class Command(BaseCommand):
                     'O(V + E)',
                     'O(V²)',
                     'O(E²)'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the time complexity of DFS?',
+                'options': [
+                    'O(V × E)',
+                    'O(V²)',
+                    'O(E²)',
+                    'O(V + E)'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is a graph?',
+                'options': [
+                    'A linear data structure',
+                    'A tree structure',
+                    'An array structure',
+                    'A collection of nodes and edges'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the difference between directed and undirected graph?',
+                'options': [
+                    'Undirected has direction, directed does not',
+                    'They are identical',
+                    'Directed is for trees only',
+                    'Directed has direction, undirected does not'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is a cycle in a graph?',
+                'options': [
+                    'A path with no repeated vertices',
+                    'A path with maximum length',
+                    'A path with minimum length',
+                    'A path that starts and ends at the same vertex'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is a connected graph?',
+                'options': [
+                    'A graph where there is a path between every pair of vertices',
+                    'A graph with no edges',
+                    'A graph with only one vertex',
+                    'A graph with cycles'
                 ],
                 'correct_answer': 1
             },

@@ -206,12 +206,12 @@ class Command(BaseCommand):
             {
                 'question': 'What does STS stand for?',
                 'options': [
-                    'Spring Tool Suite',
                     'Spring Technology Stack',
+                    'Spring Tool Suite',
                     'Spring Testing Suite',
                     'Spring Template System'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'Which IDE is commonly used for Spring development?',
@@ -222,6 +222,76 @@ class Command(BaseCommand):
                     'All of the above'
                 ],
                 'correct_answer': 4
+            },
+            {
+                'question': 'What is the minimum Java version required for Spring 5?',
+                'options': [
+                    'Java 6',
+                    'Java 7',
+                    'Java 8',
+                    'Java 11'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the main advantage of using Spring Framework?',
+                'options': [
+                    'It simplifies Java development',
+                    'It provides dependency injection',
+                    'It supports enterprise features',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'Which build tool is commonly used with Spring projects?',
+                'options': [
+                    'Maven',
+                    'Gradle',
+                    'Ant',
+                    'Both A and B'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of Spring Tool Suite (STS)?',
+                'options': [
+                    'An IDE specifically designed for Spring development',
+                    'A Spring testing framework',
+                    'A Spring deployment tool',
+                    'A Spring configuration manager'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What file is used to configure Spring application context?',
+                'options': [
+                    'application.properties',
+                    'spring-config.xml',
+                    'Both A and B',
+                    'web.xml only'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the core container in Spring Framework?',
+                'options': [
+                    'Spring Core',
+                    'Spring Beans',
+                    'Spring Context',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'Which command is used to create a new Spring project using Spring Initializr?',
+                'options': [
+                    'spring create project',
+                    'spring init',
+                    'spring new',
+                    'spring start'
+                ],
+                'correct_answer': 2
             },
         ]
 
@@ -241,12 +311,12 @@ class Command(BaseCommand):
             {
                 'question': 'What is Dependency Injection?',
                 'options': [
-                    'A design pattern where dependencies are injected rather than created',
                     'A way to inject code into classes',
+                    'A design pattern where dependencies are injected rather than created',
                     'A database injection technique',
                     'A security vulnerability'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What are the benefits of Dependency Injection?',
@@ -267,6 +337,66 @@ class Command(BaseCommand):
                     'All of the above'
                 ],
                 'correct_answer': 4
+            },
+            {
+                'question': 'What is the traditional way of creating dependencies (before DI)?',
+                'options': [
+                    'Using new keyword inside classes',
+                    'Using factory methods',
+                    'Using static methods',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What are the types of Dependency Injection in Spring?',
+                'options': [
+                    'Constructor injection',
+                    'Setter injection',
+                    'Field injection',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'Which type of injection is recommended by Spring?',
+                'options': [
+                    'Constructor injection',
+                    'Setter injection',
+                    'Field injection',
+                    'All are equally recommended'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What does Inversion of Control mean?',
+                'options': [
+                    'The developer controls object creation',
+                    'The framework controls object creation and lifecycle',
+                    'Objects control their own creation',
+                    'No control over object creation'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the Spring IoC container?',
+                'options': [
+                    'A container that manages Spring beans',
+                    'A container that stores configuration',
+                    'A container for web applications',
+                    'A database container'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the main interface of Spring IoC container?',
+                'options': [
+                    'ApplicationContext',
+                    'BeanFactory',
+                    'Both A and B',
+                    'ContainerFactory'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -296,12 +426,12 @@ class Command(BaseCommand):
             {
                 'question': 'What is @Qualifier annotation used for?',
                 'options': [
-                    'To specify which bean to inject when multiple candidates exist',
                     'To qualify a method',
+                    'To specify which bean to inject when multiple candidates exist',
                     'To add validation',
                     'To mark a class as qualified'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'Which autowiring mode uses constructor parameters?',
@@ -313,6 +443,66 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 3
             },
+            {
+                'question': 'What happens when autowiring byType finds multiple beans of the same type?',
+                'options': [
+                    'Spring throws an exception',
+                    'Spring uses the first bean found',
+                    'Spring uses @Primary bean',
+                    'Both A and C'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is @Primary annotation used for?',
+                'options': [
+                    'To mark a class as primary',
+                    'To mark a bean as the primary candidate for autowiring',
+                    'To set primary key in database',
+                    'To mark a method as primary'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'Which autowiring mode matches beans by property name?',
+                'options': [
+                    'byType',
+                    'byName',
+                    'constructor',
+                    'autodetect'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the difference between @Autowired and @Resource?',
+                'options': [
+                    '@Resource is Spring-specific, @Autowired is JSR-250',
+                    '@Autowired is Spring-specific, @Resource is JSR-250',
+                    'They are identical',
+                    '@Autowired is for fields, @Resource is for methods'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'Can you use @Autowired on a constructor?',
+                'options': [
+                    'No, only on fields',
+                    'Yes, it is the recommended way',
+                    'No, only on setters',
+                    'Yes, but not recommended'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is required=false in @Autowired used for?',
+                'options': [
+                    'To make dependency optional',
+                    'To make dependency required',
+                    'To disable autowiring',
+                    'To enable lazy loading'
+                ],
+                'correct_answer': 1
+            },
         ]
 
     # Module 4 Questions - Spring Beans
@@ -321,32 +511,32 @@ class Command(BaseCommand):
             {
                 'question': 'What is a Spring Bean?',
                 'options': [
-                    'An object managed by Spring container',
                     'A Java class',
                     'A database entity',
-                    'A configuration file'
+                    'A configuration file',
+                    'An object managed by Spring container'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is constructor injection?',
                 'options': [
-                    'Injecting dependencies through constructor',
                     'Creating objects using constructor',
+                    'Injecting dependencies through constructor',
                     'Calling constructor methods',
                     'Defining constructors in classes'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is the default scope of a Spring bean?',
                 'options': [
-                    'singleton',
                     'prototype',
                     'request',
-                    'session'
+                    'session',
+                    'singleton'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'Which annotation is used to define a Spring bean?',
@@ -358,6 +548,66 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 4
             },
+            {
+                'question': 'What is the difference between singleton and prototype scope?',
+                'options': [
+                    'Prototype creates one instance, singleton creates new instance each time',
+                    'They are the same',
+                    'Singleton is for web, prototype is for desktop',
+                    'Singleton creates one instance, prototype creates new instance each time'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is bean lifecycle in Spring?',
+                'options': [
+                    'The time a bean exists',
+                    'The process of bean creation, initialization, and destruction',
+                    'The version of a bean',
+                    'The location of a bean'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'Which method is called after bean initialization?',
+                'options': [
+                    '@PreDestroy',
+                    '@Init',
+                    '@After',
+                    '@PostConstruct'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is @Bean annotation used for?',
+                'options': [
+                    'To mark a class as a bean',
+                    'To define a bean in Java configuration',
+                    'To inject a bean',
+                    'To destroy a bean'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the difference between @Component and @Bean?',
+                'options': [
+                    '@Bean is class-level, @Component is method-level',
+                    'They are identical',
+                    '@Component is for services, @Bean is for repositories',
+                    '@Component is class-level, @Bean is method-level'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is lazy initialization of beans?',
+                'options': [
+                    'Beans are created immediately',
+                    'Beans are never created',
+                    'Beans are created in background thread',
+                    'Beans are created only when first requested'
+                ],
+                'correct_answer': 4
+            },
         ]
 
     # Module 5 Questions - IDE Setup
@@ -366,22 +616,102 @@ class Command(BaseCommand):
             {
                 'question': 'What is Spring MVC?',
                 'options': [
-                    'A web framework built on Spring',
                     'A database framework',
                     'A testing framework',
-                    'A security framework'
+                    'A security framework',
+                    'A web framework built on Spring'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is the Model in Spring MVC?',
                 'options': [
-                    'The data/objects passed to the view',
                     'A database model',
                     'A class model',
-                    'A design pattern'
+                    'A design pattern',
+                    'The data/objects passed to the view'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
+            },
+            {
+                'question': 'How do you add Spring MVC support in Eclipse?',
+                'options': [
+                    'Install Spring Tools plugin',
+                    'Add Spring MVC dependencies',
+                    'Configure web.xml',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is a dynamic web project in Eclipse?',
+                'options': [
+                    'A project with dynamic content',
+                    'A project that changes automatically',
+                    'A project with dynamic variables',
+                    'A web project that can be deployed to a server'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of web.xml in Spring MVC?',
+                'options': [
+                    'To configure DispatcherServlet',
+                    'To define servlet mappings',
+                    'To configure filters',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is DispatcherServlet?',
+                'options': [
+                    'A database servlet',
+                    'A security servlet',
+                    'A configuration servlet',
+                    'The front controller in Spring MVC'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What file is used for Spring MVC configuration in Java config?',
+                'options': [
+                    'WebMvcConfigurer',
+                    'WebConfig',
+                    'SpringConfig',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of @EnableWebMvc annotation?',
+                'options': [
+                    'To enable web services',
+                    'To enable web security',
+                    'To enable web sockets',
+                    'To enable Spring MVC configuration'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the default view resolver in Spring MVC?',
+                'options': [
+                    'JstlViewResolver',
+                    'ThymeleafViewResolver',
+                    'FreeMarkerViewResolver',
+                    'InternalResourceViewResolver'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of @RequestMapping annotation?',
+                'options': [
+                    'To map database tables',
+                    'To map configuration files',
+                    'To map services',
+                    'To map URLs to controller methods'
+                ],
+                'correct_answer': 4
             },
         ]
 
@@ -428,6 +758,66 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 3
             },
+            {
+                'question': 'What is the difference between @Controller and @RestController?',
+                'options': [
+                    '@RestController includes @ResponseBody, @Controller does not',
+                    '@Controller includes @ResponseBody, @RestController does not',
+                    'They are identical',
+                    '@RestController is for web, @Controller is for API'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is @PathVariable used for?',
+                'options': [
+                    'To extract path variables from URL',
+                    'To create path variables',
+                    'To validate paths',
+                    'To handle path errors'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of Model interface?',
+                'options': [
+                    'To add attributes to be used in view',
+                    'To define data models',
+                    'To configure models',
+                    'To validate models'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What HTTP methods can be specified in @RequestMapping?',
+                'options': [
+                    'GET, POST, PUT, DELETE',
+                    'GET, POST only',
+                    'GET only',
+                    'All HTTP methods'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is @GetMapping a shortcut for?',
+                'options': [
+                    '@RequestMapping(method = RequestMethod.GET)',
+                    '@RequestMapping(method = RequestMethod.POST)',
+                    '@RequestMapping without method',
+                    '@RequestMapping(method = RequestMethod.PUT)'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of @ResponseBody annotation?',
+                'options': [
+                    'To return response directly without view',
+                    'To return response body',
+                    'To handle response errors',
+                    'To validate response'
+                ],
+                'correct_answer': 1
+            },
         ]
 
     # Module 7 Questions - Spring Form Elements
@@ -473,6 +863,66 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 1
             },
+            {
+                'question': 'Which tag is used for radio buttons in Spring forms?',
+                'options': [
+                    '<form:radiobutton>',
+                    '<form:radio>',
+                    '<form:input type="radio">',
+                    '<radio>'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which tag is used for checkboxes in Spring forms?',
+                'options': [
+                    '<form:checkbox>',
+                    '<form:check>',
+                    '<form:input type="checkbox">',
+                    '<checkbox>'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which tag is used for text areas in Spring forms?',
+                'options': [
+                    '<form:textarea>',
+                    '<form:text>',
+                    '<form:area>',
+                    '<textarea>'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of path attribute in form tags?',
+                'options': [
+                    'To bind form field to model property',
+                    'To specify URL path',
+                    'To define file path',
+                    'To set form path'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What happens if modelAttribute is not set in form:form?',
+                'options': [
+                    'Form will not bind to model',
+                    'Form will use default model',
+                    'Form will throw error',
+                    'Form will work normally'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'How do you bind a form to a model object?',
+                'options': [
+                    'Using modelAttribute in form:form',
+                    'Using @ModelAttribute in controller',
+                    'Both A and B',
+                    'Using @RequestParam'
+                ],
+                'correct_answer': 3
+            },
         ]
 
     # Module 8 Questions - Styling & External Resources
@@ -492,11 +942,91 @@ class Command(BaseCommand):
                 'question': 'What is the default location for static resources in Spring MVC?',
                 'options': [
                     '/resources',
+                    'All of the above',
                     '/static',
-                    '/public',
-                    'All of the above'
+                    '/public'
                 ],
-                'correct_answer': 4
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of <mvc:resources> tag?',
+                'options': [
+                    'To map static resources to URLs',
+                    'To load resources dynamically',
+                    'To validate resources',
+                    'To cache resources'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the mapping attribute in <mvc:resources> used for?',
+                'options': [
+                    'To specify URL pattern for resources',
+                    'To map resources to database',
+                    'To map resources to services',
+                    'To validate resource mapping'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the location attribute in <mvc:resources> used for?',
+                'options': [
+                    'To specify physical location of resources',
+                    'To specify URL location',
+                    'To specify database location',
+                    'To specify service location'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'How do you add CSS files to Spring MVC views?',
+                'options': [
+                    'Using <link> tag with proper resource mapping',
+                    'Using @Import annotation',
+                    'Using @Resource annotation',
+                    'Using <style> tag only'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is STS3 support in Eclipse?',
+                'options': [
+                    'Spring Testing Suite 3',
+                    'Spring Tool Suite 3 plugin for Eclipse',
+                    'Spring Template System 3',
+                    'Spring Technology Stack 3'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of ResourceHandlerRegistry?',
+                'options': [
+                    'To register database resources',
+                    'To register static resource handlers in Java config',
+                    'To register service resources',
+                    'To register validation resources'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'How do you configure static resources in Java-based configuration?',
+                'options': [
+                    'Using @ResourceHandler annotation',
+                    'Using addResourceHandlers in WebMvcConfigurer',
+                    'Using ResourceConfig class',
+                    'Using web.xml only'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the benefit of using resource mapping?',
+                'options': [
+                    'Better organization and caching of static resources',
+                    'All of the above',
+                    'Faster resource loading',
+                    'Better security'
+                ],
+                'correct_answer': 2
             },
         ]
 
@@ -507,51 +1037,101 @@ class Command(BaseCommand):
                 'question': 'Which annotation is used for validation in Spring?',
                 'options': [
                     '@Valid',
+                    'All of the above',
                     '@NotNull',
-                    '@Size',
-                    'All of the above'
+                    '@Size'
                 ],
-                'correct_answer': 4
+                'correct_answer': 2
             },
             {
                 'question': 'What is Hibernate Validator?',
                 'options': [
-                    'A validation framework',
                     'An ORM framework',
+                    'A validation framework',
                     'A database',
                     'A web framework'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'Which annotation is used to show validation errors?',
                 'options': [
-                    '<form:errors>',
                     '<errors:form>',
+                    '<form:errors>',
                     '<validation:errors>',
                     '<spring:errors>'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is ModelMap?',
                 'options': [
-                    'A simplified way to pass data to views',
                     'A database mapping',
+                    'A simplified way to pass data to views',
                     'A configuration map',
                     'A validation map'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'How do you configure error messages from properties file?',
                 'options': [
                     'Using MessageSource',
+                    'All of the above',
                     'Using ResourceBundle',
-                    'Using Properties file',
+                    'Using Properties file'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is @Valid annotation used for?',
+                'options': [
+                    'To validate forms',
+                    'To trigger validation on model object',
+                    'To validate requests',
                     'All of the above'
                 ],
-                'correct_answer': 4
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is BindingResult used for?',
+                'options': [
+                    'To bind form data',
+                    'To hold validation errors',
+                    'To bind model data',
+                    'To validate results'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What happens if validation fails in Spring MVC?',
+                'options': [
+                    'BindingResult contains errors',
+                    'Form is redisplayed with errors',
+                    'Both A and B',
+                    'Exception is thrown'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'Which annotation validates string length?',
+                'options': [
+                    '@Size',
+                    'Both A and B',
+                    '@Length',
+                    '@Min'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is @InitBinder used for?',
+                'options': [
+                    'To bind form data',
+                    'To initialize data binder',
+                    'To validate data',
+                    'To configure validation'
+                ],
+                'correct_answer': 2
             },
         ]
 
@@ -561,22 +1141,22 @@ class Command(BaseCommand):
             {
                 'question': 'What is Spring JDBC?',
                 'options': [
-                    'A JDBC abstraction framework',
                     'A database',
                     'A web framework',
+                    'A JDBC abstraction framework',
                     'A testing framework'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is a DAO?',
                 'options': [
-                    'Data Access Object',
                     'Database Access Object',
                     'Data Application Object',
+                    'Data Access Object',
                     'Database Application Object'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'Which class is used for JDBC operations in Spring?',
@@ -591,12 +1171,72 @@ class Command(BaseCommand):
             {
                 'question': 'How do you configure DataSource in XML?',
                 'options': [
-                    'Using <bean> tag with DataSource class',
                     'Using <datasource> tag',
                     'Using @DataSource annotation',
+                    'Using <bean> tag with DataSource class',
                     'Using properties file only'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the advantage of using JdbcTemplate?',
+                'options': [
+                    'Reduces boilerplate JDBC code',
+                    'Handles exceptions automatically',
+                    'All of the above',
+                    'Manages connections'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is RowMapper used for?',
+                'options': [
+                    'To map objects to rows',
+                    'To map tables',
+                    'To map database rows to objects',
+                    'To map columns'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of DriverManagerDataSource?',
+                'options': [
+                    'To manage database drivers',
+                    'To configure database',
+                    'To create DataSource for simple JDBC connections',
+                    'To validate database'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the difference between query() and queryForObject()?',
+                'options': [
+                    'queryForObject() returns list, query() returns single object',
+                    'They are identical',
+                    'query() returns list, queryForObject() returns single object',
+                    'query() is for updates, queryForObject() is for selects'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is NamedParameterJdbcTemplate?',
+                'options': [
+                    'JdbcTemplate with positional parameters',
+                    'A different JDBC framework',
+                    'JdbcTemplate with named parameters',
+                    'A database template'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of @Repository annotation in DAO?',
+                'options': [
+                    'To mark class as service',
+                    'To mark class as controller',
+                    'To mark class as repository and enable exception translation',
+                    'To mark class as component'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -606,40 +1246,100 @@ class Command(BaseCommand):
             {
                 'question': 'Which annotation is used for JDBC configuration?',
                 'options': [
-                    '@Configuration',
                     '@EnableJdbc',
                     '@JdbcConfiguration',
+                    '@Configuration',
                     'Both A and B'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What does JAAS stand for?',
                 'options': [
-                    'Java Authentication and Authorization Service',
                     'Java Application and Authorization Service',
                     'Java Authentication and Access Service',
+                    'Java Authentication and Authorization Service',
                     'Java Application and Access Service'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'Which annotation is used for repository classes?',
                 'options': [
-                    '@Repository',
                     '@Component',
                     '@Service',
+                    '@Repository',
                     'All of the above'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the difference between authentication and authorization?',
                 'options': [
-                    'Authentication verifies identity, authorization checks permissions',
                     'Authorization verifies identity, authentication checks permissions',
                     'They are the same',
+                    'Authentication verifies identity, authorization checks permissions',
                     'Authentication is for users, authorization is for admins'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'How do you configure DataSource using annotations?',
+                'options': [
+                    'Using @DataSource annotation',
+                    'Using @ConfigureDataSource',
+                    'Using @Bean method with DataSource',
+                    'Using @Resource annotation'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is @Transactional used for?',
+                'options': [
+                    'To configure transactions',
+                    'To validate transactions',
+                    'To manage database transactions',
+                    'To log transactions'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of @EnableTransactionManagement?',
+                'options': [
+                    'To enable programmatic transactions',
+                    'To enable transaction logging',
+                    'To enable declarative transaction management',
+                    'To enable transaction validation'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is a user role in Spring security context?',
+                'options': [
+                    'A user type',
+                    'A user category',
+                    'A permission level assigned to a user',
+                    'A user group'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of addUser functionality?',
+                'options': [
+                    'To add new users to the system',
+                    'To add user roles',
+                    'To add user permissions',
+                    'To add user data'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is exception translation in Spring JDBC?',
+                'options': [
+                    'Converting database exceptions to Spring exceptions',
+                    'Translating error messages',
+                    'Translating SQL queries',
+                    'Translating database schemas'
                 ],
                 'correct_answer': 1
             },

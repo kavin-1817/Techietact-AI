@@ -1034,42 +1034,42 @@ class Command(BaseCommand):
             {
                 'question': 'What is a context manager?',
                 'options': [
-                    'A way to manage resources',
                     'A way to open files',
                     'A way to handle exceptions',
+                    'A way to manage resources',
                     'A way to define classes'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the with statement used for?',
                 'options': [
-                    'Context management',
                     'Exception handling',
                     'Loop control',
+                    'Context management',
                     'Function definition'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the output of: try: 1/0 except ZeroDivisionError: print("Error")',
                 'options': [
-                    'Error',
                     'ZeroDivisionError',
                     'No output',
+                    'Error',
                     'Exception'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'How do you open a file in Python?',
                 'options': [
-                    'open(filename)',
                     'file(filename)',
                     'read(filename)',
+                    'open(filename)',
                     'load(filename)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
         ]
 
@@ -1079,102 +1079,102 @@ class Command(BaseCommand):
             {
                 'question': 'What method converts a string to uppercase?',
                 'options': [
-                    'upper()',
                     'uppercase()',
                     'toUpper()',
+                    'upper()',
                     'to_upper()'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What method splits a string into a list?',
                 'options': [
-                    'split()',
                     'divide()',
                     'separate()',
+                    'split()',
                     'break()'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is f-string formatting?',
                 'options': [
-                    'A way to format strings with f prefix',
                     'A way to format strings with format()',
                     'A way to format strings with %',
+                    'A way to format strings with f prefix',
                     'A way to format strings with template'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the output of: "Hello".replace("l", "L")',
                 'options': [
-                    "'HeLLo'",
-                    "'Hello'",
-                    "'HELLO'",
-                    "'HeLlo'"
+                    'Hello',
+                    'HELLO',
+                    'HeLLo',
+                    'HeLlo'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What module is used for regular expressions?',
                 'options': [
                     'regex',
-                    're',
                     'string',
+                    're',
                     'pattern'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'What method searches for a pattern in a string?',
                 'options': [
-                    'search()',
                     'find()',
                     'match()',
+                    'search()',
                     'locate()'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the output of: "Python".find("th")',
                 'options': [
-                    '2',
                     '3',
                     '4',
+                    '2',
                     '-1'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What method joins a list of strings?',
                 'options': [
-                    'join()',
                     'combine()',
                     'merge()',
+                    'join()',
                     'concat()'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the output of: " ".join(["Hello", "World"])',
                 'options': [
-                    "'Hello World'",
-                    "'HelloWorld'",
-                    "'Hello,World'",
-                    "'Hello-World'"
+                    'HelloWorld',
+                    'Hello,World',
+                    'Hello World',
+                    'Hello-World'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What does the re.match() function do?',
                 'options': [
-                    'Matches pattern at the start of string',
                     'Matches pattern anywhere in string',
                     'Matches pattern at the end of string',
+                    'Matches pattern at the start of string',
                     'Matches all occurrences'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
         ]
 
@@ -1184,102 +1184,102 @@ class Command(BaseCommand):
             {
                 'question': 'What is an iterator?',
                 'options': [
-                    'An object that can be iterated',
                     'A function that returns values',
                     'A class',
+                    'An object that can be iterated',
                     'A module'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is an iterable?',
                 'options': [
-                    'An object that can return an iterator',
                     'An iterator',
                     'A function',
+                    'An object that can return an iterator',
                     'A class'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What keyword is used in a generator function?',
                 'options': [
                     'return',
-                    'yield',
                     'generate',
+                    'yield',
                     'produce'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'What is a generator?',
                 'options': [
-                    'A function that returns a generator object',
                     'A class',
                     'A module',
+                    'A function that returns a generator object',
                     'A variable'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the output of: [x for x in range(3)]',
                 'options': [
-                    '[0, 1, 2]',
                     '(0, 1, 2)',
                     '{0, 1, 2}',
+                    '[0, 1, 2]',
                     '0 1 2'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is a generator expression?',
                 'options': [
                     'A list comprehension',
-                    'A generator created with parentheses',
                     'A tuple comprehension',
+                    'A generator created with parentheses',
                     'A set comprehension'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'What is the output of: (x*2 for x in range(3))',
                 'options': [
                     '[0, 2, 4]',
-                    '<generator object>',
                     '(0, 2, 4)',
+                    '<generator object>',
                     '{0, 2, 4}'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'What is the advantage of generators?',
                 'options': [
-                    'Memory efficiency',
                     'Speed',
                     'Simplicity',
+                    'Memory efficiency',
                     'All of the above'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What method is used to get the next value from an iterator?',
                 'options': [
-                    'next()',
                     'get()',
                     'fetch()',
+                    'next()',
                     'retrieve()'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is a nested list comprehension?',
                 'options': [
-                    'A list comprehension inside another',
                     'A list with nested lists',
                     'A list with multiple dimensions',
+                    'A list comprehension inside another',
                     'A list with functions'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
         ]
 
@@ -1290,101 +1290,101 @@ class Command(BaseCommand):
                 'question': 'What should the first section of a Python mini project brief capture?',
                 'options': [
                     'Styling preferences for the IDE',
-                    'Problem statement, constraints, and success metrics',
                     'Names of every contributor',
+                    'Problem statement, constraints, and success metrics',
                     'Production traffic projections'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which virtual environment tool keeps isolated dependencies for quick prototypes?',
                 'options': [
                     'pip freeze',
-                    'venv',
                     'tar',
+                    'venv',
                     'pip install --upgrade'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Why run pytest at every milestone of a mini build?',
                 'options': [
                     'It guarantees 100% coverage instantly',
-                    'It provides fast regression feedback as scope evolves',
                     'It replaces code reviews',
-                    'It removes the need for documentation'
+                    'It removes the need for documentation',
+                    'It provides fast regression feedback as scope evolves'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which artifact documents quick lessons learned after each Python experiment?',
                 'options': [
-                    'Retrospective note in the repo',
                     'Dockerfile',
                     'requirements.txt',
-                    'Procfile'
+                    'Procfile',
+                    'Retrospective note in the repo'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is the benefit of keeping mini projects under two weeks of effort?',
                 'options': [
                     'They become easier to forget',
-                    'They surface gaps early without large rewrites',
                     'They remove the need for planning',
-                    'They satisfy compliance requirements'
+                    'They satisfy compliance requirements',
+                    'They surface gaps early without large rewrites'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which tool automates formatting for quick-read diffs in a Python mini project?',
                 'options': [
-                    'Black',
                     'curl',
                     'dig',
-                    'scp'
+                    'scp',
+                    'Black'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'How can you collect asynchronous feedback during a scoped experiment?',
                 'options': [
                     'Push directly to main without review',
-                    'Open draft pull requests with checklists',
                     'Wait for a quarterly meeting',
-                    'Email zipped source code'
+                    'Email zipped source code',
+                    'Open draft pull requests with checklists'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which dependency file should be pinned for reproducible exercises?',
                 'options': [
                     'README.md',
-                    'poetry.lock or requirements.txt',
                     'CONTRIBUTING.md',
-                    'LICENSE'
+                    'LICENSE',
+                    'poetry.lock or requirements.txt'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What is a lightweight way to track scope changes mid-project?',
                 'options': [
                     'Tagging releases hourly',
-                    'Updating the project Kanban cards and notes',
                     'Renaming the repo',
-                    'Rewriting the Git history'
+                    'Rewriting the Git history',
+                    'Updating the project Kanban cards and notes'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'When should a Python mini project graduate into a larger initiative?',
                 'options': [
                     'After it reaches 10k lines of code',
-                    'When the experiment validates user value worth scaling',
                     'Once the CI pipeline fails',
-                    'When the repo receives two stars'
+                    'When the repo receives two stars',
+                    'When the experiment validates user value worth scaling'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
         ]
 
@@ -1394,102 +1394,102 @@ class Command(BaseCommand):
             {
                 'question': 'Which framework pairing best suits a Python API plus background worker architecture?',
                 'options': [
-                    'FastAPI with Celery/RQ',
                     'Tkinter with Paramiko',
                     'Flask with Bash scripts only',
-                    'Django templates without views'
+                    'Django templates without views',
+                    'FastAPI with Celery/RQ'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'Why run mypy and ruff in CI for production Python services?',
                 'options': [
                     'They optimize SQL queries automatically',
-                    'They enforce typing and linting to prevent regressions',
                     'They deploy to Kubernetes',
-                    'They generate changelog entries'
+                    'They generate changelog entries',
+                    'They enforce typing and linting to prevent regressions'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What is the purpose of a health probe endpoint in a FastAPI service?',
                 'options': [
                     'Render dashboards',
-                    'Provide liveness/readiness signals to orchestrators',
                     'Store secrets',
-                    'Replace authentication'
+                    'Replace authentication',
+                    'Provide liveness/readiness signals to orchestrators'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which file typically defines Python dependency metadata for Docker builds?',
                 'options': [
                     'docker-compose.yml',
-                    'pyproject.toml or requirements.txt',
                     'README.md',
-                    'alembic.ini'
+                    'alembic.ini',
+                    'pyproject.toml or requirements.txt'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What does OpenTelemetry instrumentation enable in an end-to-end pipeline?',
                 'options': [
                     'Static code analysis',
-                    'Cross-service tracing and metrics correlation',
                     'Secret rotation',
-                    'Unit test discovery'
+                    'Unit test discovery',
+                    'Cross-service tracing and metrics correlation'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which storage strategy helps maintain schema compatibility over time?',
                 'options': [
                     'Applying migrations only in production',
-                    'Versioned migrations with Alembic or Django Migrations',
                     'Editing tables manually',
-                    'Dropping the database on every deploy'
+                    'Dropping the database on every deploy',
+                    'Versioned migrations with Alembic or Django Migrations'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Why include contract tests between FastAPI and a frontend client?',
                 'options': [
                     'Ensure UI colors match brand guidelines',
-                    'Validate that payload shapes stay backward compatible',
                     'Reduce logging noise',
-                    'Speed up database writes'
+                    'Speed up database writes',
+                    'Validate that payload shapes stay backward compatible'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What is a safe rollout strategy for Python services consuming third-party APIs?',
                 'options': [
                     'Deploy to 100% instantly',
-                    'Use staged traffic (canary) with feature flags',
                     'Disable retries entirely',
-                    'Ignore rate limits'
+                    'Ignore rate limits',
+                    'Use staged traffic (canary) with feature flags'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which command builds a deterministic container image for deployment?',
                 'options': [
-                    'docker build -t service:latest .',
                     'pip install -r requirements.txt',
                     'pytest',
-                    'git merge origin/main'
+                    'git merge origin/main',
+                    'docker build -t service:latest .'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'Why capture runbooks alongside Terraform or deployment manifests?',
                 'options': [
                     'They boost test coverage',
-                    'They explain recovery steps for on-call engineers',
                     'They replace CI pipelines',
-                    'They remove the need for monitoring'
+                    'They remove the need for monitoring',
+                    'They explain recovery steps for on-call engineers'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
         ]
 
@@ -1500,81 +1500,81 @@ class Command(BaseCommand):
                 'question': 'Which Python feature is most persuasive when explaining algorithm choices in interviews?',
                 'options': [
                     'Global interpreter lock trivia',
-                    'Time/space trade-offs using built-in data structures',
                     'Terminal color customization',
-                    'Knowledge of every PEP number'
+                    'Knowledge of every PEP number',
+                    'Time/space trade-offs using built-in data structures'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What is the primary goal of walking through edge cases before coding?',
                 'options': [
                     'Impress the interviewer with syntax',
-                    'Validate understanding of constraints and failure modes',
                     'Shorten the interview time',
-                    'Avoid writing tests'
+                    'Avoid writing tests',
+                    'Validate understanding of constraints and failure modes'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which technique keeps Python whiteboard solutions testable?',
                 'options': [
                     'Hard-coding stdin reads',
-                    'Writing pure functions with clear inputs/outputs',
                     'Mutating global state frequently',
-                    'Avoiding helper functions'
+                    'Avoiding helper functions',
+                    'Writing pure functions with clear inputs/outputs'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'How can you showcase familiarity with concurrency in system design interviews?',
                 'options': [
-                    'Discuss asyncio, Celery, or multiprocessing trade-offs',
                     'Draw a desktop UI mock',
                     'Share screenshot of htop',
-                    'Talk about CSS frameworks'
+                    'Talk about CSS frameworks',
+                    'Discuss asyncio, Celery, or multiprocessing trade-offs'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What makes STAR stories compelling for behavioral rounds?',
                 'options': [
-                    'They provide structured context, actions, and measurable results',
                     'They repeat the resume verbatim',
                     'They only discuss setbacks',
-                    'They rely on jargon'
+                    'They rely on jargon',
+                    'They provide structured context, actions, and measurable results'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'Why keep a post-interview notebook?',
                 'options': [
                     'Record coding shortcuts',
-                    'Capture questions asked, feedback themes, and follow-up notes',
                     'Document IDE settings',
-                    'Track company stock prices'
+                    'Track company stock prices',
+                    'Capture questions asked, feedback themes, and follow-up notes'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What is a strong opening question to clarify during a system design interview?',
                 'options': [
                     'Favorite office snack',
-                    'Expected scale: QPS, users, data retention',
                     'Number of interviewers',
-                    'Vacation policy'
+                    'Vacation policy',
+                    'Expected scale: QPS, users, data retention'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'How should you respond when stuck during a coding round?',
                 'options': [
                     'Stay silent until you finish',
-                    'Verbalize your thought process and consider alternative strategies',
                     'Ask for the solution',
-                    'Change the question'
+                    'Change the question',
+                    'Verbalize your thought process and consider alternative strategies'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Why is benchmarking important for Python interview take-home tasks?',

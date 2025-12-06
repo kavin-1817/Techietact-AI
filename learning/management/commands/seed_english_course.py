@@ -619,41 +619,41 @@ class Command(BaseCommand):
                 'question': 'Which sentence expresses obligation?',
                 'options': [
                     'You can go now.',
-                    'You must go now.',
                     'You might go now.',
+                    'You must go now.',
                     'You could go now.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which is a zero conditional sentence?',
                 'options': [
                     'If it rains, I will stay home.',
-                    'If it rains, I stay home.',
                     'If it rained, I would stay home.',
+                    'If it rains, I stay home.',
                     'If it had rained, I would have stayed home.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which is a first conditional sentence?',
                 'options': [
                     'If it rains, I stay home.',
-                    'If it rains, I will stay home.',
                     'If it rained, I would stay home.',
+                    'If it rains, I will stay home.',
                     'If it had rained, I would have stayed home.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which is a second conditional sentence?',
                 'options': [
                     'If I have time, I will help you.',
-                    'If I had time, I would help you.',
                     'If I had had time, I would have helped you.',
+                    'If I had time, I would help you.',
                     'If I have time, I help you.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which is a third conditional sentence?',
@@ -669,31 +669,31 @@ class Command(BaseCommand):
                 'question': 'Which sentence expresses ability in the past?',
                 'options': [
                     'I can swim.',
-                    'I could swim when I was young.',
                     'I must swim.',
+                    'I could swim when I was young.',
                     'I should swim.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which sentence is a polite request?',
                 'options': [
                     'Give me the book!',
-                    'Could you give me the book?',
                     'You must give me the book.',
+                    'Could you give me the book?',
                     'You should give me the book.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which sentence expresses advice?',
                 'options': [
                     'You can study hard.',
-                    'You should study hard.',
                     'You must study hard.',
+                    'You should study hard.',
                     'You will study hard.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which sentence expresses certainty?',
@@ -714,11 +714,11 @@ class Command(BaseCommand):
                 'question': 'Which sentence is in passive voice?',
                 'options': [
                     'The cat chased the mouse.',
-                    'The mouse was chased by the cat.',
                     'The cat is chasing the mouse.',
+                    'The mouse was chased by the cat.',
                     'The cat will chase the mouse.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Convert to passive: "They built this house."',
@@ -744,11 +744,11 @@ class Command(BaseCommand):
                 'question': 'Which sentence is in passive voice?',
                 'options': [
                     'She teaches English.',
-                    'English is taught by her.',
                     'She is teaching English.',
+                    'English is taught by her.',
                     'She will teach English.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Convert to passive: "Someone stole my bike."',
@@ -794,11 +794,11 @@ class Command(BaseCommand):
                 'question': 'Which sentence is in active voice?',
                 'options': [
                     'The problem was solved by the team.',
-                    'The team solved the problem.',
                     'The problem is being solved.',
+                    'The team solved the problem.',
                     'The problem has been solved.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Convert to passive: "She will finish the work."',
@@ -819,21 +819,21 @@ class Command(BaseCommand):
                 'question': 'Convert to indirect speech: "I am tired," he said.',
                 'options': [
                     'He said that he is tired.',
-                    'He said that he was tired.',
                     'He said that he will be tired.',
+                    'He said that he was tired.',
                     'He said that he has been tired.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Convert to indirect speech: "I will help you," she said.',
                 'options': [
                     'She said that she will help me.',
-                    'She said that she would help me.',
                     'She said that she helps me.',
+                    'She said that she would help me.',
                     'She said that she helped me.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Convert to indirect speech: "What is your name?" he asked.',
@@ -849,41 +849,41 @@ class Command(BaseCommand):
                 'question': 'Convert to indirect speech: "Do you like coffee?" she asked.',
                 'options': [
                     'She asked if I like coffee.',
-                    'She asked if I liked coffee.',
                     'She asked do I like coffee.',
+                    'She asked if I liked coffee.',
                     'She asked that I like coffee.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Convert to indirect speech: "Come here," he said.',
                 'options': [
                     'He said to come here.',
-                    'He told me to come here.',
                     'He said come here.',
+                    'He told me to come here.',
                     'He told that come here.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Convert to indirect speech: "I have finished," she said.',
                 'options': [
                     'She said that she has finished.',
-                    'She said that she had finished.',
                     'She said that she finished.',
+                    'She said that she had finished.',
                     'She said that she is finished.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Convert to indirect speech: "Where do you live?" he asked.',
                 'options': [
                     'He asked where I live.',
-                    'He asked where I lived.',
                     'He asked where do I live.',
-                    'He asked where did I live.'
+                    'He asked where did I live.',
+                    'He asked where I lived.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Convert to indirect speech: "Don\'t go there," she said.',
@@ -900,20 +900,20 @@ class Command(BaseCommand):
                 'options': [
                     'He said that he is studying.',
                     'He said that he was studying.',
-                    'He said that he had been studying.',
-                    'He said that he studies.'
+                    'He said that he studies.',
+                    'He said that he had been studying.'
                 ],
-                'correct_answer': 3
+                'correct_answer': 4
             },
             {
                 'question': 'Convert to indirect speech: "Can you help me?" she asked.',
                 'options': [
                     'She asked if I can help her.',
-                    'She asked if I could help her.',
                     'She asked can I help her.',
-                    'She asked that I can help her.'
+                    'She asked that I can help her.',
+                    'She asked if I could help her.'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
         ]
 
@@ -925,50 +925,50 @@ class Command(BaseCommand):
                 'options': [
                     'sad',
                     'angry',
-                    'joyful',
-                    'tired'
+                    'tired',
+                    'joyful'
                 ],
-                'correct_answer': 3
+                'correct_answer': 4
             },
             {
                 'question': 'What is an antonym for "big"?',
                 'options': [
                     'large',
                     'huge',
-                    'small',
-                    'enormous'
+                    'enormous',
+                    'small'
                 ],
-                'correct_answer': 3
+                'correct_answer': 4
             },
             {
                 'question': 'What does the idiom "break the ice" mean?',
                 'options': [
                     'To make something cold',
-                    'To start a conversation',
                     'To break something',
-                    'To freeze something'
+                    'To freeze something',
+                    'To start a conversation'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What does the phrasal verb "give up" mean?',
                 'options': [
                     'To give something',
-                    'To stop trying',
                     'To give away',
-                    'To give back'
+                    'To give back',
+                    'To stop trying'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which prefix means "not" or "opposite"?',
                 'options': [
                     'pre-',
-                    'un-',
                     're-',
-                    'dis-'
+                    'dis-',
+                    'un-'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which suffix forms a noun meaning "the act of"?',
@@ -994,31 +994,31 @@ class Command(BaseCommand):
                 'question': 'What is a collocation?',
                 'options': [
                     'Words that sound the same',
-                    'Words that are often used together',
                     'Words with opposite meanings',
-                    'Words with similar meanings'
+                    'Words with similar meanings',
+                    'Words that are often used together'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What does the phrasal verb "look after" mean?',
                 'options': [
                     'To look behind',
-                    'To take care of',
                     'To look for',
-                    'To look at'
+                    'To look at',
+                    'To take care of'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which word formation process creates "unhappiness" from "happy"?',
                 'options': [
                     'Compounding',
-                    'Derivation (prefix + suffix)',
                     'Conversion',
-                    'Blending'
+                    'Blending',
+                    'Derivation (prefix + suffix)'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
         ]
 
@@ -1030,10 +1030,10 @@ class Command(BaseCommand):
                 'options': [
                     'about',
                     'above',
-                    'begin',
-                    'before'
+                    'before',
+                    'begin'
                 ],
-                'correct_answer': 3
+                'correct_answer': 4
             },
             {
                 'question': 'Which pair are homophones?',
@@ -1060,10 +1060,10 @@ class Command(BaseCommand):
                 'options': [
                     'I',
                     'want',
-                    'GO',
-                    'there'
+                    'there',
+                    'GO'
                 ],
-                'correct_answer': 3
+                'correct_answer': 4
             },
             {
                 'question': 'Which word has a different vowel sound?',
@@ -1079,21 +1079,21 @@ class Command(BaseCommand):
                 'question': 'What is intonation?',
                 'options': [
                     'The rhythm of speech',
-                    'The rise and fall of voice pitch',
                     'The speed of speech',
-                    'The volume of speech'
+                    'The volume of speech',
+                    'The rise and fall of voice pitch'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which sentence has rising intonation?',
                 'options': [
                     'I am happy.',
-                    'Are you happy?',
                     'I am not happy.',
-                    'She is happy.'
+                    'She is happy.',
+                    'Are you happy?'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which letter is silent in "honest"?',
@@ -1119,11 +1119,11 @@ class Command(BaseCommand):
                 'question': 'Which word has the stress on the second syllable?',
                 'options': [
                     'happy',
-                    'teacher',
                     'student',
-                    'begin'
+                    'begin',
+                    'teacher'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
         ]
 
@@ -1134,11 +1134,11 @@ class Command(BaseCommand):
                 'question': 'Which phrase is appropriate for starting a conversation?',
                 'options': [
                     'What do you want?',
-                    'How are you doing?',
                     'Tell me everything.',
-                    'I need to talk.'
+                    'I need to talk.',
+                    'How are you doing?'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which phrase expresses agreement?',
@@ -1164,21 +1164,24 @@ class Command(BaseCommand):
                 'question': 'Which phrase is appropriate for asking for clarification?',
                 'options': [
                     'What?',
-                    'I don\'t understand.',
-                    'Could you repeat that, please?',
-                    'Say it again!'
+                    'I don\',
+                    ',
+                    ',
+                    ',
+                    '
                 ],
-                'correct_answer': 3
+                'correct_answer': 4
             },
             {
                 'question': 'Which phrase expresses an opinion politely?',
                 'options': [
                     'You are wrong.',
-                    'I think...',
-                    'That\'s stupid.',
-                    'No way!'
+                    'That\',
+                    ',
+                    ',
+                    'I think...'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which connector is used to add information?',

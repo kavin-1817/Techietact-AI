@@ -205,6 +205,46 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 4
             },
+            {
+                'question': 'What are the main principles of REST?',
+                'options': [
+                    'Stateless, resource-based, uniform interface',
+                    'Stateful, action-based, custom interface',
+                    'Stateless, action-based, uniform interface',
+                    'Stateful, resource-based, custom interface'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What HTTP status code indicates successful creation?',
+                'options': [
+                    '200 OK',
+                    '201 Created',
+                    '204 No Content',
+                    '202 Accepted'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of HTTP verbs in REST?',
+                'options': [
+                    'To indicate the operation to perform on a resource',
+                    'To indicate the resource type',
+                    'To indicate the response format',
+                    'To indicate the request format'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which HTTP method is used to retrieve a resource?',
+                'options': [
+                    'GET',
+                    'POST',
+                    'PUT',
+                    'DELETE'
+                ],
+                'correct_answer': 1
+            },
         ]
 
     # Module 2 Questions - Setting Up JAX-RS
@@ -260,6 +300,56 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 2
             },
+            {
+                'question': 'What is the purpose of @ApplicationPath annotation?',
+                'options': [
+                    'To define the base path for all REST resources',
+                    'To define a specific resource path',
+                    'To define query parameters',
+                    'To define path parameters'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which class must extend Application in JAX-RS?',
+                'options': [
+                    'ResourceConfig (Jersey)',
+                    'Application class',
+                    'Both A and B',
+                    'WebApplication'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of @Produces annotation?',
+                'options': [
+                    'To specify the media type of the request',
+                    'To specify the media type of the response',
+                    'To specify the resource path',
+                    'To specify query parameters'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of @Consumes annotation?',
+                'options': [
+                    'To specify the media type of the response',
+                    'To specify the media type of the request',
+                    'To specify the resource path',
+                    'To specify path parameters'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'Which annotation is used to extract query parameters?',
+                'options': [
+                    '@PathParam',
+                    '@QueryParam',
+                    '@FormParam',
+                    '@HeaderParam'
+                ],
+                'correct_answer': 2
+            },
         ]
 
     # Module 3 Questions - Database Connectivity using Hibernate
@@ -268,42 +358,102 @@ class Command(BaseCommand):
             {
                 'question': 'What is the purpose of a Service layer?',
                 'options': [
-                    'To contain business logic',
                     'To handle database operations',
+                    'To contain business logic',
                     'To manage HTTP requests',
                     'To format responses'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is the purpose of a DAO layer?',
                 'options': [
-                    'To handle database operations',
                     'To contain business logic',
+                    'To handle database operations',
                     'To manage HTTP requests',
                     'To format responses'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'Which annotation is used to produce JSON response?',
                 'options': [
-                    '@Produces(MediaType.APPLICATION_JSON)',
                     '@JSON',
+                    '@Produces(MediaType.APPLICATION_JSON)',
                     '@ResponseType(JSON)',
                     '@Format(JSON)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'Which annotation is used to consume JSON request?',
                 'options': [
-                    '@Consumes(MediaType.APPLICATION_JSON)',
                     '@JSON',
+                    '@Consumes(MediaType.APPLICATION_JSON)',
                     '@RequestType(JSON)',
                     '@Format(JSON)'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of Response class in JAX-RS?',
+                'options': [
+                    'To build HTTP requests',
+                    'To build HTTP responses with status codes and headers',
+                    'To validate responses',
+                    'To format responses'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'How do you return a 404 Not Found response?',
+                'options': [
+                    'Response.status(404).build()',
+                    'Response.notFound().build()',
+                    'Both A and B',
+                    'Response.error(404).build()'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of Entity class in JAX-RS?',
+                'options': [
+                    'To represent database entities',
+                    'To represent request/response body',
+                    'To represent HTTP entities',
+                    'To represent REST entities'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of MessageBodyWriter?',
+                'options': [
+                    'To convert HTTP request body to Java objects',
+                    'To convert Java objects to HTTP response body',
+                    'To write messages',
+                    'To read messages'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of MessageBodyReader?',
+                'options': [
+                    'To convert Java objects to HTTP response body',
+                    'To read messages',
+                    'To convert HTTP request body to Java objects',
+                    'To write messages'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of @Context annotation?',
+                'options': [
+                    'To define context path',
+                    'To set context variables',
+                    'To inject JAX-RS context objects',
+                    'To get context information'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -323,62 +473,92 @@ class Command(BaseCommand):
             {
                 'question': 'What is ManyToOne mapping in Hibernate?',
                 'options': [
-                    'Many entities related to one entity',
                     'One entity related to many entities',
                     'Many-to-many relationship',
+                    'Many entities related to one entity',
                     'One-to-one relationship'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is a Filter in JAX-RS?',
                 'options': [
-                    'A component that intercepts requests and responses',
                     'A database filter',
                     'A query filter',
+                    'A component that intercepts requests and responses',
                     'A response filter only'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'Which annotation is used to extract header parameters?',
                 'options': [
-                    '@HeaderParam',
                     '@PathParam',
                     '@QueryParam',
+                    '@HeaderParam',
                     '@CookieParam'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'Which annotation is used to extract cookie parameters?',
                 'options': [
-                    '@CookieParam',
                     '@HeaderParam',
                     '@PathParam',
+                    '@CookieParam',
                     '@QueryParam'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is an Exception Mapper?',
                 'options': [
-                    'A component that maps exceptions to HTTP responses',
                     'A database exception handler',
                     'A validation exception',
+                    'A component that maps exceptions to HTTP responses',
                     'A runtime exception'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is URI Builder used for?',
                 'options': [
-                    'To build URIs programmatically',
                     'To parse URIs',
                     'To validate URIs',
+                    'To build URIs programmatically',
                     'To encode URIs'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the difference between ContainerRequestFilter and ContainerResponseFilter?',
+                'options': [
+                    'ResponseFilter intercepts requests, RequestFilter intercepts responses',
+                    'They are identical',
+                    'RequestFilter intercepts requests, ResponseFilter intercepts responses',
+                    'RequestFilter is for GET, ResponseFilter is for POST'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is @Priority annotation used for in filters?',
+                'options': [
+                    'To set filter priority level',
+                    'To mark high-priority filters',
+                    'To specify the order of filter execution',
+                    'To disable filters'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of @NameBinding annotation?',
+                'options': [
+                    'To bind resources to names',
+                    'To bind parameters to names',
+                    'To bind responses to names',
+                    'To bind filters or interceptors to specific resources'
+                ],
+                'correct_answer': 4
             },
         ]
 
@@ -388,12 +568,12 @@ class Command(BaseCommand):
             {
                 'question': 'What is a REST client?',
                 'options': [
-                    'An application that consumes REST APIs',
                     'A REST server',
                     'A database client',
-                    'A web browser'
+                    'A web browser',
+                    'An application that consumes REST APIs'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'Which class is used to build REST clients in JAX-RS?',
@@ -418,10 +598,70 @@ class Command(BaseCommand):
             {
                 'question': 'What is a wrapper class in REST context?',
                 'options': [
-                    'A class that wraps response data',
                     'A primitive wrapper',
                     'A database wrapper',
-                    'A service wrapper'
+                    'A service wrapper',
+                    'A class that wraps response data'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of Invocation.Builder?',
+                'options': [
+                    'To build responses',
+                    'To build clients',
+                    'To build targets',
+                    'To build and configure HTTP requests'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'How do you add headers to a REST client request?',
+                'options': [
+                    'Using header() method on Invocation.Builder',
+                    'Using addHeader() method',
+                    'Using setHeader() method',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of WebTarget?',
+                'options': [
+                    'To represent a REST resource',
+                    'To represent a REST service',
+                    'To represent a REST endpoint',
+                    'To represent a target URI for REST client requests'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'How do you handle errors in REST client?',
+                'options': [
+                    'Using Response.getStatus() to check status code',
+                    'Using exception handling',
+                    'Using error handlers',
+                    'All of the above'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of AsyncInvoker in REST client?',
+                'options': [
+                    'To make asynchronous REST calls',
+                    'To make synchronous REST calls',
+                    'To validate REST calls',
+                    'To log REST calls'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the difference between sync and async REST client calls?',
+                'options': [
+                    'Sync blocks until response, async returns immediately',
+                    'Async blocks until response, sync returns immediately',
+                    'They are identical',
+                    'Sync is for GET, async is for POST'
                 ],
                 'correct_answer': 1
             },

@@ -131,11 +131,11 @@
     }
     .module-locked {
         opacity: 0.6;
-        cursor: not-allowed !important;
+        cursor: pointer !important;
         position: relative;
     }
     .module-locked:hover {
-        transform: none !important;
+        transform: scale(1.02) !important;
     }
     .module-lock-badge {
         display: inline-flex;
@@ -258,6 +258,391 @@
         .btn-enroll-course {
             width: 100%;
             justify-content: center;
+        }
+    }
+
+    /* Locked Module Modal Styles - Modern & Futuristic */
+    .locked-module-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(20, 20, 30, 0.85) 100%);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        padding: 5rem 1rem 2rem;
+        animation: fadeInModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow-y: auto;
+    }
+
+    @keyframes fadeInModal {
+        from {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+        }
+        to {
+            opacity: 1;
+            backdrop-filter: blur(12px) saturate(180%);
+        }
+    }
+
+    .locked-module-modal-content {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 250, 255, 0.95) 100%);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 32px 64px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+            0 0 80px rgba(255, 153, 0, 0.15);
+        max-width: 500px;
+        width: 100%;
+        max-height: calc(100vh - 8rem);
+        overflow-y: auto;
+        animation: slideUpModal 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        margin: auto;
+        overflow: hidden;
+    }
+
+    .locked-module-modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(255, 153, 0, 0.8) 25%, 
+            rgba(255, 119, 0, 1) 50%, 
+            rgba(255, 153, 0, 0.8) 75%, 
+            transparent 100%);
+        animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% {
+            transform: translateX(-100%);
+        }
+        50% {
+            transform: translateX(100%);
+        }
+    }
+
+    @keyframes slideUpModal {
+        from {
+            transform: translateY(30px) scale(0.92) rotateX(5deg);
+            opacity: 0;
+            filter: blur(10px);
+        }
+        to {
+            transform: translateY(0) scale(1) rotateX(0deg);
+            opacity: 1;
+            filter: blur(0);
+        }
+    }
+
+    .locked-module-modal-header {
+        background: linear-gradient(135deg, 
+            #ff9900 0%, 
+            #ff7700 50%, 
+            #ff6600 100%);
+        padding: 2rem 1.75rem 1.75rem;
+        text-align: center;
+        position: relative;
+        color: #000000;
+        border-radius: 24px 24px 0 0;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(255, 153, 0, 0.3);
+    }
+
+    .locked-module-modal-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+        animation: rotateGradient 8s linear infinite;
+    }
+
+    @keyframes rotateGradient {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .lock-icon-large {
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+        color: #000000;
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+        animation: lockPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes lockPulse {
+        0%, 100% {
+            transform: scale(1) rotate(0deg);
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+        }
+        25% {
+            transform: scale(1.08) rotate(-2deg);
+            filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.3));
+        }
+        50% {
+            transform: scale(1.05) rotate(2deg);
+            filter: drop-shadow(0 8px 20px rgba(255, 153, 0, 0.4));
+        }
+        75% {
+            transform: scale(1.08) rotate(-2deg);
+            filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.3));
+        }
+    }
+
+    .locked-module-modal-header h2 {
+        font-size: 1.65rem;
+        font-weight: 800;
+        margin: 0;
+        color: #000000;
+        letter-spacing: -0.03em;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .modal-close-btn {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.25rem;
+        background: rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        color: #000000;
+        z-index: 2;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-close-btn:hover {
+        background: rgba(0, 0, 0, 0.25);
+        transform: rotate(90deg) scale(1.15);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .locked-module-modal-body {
+        padding: 2rem 1.75rem;
+        color: #1a1a1a;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(250, 250, 255, 0.98));
+    }
+
+    .warning-message {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        color: #1f2937;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .previous-module-details {
+        background: linear-gradient(135deg, 
+            rgba(255, 247, 237, 0.95) 0%, 
+            rgba(255, 237, 213, 0.98) 50%,
+            rgba(255, 229, 200, 0.95) 100%);
+        backdrop-filter: blur(10px);
+        border: 1.5px solid rgba(255, 153, 0, 0.3);
+        border-left: 4px solid;
+        border-image: linear-gradient(135deg, #ff9900, #ff7700) 1;
+        padding: 1.25rem 1.5rem;
+        border-radius: 16px;
+        margin-top: 1.25rem;
+        box-shadow: 
+            0 8px 24px rgba(255, 153, 0, 0.15),
+            0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+            0 4px 12px rgba(255, 153, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .previous-module-details::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+            rgba(255, 153, 0, 0.05) 0%, 
+            transparent 50%);
+        pointer-events: none;
+    }
+
+    .previous-module-details p {
+        margin: 0.5rem 0;
+        color: #1f2937;
+        font-size: 0.95rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .previous-module-details p:first-child {
+        margin-top: 0;
+    }
+
+    .previous-module-details strong {
+        color: #000000;
+        font-weight: 700;
+        background: linear-gradient(135deg, #000000, #1a1a1a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .instruction-text {
+        font-size: 0.9rem;
+        color: #4b5563;
+        margin-top: 0.75rem;
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
+        font-style: italic;
+    }
+
+    .locked-module-modal-footer {
+        padding: 1.5rem 1.75rem;
+        background: linear-gradient(to top, 
+            rgba(250, 250, 250, 0.98) 0%, 
+            rgba(255, 255, 255, 0.95) 100%);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: flex-end;
+        border-top: 1px solid rgba(229, 231, 235, 0.5);
+        border-radius: 0 0 24px 24px;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .modal-ok-btn {
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        background-size: 200% 200%;
+        color: #ffffff;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 
+            0 4px 16px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+            0 0 20px rgba(0, 0, 0, 0.2);
+        letter-spacing: 0.02em;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .modal-ok-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.2), 
+            transparent);
+        transition: left 0.5s ease;
+    }
+
+    .modal-ok-btn:hover {
+        background-position: 100% 0;
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 
+            0 8px 24px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+            0 0 30px rgba(255, 153, 0, 0.3);
+    }
+
+    .modal-ok-btn:hover::before {
+        left: 100%;
+    }
+
+    .modal-ok-btn:active {
+        transform: translateY(0) scale(1.02);
+    }
+
+
+    @media (max-width: 768px) {
+        .locked-module-modal {
+            padding: 4rem 1rem 1.5rem;
+        }
+
+        .locked-module-modal-content {
+            max-width: 92%;
+            max-height: calc(100vh - 6rem);
+            border-radius: 20px;
+        }
+
+        .locked-module-modal-header {
+            padding: 1.5rem 1.5rem 1.25rem;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .lock-icon-large {
+            font-size: 2.5rem;
+        }
+
+        .locked-module-modal-header h2 {
+            font-size: 1.4rem;
+        }
+
+        .locked-module-modal-body {
+            padding: 1.75rem 1.5rem;
+        }
+
+        .warning-message {
+            font-size: 1rem;
+        }
+
+        .previous-module-details {
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+        }
+
+        .locked-module-modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .modal-ok-btn {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
         }
     }
 

@@ -234,10 +234,29 @@
     color: rgba(0, 0, 0, 0.5) !important;
 }
 
+/* Override browser autofill styles - completely transparent, no marks */
+.auth-control:-webkit-autofill,
+.auth-control:-webkit-autofill:hover,
+.auth-control:-webkit-autofill:focus,
+.auth-control:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-text-fill-color: #000000 !important;
+    background-color: transparent !important;
+    background-clip: content-box !important;
+    transition: background-color 5000s ease-in-out 0s, -webkit-box-shadow 5000s ease-in-out 0s;
+    caret-color: #000000 !important;
+    border: none !important;
+    outline: none !important;
+}
+
 .input-shell:focus-within {
     background: rgba(255, 153, 0, 0.15);
     border-color: rgba(255, 153, 0, 0.65);
     box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.12);
+}
+
+.input-shell:focus-within .auth-control:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
 }
 
 .auth-button {
@@ -300,6 +319,25 @@
 
 [data-theme="light"] .auth-control::placeholder {
     color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Override browser autofill styles for light theme - completely transparent, no marks */
+[data-theme="light"] .auth-control:-webkit-autofill,
+[data-theme="light"] .auth-control:-webkit-autofill:hover,
+[data-theme="light"] .auth-control:-webkit-autofill:focus,
+[data-theme="light"] .auth-control:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-color: transparent !important;
+    background-clip: content-box !important;
+    transition: background-color 5000s ease-in-out 0s, -webkit-box-shadow 5000s ease-in-out 0s;
+    caret-color: #ffffff !important;
+    border: none !important;
+    outline: none !important;
+}
+
+[data-theme="light"] .input-shell:focus-within .auth-control:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
 }
 
 [data-theme="light"] .toggle-visibility:hover {

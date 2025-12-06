@@ -45,7 +45,7 @@
                     <div class="enrollment-prompt">
                         <a href="{% url 'login' %}" class="btn-enroll-course">
                             <i class="bi bi-box-arrow-in-right"></i>
-                            <span>Login to Enroll</span>
+                            <span>Login</span>
                         </a>
                         <p class="enrollment-message">Please login to enroll in this course and access the modules.</p>
                     </div>
@@ -55,8 +55,19 @@
         <div class="modules-grid">
             {% for module in modules %}
             {% with is_unlocked=module_status|get_item:module.id %}
+            {% with prev_module=previous_module_info|get_item:module.id %}
             <div class="module-card {% if not is_unlocked %}module-locked{% endif %}" 
-                 {% if not is_unlocked %}style="cursor: not-allowed;"{% endif %}>
+                 {% if not is_unlocked %}
+                 data-module-locked="true"
+                 data-module-title="{{ module.title }}"
+                 data-module-order="{{ module.order }}"
+                 {% if prev_module %}
+                 data-prev-module-id="{{ prev_module.id }}"
+                 data-prev-module-title="{{ prev_module.title }}"
+                 data-prev-module-order="{{ prev_module.order }}"
+                 data-prev-module-has-quiz="{{ prev_module.has_quiz|yesno:'true,false' }}"
+                 {% endif %}
+                 {% endif %}>
                 <div class="module-order">{{ module.order }}</div>
                 <h2>{{ module.title }}</h2>
                 <p>{{ module.summary|truncatewords:35 }}</p>
@@ -103,6 +114,7 @@
                 {% endif %}
             </div>
             {% endwith %}
+            {% endwith %}
             {% empty %}
             <div class="module-card">
                 <div class="module-order">—</div>
@@ -113,6 +125,104 @@
         </div>
     </div>
 </div>
+
+<!-- Locked Module Warning Modal -->
+<div id="lockedModuleModal" class="locked-module-modal">
+    <div class="locked-module-modal-content">
+        <div class="locked-module-modal-header">
+            <div class="lock-icon-large">
+                <i class="bi bi-lock-fill"></i>
+            </div>
+            <h2>Module Locked</h2>
+            <button class="modal-close-btn" id="closeModalBtn" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="locked-module-modal-body">
+            <p class="warning-message" id="warningMessage">
+                This module is currently locked. You need to complete the previous module's quiz to unlock it.
+            </p>
+            <div class="previous-module-details" id="previousModuleDetails" style="display: none;">
+                <p><strong>Previous Module:</strong> <span id="prevModuleTitle"></span></p>
+                <p class="instruction-text">Please complete the quiz for the previous module with a passing score to unlock this module.</p>
+            </div>
+        </div>
+        <div class="locked-module-modal-footer">
+            <button class="modal-ok-btn" id="okModalBtn">Got it</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('lockedModuleModal');
+    const closeBtn = document.getElementById('closeModalBtn');
+    const okBtn = document.getElementById('okModalBtn');
+    const lockedModules = document.querySelectorAll('.module-card[data-module-locked="true"]');
+    
+    // Function to show modal
+    function showModal(moduleTitle, moduleOrder, prevModuleTitle, prevModuleOrder, prevModuleId, prevModuleHasQuiz) {
+        const warningMessage = document.getElementById('warningMessage');
+        const prevModuleDetails = document.getElementById('previousModuleDetails');
+        const prevModuleTitleSpan = document.getElementById('prevModuleTitle');
+        
+        if (prevModuleTitle) {
+            warningMessage.textContent = `Module ${moduleOrder}: "${moduleTitle}" is currently locked.`;
+            prevModuleTitleSpan.textContent = `Module ${prevModuleOrder}: ${prevModuleTitle}`;
+            prevModuleDetails.style.display = 'block';
+        } else {
+            warningMessage.textContent = `Module ${moduleOrder}: "${moduleTitle}" is currently locked. Please complete the previous module's quiz to unlock it.`;
+            prevModuleDetails.style.display = 'none';
+        }
+        
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Function to hide modal
+    function hideModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    
+    // Add click event to locked modules
+    lockedModules.forEach(function(moduleCard) {
+        moduleCard.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const moduleTitle = this.getAttribute('data-module-title');
+            const moduleOrder = this.getAttribute('data-module-order');
+            const prevModuleId = this.getAttribute('data-prev-module-id');
+            const prevModuleTitle = this.getAttribute('data-prev-module-title');
+            const prevModuleOrder = this.getAttribute('data-prev-module-order');
+            const prevModuleHasQuiz = this.getAttribute('data-prev-module-has-quiz') === 'true';
+            
+            showModal(moduleTitle, moduleOrder, prevModuleTitle, prevModuleOrder, prevModuleId, prevModuleHasQuiz);
+        });
+    });
+    
+    // Close modal events
+    closeBtn.addEventListener('click', hideModal);
+    okBtn.addEventListener('click', hideModal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            hideModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'flex') {
+            hideModal();
+        }
+    });
+});
+</script>
 {% endblock %}
 
 

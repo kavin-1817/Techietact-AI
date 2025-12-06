@@ -283,6 +283,56 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 1
             },
+            {
+                'question': 'What does JDK stand for?',
+                'options': [
+                    'Java Development Kit',
+                    'Java Deployment Kit',
+                    'Java Design Kit',
+                    'Java Debugging Kit'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What does JRE stand for?',
+                'options': [
+                    'Java Runtime Environment',
+                    'Java Runtime Engine',
+                    'Java Runtime Extension',
+                    'Java Runtime Execution'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the difference between JDK and JRE?',
+                'options': [
+                    'JDK includes development tools, JRE only includes runtime',
+                    'JRE includes development tools, JDK only includes runtime',
+                    'They are identical',
+                    'JDK is for servers, JRE is for clients'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is bytecode?',
+                'options': [
+                    'Intermediate code that JVM executes',
+                    'Source code',
+                    'Machine code',
+                    'Assembly code'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of javac command?',
+                'options': [
+                    'To compile Java source code to bytecode',
+                    'To run Java programs',
+                    'To debug Java programs',
+                    'To package Java programs'
+                ],
+                'correct_answer': 1
+            },
         ]
 
     # Module 2 Questions
@@ -315,6 +365,76 @@ class Command(BaseCommand):
                     'java',
                     'javadoc',
                     'jar'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'Which tool is used to run Java programs?',
+                'options': [
+                    'javac',
+                    'java',
+                    'javadoc',
+                    'jar'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of Eclipse IDE?',
+                'options': [
+                    'To provide integrated development environment for Java',
+                    'To compile Java code',
+                    'To run Java programs',
+                    'To debug Java programs'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is a workspace in Eclipse?',
+                'options': [
+                    'A directory where projects are stored',
+                    'A project',
+                    'A file',
+                    'A package'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of package explorer in Eclipse?',
+                'options': [
+                    'To navigate project structure',
+                    'To compile code',
+                    'To run programs',
+                    'To debug programs'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of console in Eclipse?',
+                'options': [
+                    'To display program output',
+                    'To write code',
+                    'To compile code',
+                    'To debug code'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of debugger in Eclipse?',
+                'options': [
+                    'To debug Java programs',
+                    'To compile code',
+                    'To run programs',
+                    'To format code'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the purpose of code completion in IDE?',
+                'options': [
+                    'To suggest code while typing',
+                    'To compile code',
+                    'To run code',
+                    'To debug code'
                 ],
                 'correct_answer': 1
             },
@@ -362,6 +482,66 @@ class Command(BaseCommand):
                     'Error'
                 ],
                 'correct_answer': 2
+            },
+            {
+                'question': 'What is the difference between == and equals()?',
+                'options': [
+                    '== compares references, equals() compares values',
+                    'equals() compares references, == compares values',
+                    'They are identical',
+                    '== is for primitives, equals() is for objects'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the result of: 10 / 3?',
+                'options': [
+                    '3.33',
+                    '3',
+                    '3.0',
+                    '4'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the result of: 10.0 / 3?',
+                'options': [
+                    '3',
+                    '3.33',
+                    '3.3333333333333335',
+                    '4'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the logical AND operator?',
+                'options': [
+                    '&&',
+                    '||',
+                    '!',
+                    '&'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the logical OR operator?',
+                'options': [
+                    '&&',
+                    '||',
+                    '!',
+                    '&'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the NOT operator?',
+                'options': [
+                    '&&',
+                    '||',
+                    '!',
+                    '&'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -418,6 +598,56 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 2
             },
+            {
+                'question': 'What is the syntax for a for loop?',
+                'options': [
+                    'for(initialization; condition; increment)',
+                    'for(condition; initialization; increment)',
+                    'for(increment; condition; initialization)',
+                    'for(initialization; increment; condition)'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the syntax for a while loop?',
+                'options': [
+                    'while(condition)',
+                    'while(initialization)',
+                    'while(increment)',
+                    'while(statement)'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the syntax for a do-while loop?',
+                'options': [
+                    'do { } while(condition);',
+                    'do while(condition) { }',
+                    'while(condition) do { }',
+                    'do(condition) while { }'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is a nested loop?',
+                'options': [
+                    'A loop inside another loop',
+                    'A loop that is nested in a class',
+                    'A loop that is nested in a method',
+                    'A loop that cannot be executed'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is an infinite loop?',
+                'options': [
+                    'A loop that never terminates',
+                    'A loop that runs once',
+                    'A loop that cannot start',
+                    'A loop that is broken'
+                ],
+                'correct_answer': 1
+            },
         ]
 
     # Module 5 Questions
@@ -453,6 +683,76 @@ class Command(BaseCommand):
                 ],
                 'correct_answer': 1
             },
+            {
+                'question': 'What is a void method?',
+                'options': [
+                    'A method that returns no value',
+                    'A method that returns void',
+                    'A method that is empty',
+                    'A method that cannot be called'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is method signature?',
+                'options': [
+                    'Method name and parameter list',
+                    'Method name only',
+                    'Parameter list only',
+                    'Return type only'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is a parameter?',
+                'options': [
+                    'A variable passed to a method',
+                    'A value returned from a method',
+                    'A method name',
+                    'A class name'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is an argument?',
+                'options': [
+                    'A value passed to a method when calling it',
+                    'A variable in a method',
+                    'A return value',
+                    'A method name'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is the difference between parameter and argument?',
+                'options': [
+                    'Parameter is in method definition, argument is in method call',
+                    'Argument is in method definition, parameter is in method call',
+                    'They are identical',
+                    'Parameter is for primitives, argument is for objects'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is a static method?',
+                'options': [
+                    'A method that belongs to the class',
+                    'A method that belongs to an instance',
+                    'A method that cannot be called',
+                    'A method that is final'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is an instance method?',
+                'options': [
+                    'A method that belongs to an instance',
+                    'A method that belongs to the class',
+                    'A method that cannot be called',
+                    'A method that is static'
+                ],
+                'correct_answer': 1
+            },
         ]
 
     # Module 6 Questions
@@ -475,6 +775,86 @@ class Command(BaseCommand):
                     '5',
                     'x',
                     'int'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is a variable?',
+                'options': [
+                    'A named storage location',
+                    'A method',
+                    'A class',
+                    'A package'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is variable scope?',
+                'options': [
+                    'The region where a variable is accessible',
+                    'The type of a variable',
+                    'The value of a variable',
+                    'The name of a variable'
+                ],
+                'correct_answer': 1
+            },
+            {
+                'question': 'What is a local variable?',
+                'options': [
+                    'A variable declared in a class',
+                    'A variable declared inside a method or block',
+                    'A variable declared in a package',
+                    'A variable declared globally'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is an instance variable?',
+                'options': [
+                    'A variable declared in a method',
+                    'A variable declared in a class, outside methods',
+                    'A variable declared in a block',
+                    'A variable declared in a package'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is a static variable?',
+                'options': [
+                    'A variable that belongs to an instance',
+                    'A variable that belongs to the class',
+                    'A variable that cannot change',
+                    'A variable that is final'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is variable shadowing?',
+                'options': [
+                    'When a variable is hidden',
+                    'When a local variable hides an instance variable',
+                    'When a variable is deleted',
+                    'When a variable is renamed'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of final keyword for variables?',
+                'options': [
+                    'To make a variable static',
+                    'To make a variable constant',
+                    'To make a variable public',
+                    'To make a variable private'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is type casting?',
+                'options': [
+                    'Creating a new type',
+                    'Converting one data type to another',
+                    'Deleting a type',
+                    'Renaming a type'
                 ],
                 'correct_answer': 2
             },
@@ -506,22 +886,22 @@ class Command(BaseCommand):
             {
                 'question': 'What is encapsulation?',
                 'options': [
-                    'Hiding implementation details',
                     'Inheriting from a parent class',
+                    'Hiding implementation details',
                     'Creating multiple objects',
                     'Using static methods'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is the purpose of getters and setters?',
                 'options': [
-                    'To access and modify private fields',
                     'To create objects',
+                    'To access and modify private fields',
                     'To inherit from classes',
                     'To handle exceptions'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is composition?',
@@ -530,6 +910,56 @@ class Command(BaseCommand):
                     'HAS-A relationship',
                     'IS-A relationship',
                     'Polymorphism'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is a default constructor?',
+                'options': [
+                    'A constructor with parameters',
+                    'A constructor with no parameters',
+                    'A constructor that is private',
+                    'A constructor that is static'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is a parameterized constructor?',
+                'options': [
+                    'A constructor with no parameters',
+                    'A constructor that takes parameters',
+                    'A constructor that is private',
+                    'A constructor that is static'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of this keyword?',
+                'options': [
+                    'To refer to parent class',
+                    'To refer to current object',
+                    'To refer to child class',
+                    'To refer to static members'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of super keyword?',
+                'options': [
+                    'To refer to current object',
+                    'To refer to parent class',
+                    'To refer to child class',
+                    'To refer to static members'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is polymorphism?',
+                'options': [
+                    'Ability to create objects',
+                    'Ability of an object to take many forms',
+                    'Ability to delete objects',
+                    'Ability to update objects'
                 ],
                 'correct_answer': 2
             },
@@ -571,12 +1001,12 @@ class Command(BaseCommand):
             {
                 'question': 'What is the difference between String literal and String Object?',
                 'options': [
-                    'String literal is stored in string pool, String Object is in heap',
                     'There is no difference',
+                    'String literal is stored in string pool, String Object is in heap',
                     'String literal is mutable, String Object is immutable',
                     'String literal cannot be created'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is a static method?',
@@ -585,6 +1015,56 @@ class Command(BaseCommand):
                     'A method that belongs to the class',
                     'A method that cannot be overridden',
                     'A method that is final'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is an abstract class?',
+                'options': [
+                    'A class that can be instantiated',
+                    'A class that cannot be instantiated',
+                    'A class that is final',
+                    'A class that is static'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is an interface?',
+                'options': [
+                    'A class with implementation',
+                    'A contract that defines methods without implementation',
+                    'A variable',
+                    'A method'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is method overriding?',
+                'options': [
+                    'Creating a new method',
+                    'Providing a new implementation of a parent class method',
+                    'Deleting a method',
+                    'Renaming a method'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the difference between abstract class and interface?',
+                'options': [
+                    'Interface can have implementation, abstract class cannot',
+                    'Abstract class can have implementation, interface cannot (before Java 8)',
+                    'They are identical',
+                    'Abstract class is for primitives, interface is for objects'
+                ],
+                'correct_answer': 2
+            },
+            {
+                'question': 'What is the purpose of @Override annotation?',
+                'options': [
+                    'To create overrides',
+                    'To indicate method overriding',
+                    'To delete overrides',
+                    'To update overrides'
                 ],
                 'correct_answer': 2
             },
@@ -606,32 +1086,92 @@ class Command(BaseCommand):
             {
                 'question': 'What is the index of the first element in an array?',
                 'options': [
-                    '0',
                     '1',
+                    '0',
                     '-1',
                     'Depends on the array'
                 ],
-                'correct_answer': 1
+                'correct_answer': 2
             },
             {
                 'question': 'What is the enhanced for loop also known as?',
                 'options': [
-                    'for-each loop',
                     'while loop',
                     'do-while loop',
+                    'for-each loop',
                     'traditional for loop'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'In Java, are primitive types passed by value or reference?',
                 'options': [
-                    'By value',
                     'By reference',
                     'Both',
+                    'By value',
                     'Neither'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
+            },
+            {
+                'question': 'How do you declare an array?',
+                'options': [
+                    'int arr;',
+                    'array int arr;',
+                    'int[] arr; or int arr[];',
+                    'int array arr;'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'How do you initialize an array?',
+                'options': [
+                    'int arr = new int[5];',
+                    'int[] arr = int[5];',
+                    'int[] arr = new int[5];',
+                    'int arr = int[5];'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is ArrayIndexOutOfBoundsException?',
+                'options': [
+                    'Exception thrown when array is null',
+                    'Exception thrown when array is empty',
+                    'Exception thrown when accessing invalid array index',
+                    'Exception thrown when array is full'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is a multidimensional array?',
+                'options': [
+                    'A single array',
+                    'A variable',
+                    'An array of arrays',
+                    'A method'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the syntax for enhanced for loop?',
+                'options': [
+                    'for(array : type variable)',
+                    'for(variable : type array)',
+                    'for(type variable : array)',
+                    'for(type : variable array)'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'Can you change the size of an array after creation?',
+                'options': [
+                    'Yes',
+                    'Only if it is empty',
+                    'No',
+                    'Only if it is full'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -642,41 +1182,101 @@ class Command(BaseCommand):
                 'question': 'Which interface does ArrayList implement?',
                 'options': [
                     'Set',
-                    'List',
                     'Map',
+                    'List',
                     'Queue'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'What is autoboxing?',
                 'options': [
-                    'Converting primitive to wrapper object automatically',
                     'Converting wrapper object to primitive automatically',
                     'Creating a box',
+                    'Converting primitive to wrapper object automatically',
                     'Wrapping code'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
             },
             {
                 'question': 'What is the difference between ArrayList and LinkedList?',
                 'options': [
                     'ArrayList is faster for insertion, LinkedList for access',
-                    'LinkedList is faster for insertion, ArrayList for access',
                     'They are the same',
+                    'LinkedList is faster for insertion, ArrayList for access',
                     'ArrayList cannot store objects'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'What is the purpose of an Iterator?',
                 'options': [
                     'To create collections',
-                    'To iterate over collection elements',
                     'To sort collections',
+                    'To iterate over collection elements',
                     'To filter collections'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is unboxing?',
+                'options': [
+                    'Converting primitive to wrapper object',
+                    'Creating a box',
+                    'Converting wrapper object to primitive',
+                    'Deleting a box'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the Collection framework?',
+                'options': [
+                    'A single class',
+                    'A single interface',
+                    'A set of classes and interfaces for storing and manipulating groups of objects',
+                    'A method'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the difference between Collection and Collections?',
+                'options': [
+                    'Collections is an interface, Collection is a utility class',
+                    'They are identical',
+                    'Collection is an interface, Collections is a utility class',
+                    'Collection is for primitives, Collections is for objects'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of add() method in ArrayList?',
+                'options': [
+                    'To remove an element',
+                    'To get an element',
+                    'To add an element to the list',
+                    'To update an element'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of remove() method in ArrayList?',
+                'options': [
+                    'To add an element',
+                    'To get an element',
+                    'To remove an element from the list',
+                    'To update an element'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of get() method in ArrayList?',
+                'options': [
+                    'To add an element',
+                    'To remove an element',
+                    'To get an element at a specific index',
+                    'To update an element'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -687,11 +1287,11 @@ class Command(BaseCommand):
                 'question': 'What is generics in Java?',
                 'options': [
                     'A way to create generic classes',
-                    'Type-safe collections',
                     'A programming language',
+                    'Type-safe collections',
                     'A design pattern'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'What is the syntax for creating a generic ArrayList?',
@@ -706,12 +1306,82 @@ class Command(BaseCommand):
             {
                 'question': 'What are wildcards in generics?',
                 'options': [
-                    '? symbol used to represent unknown type',
                     'A type parameter',
                     'A method',
+                    '? symbol used to represent unknown type',
                     'A class'
                 ],
-                'correct_answer': 1
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of generics?',
+                'options': [
+                    'To create types',
+                    'To delete types',
+                    'To provide type safety and eliminate type casting',
+                    'To update types'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is a bounded type parameter?',
+                'options': [
+                    'A type parameter without restrictions',
+                    'A type parameter that is null',
+                    'A type parameter with restrictions',
+                    'A type parameter that is void'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is <? extends T> wildcard?',
+                'options': [
+                    'Lower bounded wildcard',
+                    'Unbounded wildcard',
+                    'Upper bounded wildcard',
+                    'No wildcard'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is <? super T> wildcard?',
+                'options': [
+                    'Upper bounded wildcard',
+                    'Unbounded wildcard',
+                    'Lower bounded wildcard',
+                    'No wildcard'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is <?> wildcard?',
+                'options': [
+                    'Upper bounded wildcard',
+                    'Lower bounded wildcard',
+                    'Unbounded wildcard',
+                    'No wildcard'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is type erasure?',
+                'options': [
+                    'Process of adding type information',
+                    'Process of updating type information',
+                    'Process of removing type information at runtime',
+                    'Process of deleting type information'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'Can you use primitives with generics?',
+                'options': [
+                    'Yes, directly',
+                    'Only in some cases',
+                    'No, only wrapper classes',
+                    'Only with arrays'
+                ],
+                'correct_answer': 3
             },
         ]
 
@@ -722,21 +1392,21 @@ class Command(BaseCommand):
                 'question': 'Which collection does not allow duplicate elements?',
                 'options': [
                     'List',
-                    'Set',
                     'Map',
+                    'Set',
                     'Queue'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'What is the difference between HashSet and TreeSet?',
                 'options': [
                     'HashSet is sorted, TreeSet is not',
-                    'TreeSet is sorted, HashSet is not',
                     'They are the same',
+                    'TreeSet is sorted, HashSet is not',
                     'HashSet allows null, TreeSet does not'
                 ],
-                'correct_answer': 2
+                'correct_answer': 3
             },
             {
                 'question': 'Which interface does HashMap implement?',
@@ -752,11 +1422,71 @@ class Command(BaseCommand):
                 'question': 'What is the difference between Comparable and Comparator?',
                 'options': [
                     'Comparable is in java.util, Comparator is in java.lang',
-                    'Comparable defines natural ordering, Comparator defines custom ordering',
                     'They are the same',
-                    'Comparable is for primitives, Comparator for objects'
+                    'Comparable is for primitives, Comparator for objects',
+                    'Comparable defines natural ordering, Comparator defines custom ordering'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the difference between HashMap and Hashtable?',
+                'options': [
+                    'Hashtable is not synchronized, HashMap is synchronized',
+                    'They are identical',
+                    'HashMap is not synchronized, Hashtable is synchronized',
+                    'HashMap is for primitives, Hashtable is for objects'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the difference between HashMap and LinkedHashMap?',
+                'options': [
+                    'HashMap maintains insertion order',
+                    'They are identical',
+                    'LinkedHashMap maintains insertion order',
+                    'LinkedHashMap is faster'
+                ],
+                'correct_answer': 3
+            },
+            {
+                'question': 'What is the purpose of put() method in Map?',
+                'options': [
+                    'To remove a key-value pair',
+                    'To get a value',
+                    'To update a key',
+                    'To add a key-value pair'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of get() method in Map?',
+                'options': [
+                    'To add a key-value pair',
+                    'To remove a key-value pair',
+                    'To update a key',
+                    'To get a value by key'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of keySet() method in Map?',
+                'options': [
+                    'To get all values',
+                    'To get all entries',
+                    'To get the size',
+                    'To get all keys as a Set'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of values() method in Map?',
+                'options': [
+                    'To get all keys',
+                    'To get all entries',
+                    'To get the size',
+                    'To get all values as a Collection'
+                ],
+                'correct_answer': 4
             },
         ]
 
@@ -766,32 +1496,102 @@ class Command(BaseCommand):
             {
                 'question': 'What is a lambda expression?',
                 'options': [
-                    'An anonymous function',
                     'A named function',
                     'A class',
-                    'A variable'
+                    'A variable',
+                    'An anonymous function'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is the syntax for a lambda expression?',
                 'options': [
-                    '(parameters) -> expression',
                     'parameters -> expression',
                     '(parameters) => expression',
-                    'lambda parameters: expression'
+                    'lambda parameters: expression',
+                    '(parameters) -> expression'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is a Predicate in Java?',
                 'options': [
-                    'A functional interface that takes one argument and returns boolean',
                     'A class',
                     'A method',
-                    'A variable'
+                    'A variable',
+                    'A functional interface that takes one argument and returns boolean'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is a functional interface?',
+                'options': [
+                    'An interface with multiple methods',
+                    'An interface with no methods',
+                    'An interface that is final',
+                    'An interface with exactly one abstract method'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is Stream API?',
+                'options': [
+                    'API for file processing',
+                    'API for network processing',
+                    'API for database processing',
+                    'API for processing sequences of elements'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of filter() in Stream?',
+                'options': [
+                    'To create a stream',
+                    'To delete a stream',
+                    'To update a stream',
+                    'To filter elements based on a condition'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of map() in Stream?',
+                'options': [
+                    'To create a stream',
+                    'To delete a stream',
+                    'To update a stream',
+                    'To transform elements'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of forEach() in Stream?',
+                'options': [
+                    'To create a stream',
+                    'To delete a stream',
+                    'To update a stream',
+                    'To perform an action on each element'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of collect() in Stream?',
+                'options': [
+                    'To create a stream',
+                    'To delete a stream',
+                    'To update a stream',
+                    'To collect results into a collection'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is method reference?',
+                'options': [
+                    'A way to create methods',
+                    'A way to delete methods',
+                    'A way to update methods',
+                    'A shorthand syntax for lambda expressions'
+                ],
+                'correct_answer': 4
             },
         ]
 
@@ -802,51 +1602,101 @@ class Command(BaseCommand):
                 'question': 'Which class is used to read characters from a file?',
                 'options': [
                     'FileInputStream',
-                    'FileReader',
                     'FileWriter',
-                    'BufferedReader'
+                    'BufferedReader',
+                    'FileReader'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'Which class provides buffered reading?',
                 'options': [
                     'FileReader',
-                    'BufferedReader',
                     'FileInputStream',
-                    'Reader'
+                    'Reader',
+                    'BufferedReader'
                 ],
-                'correct_answer': 2
+                'correct_answer': 4
             },
             {
                 'question': 'What is serialization in Java?',
                 'options': [
-                    'Converting object to byte stream',
                     'Converting byte stream to object',
                     'Reading from file',
-                    'Writing to file'
+                    'Writing to file',
+                    'Converting object to byte stream'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'Which interface must be implemented for serialization?',
                 'options': [
-                    'Serializable',
                     'Cloneable',
                     'Comparable',
-                    'Runnable'
+                    'Runnable',
+                    'Serializable'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is try-with-resources?',
                 'options': [
-                    'A way to automatically close resources',
                     'A way to handle exceptions',
                     'A way to create files',
-                    'A way to delete files'
+                    'A way to delete files',
+                    'A way to automatically close resources'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
+            },
+            {
+                'question': 'Which class is used to write characters to a file?',
+                'options': [
+                    'FileReader',
+                    'FileInputStream',
+                    'BufferedReader',
+                    'FileWriter'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'Which class provides buffered writing?',
+                'options': [
+                    'FileWriter',
+                    'FileReader',
+                    'FileInputStream',
+                    'BufferedWriter'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is deserialization?',
+                'options': [
+                    'Converting object to byte stream',
+                    'Reading from file',
+                    'Writing to file',
+                    'Converting byte stream to object'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of File class?',
+                'options': [
+                    'To read files',
+                    'To write files',
+                    'To delete files',
+                    'To represent file and directory pathnames'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of Scanner class?',
+                'options': [
+                    'To scan files',
+                    'To scan directories',
+                    'To scan networks',
+                    'To parse primitive types and strings'
+                ],
+                'correct_answer': 4
             },
         ]
 
@@ -856,22 +1706,102 @@ class Command(BaseCommand):
             {
                 'question': 'What is debugging?',
                 'options': [
-                    'Finding and fixing errors in code',
                     'Writing code',
                     'Compiling code',
-                    'Running code'
+                    'Running code',
+                    'Finding and fixing errors in code'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is a breakpoint?',
                 'options': [
-                    'A point where program execution pauses',
                     'A compilation error',
                     'A runtime error',
-                    'A syntax error'
+                    'A syntax error',
+                    'A point where program execution pauses'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is step over in debugging?',
+                'options': [
+                    'Execute and enter method',
+                    'Execute and exit method',
+                    'Skip current line',
+                    'Execute current line and move to next'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is step into in debugging?',
+                'options': [
+                    'Execute current line and move to next',
+                    'Execute and exit method',
+                    'Skip current line',
+                    'Execute and enter method calls'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is step out in debugging?',
+                'options': [
+                    'Execute current line and move to next',
+                    'Execute and enter method',
+                    'Skip current line',
+                    'Execute and exit current method'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is a watch expression?',
+                'options': [
+                    'A way to watch code',
+                    'A way to watch files',
+                    'A way to watch directories',
+                    'An expression to monitor variable values'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of debugger?',
+                'options': [
+                    'To compile code',
+                    'To run code',
+                    'To format code',
+                    'To help find and fix bugs'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is a stack trace?',
+                'options': [
+                    'A way to trace files',
+                    'A way to trace directories',
+                    'A way to trace networks',
+                    'A list of method calls leading to an error'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of conditional breakpoint?',
+                'options': [
+                    'To pause execution always',
+                    'To pause execution never',
+                    'To pause execution randomly',
+                    'To pause execution when condition is met'
+                ],
+                'correct_answer': 4
+            },
+            {
+                'question': 'What is the purpose of exception breakpoint?',
+                'options': [
+                    'To pause execution always',
+                    'To pause execution never',
+                    'To pause execution randomly',
+                    'To pause execution when exception occurs'
+                ],
+                'correct_answer': 4
             },
         ]
 
@@ -881,31 +1811,31 @@ class Command(BaseCommand):
             {
                 'question': 'What is Git?',
                 'options': [
-                    'A version control system',
                     'A programming language',
                     'An IDE',
-                    'A database'
+                    'A database',
+                    'A version control system'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'Which command is used to clone a Git repository?',
                 'options': [
-                    'git clone',
                     'git copy',
                     'git download',
-                    'git get'
+                    'git get',
+                    'git clone'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
             {
                 'question': 'What is a repository in Git?',
                 'options': [
-                    'A storage location for your project',
                     'A file',
                     'A folder',
-                    'A program'
+                    'A program',
+                    'A storage location for your project'
                 ],
-                'correct_answer': 1
+                'correct_answer': 4
             },
         ]
